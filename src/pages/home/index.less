@@ -1,0 +1,58 @@
+@import '~antd/es/style/themes/default.less';
+
+.main {
+  width: 100%;
+  background: @component-background;
+}
+
+.manage-card-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.manage-card {
+  margin: 10px;
+  width: 380px;
+  height: 330px;
+  border: 1px solid #ccc;
+  flex-shrink: 1;
+
+  .manage-card-bg {
+    height: 60%;
+    background: #000;
+  }
+  
+  .manage-card-title {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0;
+    font-size: 20px;
+    color: #111111;
+  }
+
+  .manage-detail-list {
+    display: flex;
+    
+    .manage-detail {
+      flex: 1;
+      
+      .detail-title {
+        font-size: 14px;
+        color: #9B9B9B;
+        text-align: center;
+      }
+
+      .detail-content {
+        font-size: 28px;
+        color: #1461CC;
+        text-align: center;
+      }
+
+      .detail-content.abnormal {
+        color: #FFA004;
+      }
+    }
+  }
+
+}

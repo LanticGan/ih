@@ -1,0 +1,74 @@
+.farm-manage-container {
+
+  .search-button {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .operate-area {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.content-area {
+  margin-top: 16px;
+
+  .farm-card-col {
+    margin-top: 16px;
+  }
+
+  .farm-content-card {
+    padding: 16px;
+    border: 1px solid #ccc;
+  
+    &.abormal {
+      border-left: 3px solid #ff7607;
+      .detail-value {
+        color: #ff7607;
+      }
+    }
+
+    &.normal {
+      border-left: 3px solid #1461CC;
+    }
+
+    .title {
+      font-weight: 600;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .monitor-count {
+      margin: 16px 0;
+      display: flex;
+      align-items: baseline;
+
+      .count-value {
+        font-size: 26px;
+        color: #333;
+        font-weight: 600;
+      }
+  
+      .count-label {
+        margin-left: 12px;
+        color: #4a4a4a;
+        font-size: 12px;
+      }
+    }
+
+    .detail {
+      .detail-value {
+        text-align: center;
+      }
+      
+      .detail-label {
+        text-align: center;
+        font-size: 12px;
+        color: #999999;
+      }
+    }
+
+    
+  }
+}

@@ -93,6 +93,12 @@ export default defineConfig({
                   icon: 'smile',
                   component: './Welcome',
                 },
+                {
+                  path: '/farm-manage/farm-manage',
+                  name: '养殖场管理',
+                  icon: 'smile',
+                  component: './FarmManage',
+                },
               ],
             },
             {

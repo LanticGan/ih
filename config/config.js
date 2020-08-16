@@ -83,6 +83,62 @@ export default defineConfig({
               component: './home',
             },
             {
+              path: '/farm-manage',
+              name: '养殖场管理',
+              icon: 'crown',
+              routes: [
+                {
+                  path: '/farm-manage/fence-manage',
+                  name: '围栏管理',
+                  icon: 'smile',
+                  component: './Welcome',
+                },
+              ],
+            },
+            {
+              path: '/animal-manage',
+              name: '牲畜管理',
+              icon: 'crown',
+              routes: [
+                {
+                  path: '/animal-manage/health-manage',
+                  name: '牲畜健康管理',
+                  icon: 'smile',
+                  component: './Welcome',
+                },
+                {
+                  path: '/animal-manage/device-manage',
+                  name: '设备管理',
+                  icon: 'smile',
+                  component: './Welcome',
+                },
+              ],
+            },
+            {
+              path: '/vaccine-manage',
+              name: '疫苗管理',
+              icon: 'smile',
+              component: './Welcome',
+            },
+            {
+              path: '/forage-manage',
+              name: '饲料管理',
+              icon: 'smile',
+              component: './Welcome',
+            },
+            {
+              path: '/staff-manage',
+              name: '人员管理',
+              icon: 'smile',
+              component: './Welcome',
+            },
+            {
+              path: '/param-manage',
+              name: '参数管理',
+              icon: 'smile',
+              component: './Welcome',
+            },
+            {
               component: './404',
             },
           ],

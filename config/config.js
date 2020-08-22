@@ -110,7 +110,7 @@ export default defineConfig({
                   path: '/animal-manage/health-manage',
                   name: '牲畜健康管理',
                   icon: 'smile',
-                  component: './Welcome',
+                  component: './HealthManage',
                 },
                 {
                   path: '/animal-manage/device-manage',

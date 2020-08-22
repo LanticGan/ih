@@ -1,4 +1,4 @@
-import { Drawer, Form, Button, Col, Row, Input, Select, Radio  } from 'antd';
+import { Drawer, Form, Button, Col, Row, Input, Select, Radio } from 'antd';
 
 const CreateFarmDrawer = (props) => {
 

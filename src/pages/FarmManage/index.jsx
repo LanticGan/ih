@@ -7,8 +7,8 @@ import {
     Button,
     Pagination
  } from 'antd';
- import CreateFarmDrawer from './components/CreateFarmDrawer';
- import cs from 'classnames';
+import CreateFarmDrawer from './components/CreateFarmDrawer';
+import cs from 'classnames';
 import './index.less';
 
 const mockFarmData = [
@@ -104,7 +104,7 @@ const FarmContentCard = (props) => {
 const FarmManage = () => {
 
     const [form] = Form.useForm();
-    const [ drawerVisible, setDrawerVisible ] = useState(false);
+    const [drawerVisible, setDrawerVisible] = useState(false);
 
     const onFinish = (values) => {
         console.log('values', values);

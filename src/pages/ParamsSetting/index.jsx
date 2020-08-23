@@ -10,7 +10,6 @@ import {
   Tag,
   Space
 } from 'antd';
-import DetailDrawer from './components/DetailDrawer';
 import cs from 'classnames';
 import './index.less';
 
@@ -156,7 +155,7 @@ export default function HealthMa0nage() {
         <Row>
             <Col span={5} >
                 <Form.Item 
-                    label="选择养殖场" 
+                    label="采集频次" 
                     name="farmName"
                 >
                     <Select>
@@ -165,21 +164,7 @@ export default function HealthMa0nage() {
                 </Form.Item>
             </Col>
             <Col span={5}>
-                <Form.Item label="活动" name="activity" labelCol={{ span: 6 }}>
-                    <Select>
-                        <Select.Option value="demo">Demo</Select.Option>
-                    </Select>
-                </Form.Item>
-            </Col>
-            <Col span={4}>
-                <Form.Item label="位置" name="position" labelCol={{ span: 6 }}>
-                    <Select>
-                        <Select.Option value="demo">Demo</Select.Option>
-                    </Select>
-                </Form.Item>
-            </Col>
-            <Col span={4}>
-                <Form.Item label="进食" name="food" labelCol={{ span: 6 }}>
+                <Form.Item label="上传频次" name="activity" labelCol={{ span: 6 }}>
                     <Select>
                         <Select.Option value="demo">Demo</Select.Option>
                     </Select>
@@ -188,27 +173,12 @@ export default function HealthMa0nage() {
             <Col span={2}>
               <div className="search-button">
                 <Button type="primary" htmlType="submit">
-                    查询
+                    保存
                 </Button>                      
               </div>
             </Col>
         </Row>
       </Form>
-      <div className="health-manage-operator">
-        已选择 {selectedRowKeys.length} 项
-        <div className="operator-button">
-          <Button>
-            批量导出
-          </Button>
-        </div>
-      </div>
-      <div className="health-manage-content">
-        <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
-      </div>
-      <DetailDrawer
-        visible={drawerVisible} 
-        onClose={() => setDrawerVisible(false)} 
-      />
     </div>
   )
 }

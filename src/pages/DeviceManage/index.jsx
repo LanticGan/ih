@@ -8,16 +8,16 @@ import {
   Pagination,
   Table,
   Tag,
-  Space
+  Space,
+  Modal
 } from 'antd';
-import DetailDrawer from './components/DetailDrawer';
 import cs from 'classnames';
 import './index.less';
 
 export default function HealthMa0nage() {
   
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [drawerVisible, setDrawerVisible] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const [form] = Form.useForm();
   const onFinish = (values) => {
@@ -30,6 +30,10 @@ export default function HealthMa0nage() {
 
   const openDetailDrawer = record => {
     setDrawerVisible(true);
+  }
+
+  const confirmUnbind = () => {
+    setShowModal(true);
   }
 
   const columns = [
@@ -109,7 +113,7 @@ export default function HealthMa0nage() {
       key: 'action',
       render: (text, record) => (
         <Space size="middle">
-          <a onClick={() => openDetailDrawer(record)} >详情</a>
+          <a onClick={confirmUnbind}>设备解绑</a>
         </Space>
       ),
     },
@@ -165,21 +169,7 @@ export default function HealthMa0nage() {
                 </Form.Item>
             </Col>
             <Col span={5}>
-                <Form.Item label="活动" name="activity" labelCol={{ span: 6 }}>
-                    <Select>
-                        <Select.Option value="demo">Demo</Select.Option>
-                    </Select>
-                </Form.Item>
-            </Col>
-            <Col span={4}>
-                <Form.Item label="位置" name="position" labelCol={{ span: 6 }}>
-                    <Select>
-                        <Select.Option value="demo">Demo</Select.Option>
-                    </Select>
-                </Form.Item>
-            </Col>
-            <Col span={4}>
-                <Form.Item label="进食" name="food" labelCol={{ span: 6 }}>
+                <Form.Item label="设备电量" name="activity" labelCol={{ span: 6 }}>
                     <Select>
                         <Select.Option value="demo">Demo</Select.Option>
                     </Select>
@@ -205,10 +195,11 @@ export default function HealthMa0nage() {
       <div className="health-manage-content">
         <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
       </div>
-      <DetailDrawer
-        visible={drawerVisible} 
-        onClose={() => setDrawerVisible(false)} 
-      />
+      <div>
+        <Modal visible={showModal}>
+          cehsi
+        </Modal>
+      </div>
     </div>
   )
 }

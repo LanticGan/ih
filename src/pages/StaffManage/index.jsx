@@ -10,7 +10,6 @@ import {
   Tag,
   Space
 } from 'antd';
-import DetailDrawer from './components/DetailDrawer';
 import cs from 'classnames';
 import './index.less';
 
@@ -109,7 +108,7 @@ export default function HealthMa0nage() {
       key: 'action',
       render: (text, record) => (
         <Space size="middle">
-          <a onClick={() => openDetailDrawer(record)} >详情</a>
+          <a onClick={() => openDetailDrawer(record)} >新增人员</a>
         </Space>
       ),
     },
@@ -205,10 +204,6 @@ export default function HealthMa0nage() {
       <div className="health-manage-content">
         <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
       </div>
-      <DetailDrawer
-        visible={drawerVisible} 
-        onClose={() => setDrawerVisible(false)} 
-      />
     </div>
   )
 }

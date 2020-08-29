@@ -33,6 +33,11 @@ export default defineConfig({
           path: '/user/login',
           component: './user/login',
         },
+        {
+          name: 'login',
+          path: '/user/register',
+          component: './user/register',
+        },
       ],
     },
     {
@@ -46,35 +51,7 @@ export default defineConfig({
           routes: [
             {
               path: '/',
-              redirect: '/welcome',
-            },
-            {
-              path: '/welcome',
-              name: 'welcome',
-              icon: 'smile',
-              component: './Welcome',
-            },
-            {
-              path: '/admin',
-              name: 'admin',
-              icon: 'crown',
-              component: './Admin',
-              authority: ['admin'],
-              routes: [
-                {
-                  path: '/admin/sub-page',
-                  name: 'sub-page',
-                  icon: 'smile',
-                  component: './Welcome',
-                  authority: ['admin'],
-                },
-              ],
-            },
-            {
-              name: 'list.table-list',
-              icon: 'table',
-              path: '/list',
-              component: './ListTableList',
+              redirect: '/home',
             },
             {
               name: '首页',
@@ -168,6 +145,10 @@ export default defineConfig({
   theme: {
     // ...darkTheme,
     'primary-color': defaultSettings.primaryColor,
+    'menu-dark-bg': defaultSettings.primaryColor,
+    'layout-sider-background': defaultSettings.primaryColor,
+    'menu-dark-submenu-bg':  defaultSettings.primaryColor,
+    'menu-dark-item-active-bg': '#29cc88'
   },
   // @ts-ignore
   title: false,

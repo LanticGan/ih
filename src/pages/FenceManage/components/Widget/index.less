@@ -1,0 +1,72 @@
+.map-widget-contianer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  margin: 10px;
+  height: 100%;
+  width: 360px;
+  z-index: 100;
+
+  .widget-header {
+    padding: 20px;
+    height: 200px;
+    border-radius: 6px;
+
+    &.normal {
+      background: no-repeat center center url(../../../../assets/normal-bg.png);
+      background-size: cover;
+    }
+
+    &.abnormal {
+      background: no-repeat center center url(../../../../assets/abnormal-bg.png);
+      background-size: cover;
+    }
+
+    .widget-title {
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+    
+      .widget-name {
+        font-size: 20px;
+        font-weight: 500;
+      }
+    }
+
+    .widget-filter-form {
+      margin: 20px 0;
+    }
+
+    .widget-info-list {
+      display: flex;
+
+      .widget-info {
+        margin: 6px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        color: #fff;
+
+        .widget-info-label {
+          text-align: center;
+        }
+        
+        .widget-info-value {
+          text-align: center;
+          font-size: 24px;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  .widget-body {
+    margin-top: 10px;
+    padding: 6px;
+    height: calc(100% - 230px);
+    border-radius: 6px;
+    background: #fff;
+  }
+}

@@ -68,7 +68,7 @@ export default defineConfig({
                   path: '/farm-manage/fence-manage',
                   name: '围栏管理',
                   icon: 'smile',
-                  component: './Welcome',
+                  component: './FenceManage',
                 },
                 {
                   path: '/farm-manage/farm-manage',

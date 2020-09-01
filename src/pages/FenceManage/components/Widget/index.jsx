@@ -90,7 +90,7 @@ class Widget extends React.Component {
           <div className="widget-filter-form">
             <Select
               options={[]}
-              defaultValue="lucy" 
+              defaultValue="全国" 
               style={{ width: '100%' }} 
             />
           </div>

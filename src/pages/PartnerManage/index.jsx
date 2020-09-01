@@ -10,7 +10,7 @@ import {
   Tag,
   Space
 } from 'antd';
-import CreateFarmDrawer from './components/CreateFarmDrawer';
+import CreatePartnerDrawer from './components/CreatePartnerDrawer';
 import cs from 'classnames';
 import './index.less';
 
@@ -34,75 +34,25 @@ export default function VaccineManage() {
 
   const columns = [
     {
-      title: '所属养殖场',
+      title: '合作方',
       dataIndex: 'name',
       key: 'name',
       render: text => <a>{text}</a>,
     },
     {
-      title: '设备编号',
+      title: '养殖场名称',
       dataIndex: 'age',
       key: 'age',
     },
     {
-      title: '品种',
+      title: '合同编号',
       dataIndex: 'address',
       key: 'address',
     },
     {
-      title: '性别',
+      title: '签约时间',
       dataIndex: 'sex',
       key: 'sex',
-    },
-    {
-      title: '日龄',
-      dataIndex: 'age',
-      key: 'age',
-    },
-    {
-      title: '活动',
-      dataIndex: 'activity',
-      key: 'activity',
-    },
-    {
-      title: '位置',
-      dataIndex: 'position',
-      key: 'position',
-    },
-    {
-      title: '进食',
-      dataIndex: 'feed',
-      key: 'feed',
-    },
-    {
-      title: '日龄',
-      dataIndex: 'dailyAge',
-      key: 'dailyAge',
-    },
-    {
-      title: '数据更新时间',
-      dataIndex: 'updateTime',
-      key: 'updateTime',
-    },
-    {
-      title: 'Tags',
-      key: 'tags',
-      dataIndex: 'tags',
-      render: tags => (
-        <>
-          {tags.map(tag => {
-            let color = tag.length > 5 ? 'geekblue' : 'green';
-            if (tag === 'loser') {
-              color = 'volcano';
-            }
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
-      ),
     },
     {
       title: '操作',
@@ -157,7 +107,7 @@ export default function VaccineManage() {
       <div className="health-manage-content">
         <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
       </div>
-      <CreateFarmDrawer
+      <CreatePartnerDrawer
         visible={drawerVisible} 
         onClose={() => setDrawerVisible(false)} 
       />

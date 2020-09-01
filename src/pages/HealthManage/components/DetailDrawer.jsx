@@ -2,23 +2,28 @@ import { Drawer, Form, Button, Card, Descriptions, Divider, Table } from 'antd';
 
 const goodsColumns = [
   {
-    title: '商品名称',
+    title: '活动',
     dataIndex: 'name',
     key: 'name',
 
   },
   {
-    title: '商品条码',
+    title: '位置',
     dataIndex: 'barcode',
     key: 'barcode',
 
   },
   {
-    title: '单价',
+    title: '进食',
     dataIndex: 'price',
     key: 'price',
     align: 'right',
   },
+  {
+    title: '设备电量',
+    dataIndex: 'device',
+    key: 'device',
+    align: 'right',  },
 ];
 
 const CreateFarmDrawer = (props) => {
@@ -46,14 +51,14 @@ const CreateFarmDrawer = (props) => {
       }
     >
     <div bordered={false}>
-          <Descriptions title="退款申请" style={{ marginBottom: 32 }}>
-            <Descriptions.Item label="取货单号">1000000000</Descriptions.Item>
-            <Descriptions.Item label="状态">已取货</Descriptions.Item>
-            <Descriptions.Item label="销售单号">1234123421</Descriptions.Item>
-            <Descriptions.Item label="子订单">3214321432</Descriptions.Item>
+          <Descriptions title="基本信息" style={{ marginBottom: 32 }}>
+            <Descriptions.Item label="设备编号">1000000000</Descriptions.Item>
+            <Descriptions.Item label="所属养殖场">已取货</Descriptions.Item>
+            <Descriptions.Item label="日龄">120天</Descriptions.Item>
+            <Descriptions.Item label="养殖类型">散养</Descriptions.Item>
           </Descriptions>
           <Divider style={{ marginBottom: 32 }} />
-          <div className="header-title">退货商品</div>
+          <div className="header-title">历史记录（近一周）</div>
           <Table
             style={{ marginBottom: 24 }}
             pagination={false}

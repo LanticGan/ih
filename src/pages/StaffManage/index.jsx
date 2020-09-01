@@ -7,9 +7,12 @@ import {
   Button,
   Pagination,
   Table,
+  Input,
   Tag,
   Space
 } from 'antd';
+import CreateStaffDrawer from './components/CreateStaffDrawer';
+import JobAssignmentDrawer from './components/JobAssignmentDrawer'
 import cs from 'classnames';
 import './index.less';
 
@@ -17,6 +20,7 @@ export default function HealthMa0nage() {
   
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const [jobDrawerVisible, setJobDrawerVisible] = useState(false);
 
   const [form] = Form.useForm();
   const onFinish = (values) => {
@@ -36,17 +40,12 @@ export default function HealthMa0nage() {
       title: '所属养殖场',
       dataIndex: 'name',
       key: 'name',
-      render: text => <a>{text}</a>,
+      render: text => <a>{text}</ a>,
     },
     {
-      title: '设备编号',
+      title: '姓名',
       dataIndex: 'age',
       key: 'age',
-    },
-    {
-      title: '品种',
-      dataIndex: 'address',
-      key: 'address',
     },
     {
       title: '性别',
@@ -54,62 +53,35 @@ export default function HealthMa0nage() {
       key: 'sex',
     },
     {
-      title: '日龄',
+      title: '身份证号',
       dataIndex: 'age',
       key: 'age',
     },
     {
-      title: '活动',
+      title: '手机号',
       dataIndex: 'activity',
       key: 'activity',
     },
     {
-      title: '位置',
+      title: '职务',
       dataIndex: 'position',
       key: 'position',
     },
     {
-      title: '进食',
+      title: '账号权限',
       dataIndex: 'feed',
       key: 'feed',
-    },
-    {
-      title: '日龄',
-      dataIndex: 'dailyAge',
-      key: 'dailyAge',
-    },
-    {
-      title: '数据更新时间',
-      dataIndex: 'updateTime',
-      key: 'updateTime',
-    },
-    {
-      title: 'Tags',
-      key: 'tags',
-      dataIndex: 'tags',
-      render: tags => (
-        <>
-          {tags.map(tag => {
-            let color = tag.length > 5 ? 'geekblue' : 'green';
-            if (tag === 'loser') {
-              color = 'volcano';
-            }
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
-      ),
     },
     {
       title: '操作',
       key: 'action',
       render: (text, record) => (
+        <div>
         <Space size="middle">
-          <a onClick={() => openDetailDrawer(record)} >新增人员</a>
+          <a onClick={() => openDetailDrawer(record)} >编辑</ a>
+          <a onClick={() => setJobDrawerVisible(true)} >分配职务/账号</ a>
         </Space>
+        </div>
       ),
     },
   ];
@@ -155,30 +127,22 @@ export default function HealthMa0nage() {
         <Row>
             <Col span={5} >
                 <Form.Item 
-                    label="选择养殖场" 
-                    name="farmName"
+                    label="姓名" 
+                    name="name"
                 >
-                    <Select>
-                        <Select.Option value="demo">Demo</Select.Option>
-                    </Select>
+                    <Input /> 
                 </Form.Item>
             </Col>
             <Col span={5}>
-                <Form.Item label="活动" name="activity" labelCol={{ span: 6 }}>
-                    <Select>
-                        <Select.Option value="demo">Demo</Select.Option>
-                    </Select>
+                <Form.Item 
+                  label="手机号" 
+                  name="number"
+                >
+                    <Input /> 
                 </Form.Item>
             </Col>
             <Col span={4}>
-                <Form.Item label="位置" name="position" labelCol={{ span: 6 }}>
-                    <Select>
-                        <Select.Option value="demo">Demo</Select.Option>
-                    </Select>
-                </Form.Item>
-            </Col>
-            <Col span={4}>
-                <Form.Item label="进食" name="food" labelCol={{ span: 6 }}>
+                <Form.Item label="职务" name="position" labelCol={{ span: 6 }}>
                     <Select>
                         <Select.Option value="demo">Demo</Select.Option>
                     </Select>
@@ -196,14 +160,27 @@ export default function HealthMa0nage() {
       <div className="health-manage-operator">
         已选择 {selectedRowKeys.length} 项
         <div className="operator-button">
+        <Space>
           <Button>
             批量导出
           </Button>
+          <Button type="primary" onClick={() => {setDrawerVisible(true)}}>
+            新增人员
+          </Button>
+          </Space>
         </div>
       </div>
       <div className="health-manage-content">
         <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
       </div>
+      <CreateStaffDrawer
+        visible={drawerVisible} 
+        onClose={() => setDrawerVisible(false)} 
+      />
+      <JobAssignmentDrawer
+        visible={jobDrawerVisible} 
+        onClose={() => setJobDrawerVisible(false)} 
+      />
     </div>
   )
 }

@@ -6,7 +6,7 @@ const CreateFarmDrawer = (props) => {
 
   return (
     <Drawer
-      title="疫苗录入"
+      title="职务分配"
       width={720}
       onClose={props.onClose}
       visible={props.visible}
@@ -34,46 +34,32 @@ const CreateFarmDrawer = (props) => {
       <Row justify="center">
         <Col span={20}>
         <Form.Item
-          name="name"
-          label="所属养殖场"
+          name="job"
+          label="职务类型"
           rules={[
                 {
                   required: true,
-                  message: '请输入养殖场名称',
+                  message: '职务类型',
                 },
               ]}
             >
-            <Input placeholder="请输入养殖场名称" />
+            <Select style={{ width: 120 }} options={[{label:'男', value:'male'},{label:'女', value:'female'}]}/>
           </Form.Item>
         </Col>
       </Row>
       <Row justify="center">
         <Col span={20}>
-          <Form.Item
-            name="cll"
-            label="疫苗名称"
-           >
-            <Input placeholder="请输入疫苗名称" />
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row justify="center">
-        <Col span={20}>
-          <Form.Item
-            name="cll"
-            label="注射数量"
-           >
-            <Input placeholder="请输入注射数量" />
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row justify="center">
-        <Col span={20}>
-          <Form.Item
-            name="cll"
-            label="注射人"
-           >
-            <Input placeholder="请输入注射人" />
+        <Form.Item
+          name="role"
+          label="账号权限"
+          rules={[
+                {
+                  required: true,
+                  message: '账号权限',
+                },
+              ]}
+            >
+            <Select style={{ width: 120 }} options={[{label:'男', value:'male'},{label:'女', value:'female'}]}/>
           </Form.Item>
         </Col>
       </Row>

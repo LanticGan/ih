@@ -1,23 +1,33 @@
 import React from 'react';
+import classnames from 'classnames';
 
-export default () => {
+export default (props) => {
+    const { item = {} } = props;
+    const { name, detail = [] } = item;
     return (
-        <div className="manage-card">
-            <div className="manage-card-bg"></div>
+        <div className={classnames({
+          "manage-card": true,
+        })}>
+            <div className={classnames({
+          "manage-card-bg": true,
+          [props.bgName]: true
+        })} />
             <div className="manage-card-content">
                 <div className="manage-card-title">
-                    养殖场管理
+                    {name}
                 </div>
-                <div className="manage-detail-list">
-                    <div className="manage-detail"> 
-                        <div className="detail-title">养殖场数量</div>
-                        <div className="detail-content">52</div>
+                {
+                  detail.length > 0 && (
+                    <div className="manage-detail-list">
+                      {
+                        detail.map(i => (<div className="manage-detail"> 
+                            <div className="detail-title">{i.label}</div>
+                            <div className="detail-content">{i.value}</div>
+                        </div>))
+                      }
                     </div>
-                    <div className="manage-detail">
-                        <div className="detail-title">异常数量</div>
-                        <div className="detail-content abnormal">8</div>
-                    </div>
-                </div>
+                  )
+                }     
             </div>
         </div>
     )

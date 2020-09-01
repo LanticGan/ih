@@ -3,6 +3,7 @@ import { QuestionCircleOutlined } from '@ant-design/icons';
 import React from 'react';
 import { connect, SelectLang } from 'umi';
 import Avatar from './AvatarDropdown';
+import NoticeIconView from './NoticeIconView';
 import styles from './index.less';
 
 const ENVTagColor = {
@@ -21,6 +22,7 @@ const GlobalHeaderRight = props => {
 
   return (
     <div className={className}>
+      <NoticeIconView />
       <Avatar />
       {REACT_APP_ENV && (
         <span>

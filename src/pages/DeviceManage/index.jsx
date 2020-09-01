@@ -49,64 +49,14 @@ export default function HealthMa0nage() {
       key: 'age',
     },
     {
-      title: '品种',
+      title: '设备状态',
       dataIndex: 'address',
       key: 'address',
     },
     {
-      title: '性别',
+      title: '设备电量',
       dataIndex: 'sex',
       key: 'sex',
-    },
-    {
-      title: '日龄',
-      dataIndex: 'age',
-      key: 'age',
-    },
-    {
-      title: '活动',
-      dataIndex: 'activity',
-      key: 'activity',
-    },
-    {
-      title: '位置',
-      dataIndex: 'position',
-      key: 'position',
-    },
-    {
-      title: '进食',
-      dataIndex: 'feed',
-      key: 'feed',
-    },
-    {
-      title: '日龄',
-      dataIndex: 'dailyAge',
-      key: 'dailyAge',
-    },
-    {
-      title: '数据更新时间',
-      dataIndex: 'updateTime',
-      key: 'updateTime',
-    },
-    {
-      title: 'Tags',
-      key: 'tags',
-      dataIndex: 'tags',
-      render: tags => (
-        <>
-          {tags.map(tag => {
-            let color = tag.length > 5 ? 'geekblue' : 'green';
-            if (tag === 'loser') {
-              color = 'volcano';
-            }
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
-      ),
     },
     {
       title: '操作',

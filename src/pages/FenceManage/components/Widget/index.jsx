@@ -1,5 +1,6 @@
 import React from 'react';
 import { Select } from 'antd';
+import { RightOutlined } from '@ant-design/icons';
 import classnames from 'classnames';
 import './index.less';
 
@@ -45,7 +46,7 @@ class Widget extends React.Component {
   renderFarmDistribution = () => {
     return (
       farmDistribution.map(i => (
-        <div className="farm-info-item">
+        <div className="farm-info-item" onClick={this.props.addCirle}>
           <div className={classnames({
               "farm-info-status-icon": true, 
               "normal": i.stauts,
@@ -66,9 +67,12 @@ class Widget extends React.Component {
               "abnormal": !i.stauts
             })}
           >
-            {
-              i.stauts ? '无异常' : '异常'
-            }
+            <span style={{ marginRight: 6 }}>
+              {
+                i.stauts ? '无异常' : '异常'
+              }
+            </span>
+            <RightOutlined />
           </div>
         </div>
       ))
@@ -105,7 +109,7 @@ class Widget extends React.Component {
           </div>
         </div>
         <div className="widget-body">
-          <div className="widget-body-title"></div>
+          <div className="widget-body-title">牧场分布</div>
           <div className="widget-body-content">
             <div className="farm-info-list">
               {

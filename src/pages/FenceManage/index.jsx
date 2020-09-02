@@ -1,80 +1,53 @@
 import React from 'react';
-import mapboxgl from 'mapbox-gl';
-import MapboxLanguage  from '@mapbox/mapbox-gl-language'
 import Widget from './components/Widget';
 import './index.less';
 
-const accessToken = "pk.eyJ1IjoibGFudGljZ2FuIiwiYSI6ImNrZWZvN2FycTBudDEzMWp5and2N2tzbXQifQ.bk0EI93t_BeiapFw5MJnSA";
+const farms = [{
+  number: 210,
+  center: [109.81, 40.83]
+}, {
+  number: 260,
+  center: [119.55, 30.27]
+}]
 
 export default class FenceManage extends React.Component {
 
-  createGeoJSONCircle = (center, radiusInKm, points) => {
-    if(!points) points = 64;
-
-    var coords = {
-        latitude: center[1],
-        longitude: center[0]
-    };
-
-    var km = radiusInKm;
-
-    var ret = [];
-    var distanceX = km/(111.320*Math.cos(coords.latitude*Math.PI/180));
-    var distanceY = km/110.574;
-
-    var theta, x, y;
-    for(var i=0; i<points; i++) {
-        theta = (i/points)*(2*Math.PI);
-        x = distanceX*Math.cos(theta);
-        y = distanceY*Math.sin(theta);
-
-        ret.push([coords.longitude+x, coords.latitude+y]);
-    }
-    ret.push(ret[0]);
-   
-
-    return {
-        "type": "geojson",
-        "data": {
-          "type": "Feature",
-          "geometry": {
-              "type": "Polygon",
-              "coordinates": [120.15, 30.3]
-          }
-        }
-    };
-  };
-
   addCirle = () => {
-    this.map.addSource("polygon", this.createGeoJSONCircle([120.15, 30.3], 0.5));
-
-    this.map.addLayer({
-      "id": "polygon",
-      "type": "symbol",
-      "source": "polygon",
-      "layout": {},
-      "paint": {
-          "text-field": "ceshi"
-      }
-    });
   }
 
   componentDidMount() {
-    mapboxgl.accessToken =accessToken;
-    
-    this.map = new mapboxgl.Map({
-      container: 'mapbox-container',
-      style: 'mapbox://styles/mapbox/streets-v11',
-      center: [120.15, 30.3], //地图中心经纬度
-      zoom: 7, //缩放级别
-      defaultLanguage: 'zh'
+     this.map = new AMap.Map('map-container', {
+      zoom: 5,//级别
+      center: [109, 33],//中心点坐标
     });
+
+    farms.forEach((farm, i) => {
+
+      const { center, number } = farm;
+
+      const text = new AMap.Text({
+        text: number,
+        anchor:'center', // 设置文本标记锚点
+        cursor:'pointer',
+        style:{
+            'background-color': 'rgba(20,97,204,.7)',
+            'width': '3.5rem',
+            'border-radius': '20px',
+            'text-align': 'center',
+            'font-size': '14px',
+            'color': 'white'
+        },
+        position: center
+    });
+
+    text.setMap(this.map);
+    })
   }
 
   render() {
     return (
       <div className="fence-map">
-        <div id="mapbox-container" className="mapbox-container" />
+        <div id="map-container" className="map-container" />
         <Widget addCirle={this.addCirle} />
       </div>
     )

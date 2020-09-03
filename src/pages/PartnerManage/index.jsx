@@ -41,18 +41,18 @@ export default function VaccineManage() {
     },
     {
       title: '养殖场名称',
-      dataIndex: 'age',
-      key: 'age',
+      dataIndex: 'farm',
+      key: 'farm',
     },
     {
       title: '合同编号',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'agreement',
+      key: 'agreement',
     },
     {
       title: '签约时间',
-      dataIndex: 'sex',
-      key: 'sex',
+      dataIndex: 'time',
+      key: 'time',
     },
     {
       title: '操作',
@@ -68,24 +68,24 @@ export default function VaccineManage() {
   const data = [
     {
       key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
+      name: '农户XXXXXXXXXXXX',
+      farm: '001号养殖场',
+      agreement: 'L1231235512341',
+      time: '2020/06/30 12:31',
     },
     {
       key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
+      name: '农户XXXXXXXXXXXX',
+      farm: '001号养殖场',
+      agreement: 'L1231235512321',
+      time: '2020/06/30 12:31',
     },
     {
       key: '3',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
+      name: '农户XXXXXXXXXXXX',
+      farm: '001号养殖场',
+      agreement: 'L1234445512341',
+      time: '2020/06/30 12:31',
     },
   ];
 

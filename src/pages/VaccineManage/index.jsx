@@ -8,9 +8,10 @@ import {
   Pagination,
   Table,
   Tag,
-  Space
+  Space,
+  message
 } from 'antd';
-import CreateFarmDrawer from './components/CreateFarmDrawer';
+import CreateVaccineDrawer from './components/CreateVaccineDrawer';
 import cs from 'classnames';
 import './index.less';
 
@@ -35,62 +36,90 @@ export default function VaccineManage() {
   const columns = [
     {
       title: '所属养殖场',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'farm',
+      key: 'farm',
       render: text => <a>{text}</a>,
     },
     {
       title: '疫苗名称',
-      dataIndex: 'age',
-      key: 'age',
+      dataIndex: 'name',
+      key: 'name',
     },
     {
       title: '注射数量',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'number',
+      key: 'number',
     },
     {
       title: '注射人',
-      dataIndex: 'sex',
-      key: 'sex',
+      dataIndex: 'operator',
+      key: 'operator',
     },
     {
       title: '注射时间',
-      dataIndex: 'age',
-      key: 'age',
-    },
-    {
-      title: '操作',
-      key: 'action',
-      render: (text, record) => (
-        <Space size="middle">
-          <a onClick={() => openDetailDrawer(record)} >详情</a>
-        </Space>
-      ),
+      dataIndex: 'time',
+      key: 'time',
     },
   ];
   
   const data = [
     {
       key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
+      farm: '养殖场001',
+      name: '********疫苗',
+      number: 120,
+      operator: '张思思',
+      time: '"2020/06/30 12:31'
     },
     {
       key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
+      farm: '养殖场001',
+      name: '********疫苗',
+      number: 1556,
+      operator: '王强',
+      time: '"2020/06/30 12:31'
+    },{
       key: '3',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
+      farm: '养殖场001',
+      name: '********疫苗',
+      number: 23,
+      operator: '张思思',
+      time: '"2020/06/30 12:31'
+    },{
+      key: '4',
+      farm: '养殖场001',
+      name: '********疫苗',
+      number: 45,
+      operator: '张思思',
+      time: '"2020/06/30 12:31'
+    },{
+      key: '5',
+      farm: '养殖场001',
+      name: '********疫苗',
+      number: 22,
+      operator: '张思思',
+      time: '"2020/06/30 12:31'
+    },{
+      key: '6',
+      farm: '养殖场001',
+      name: '********疫苗',
+      number: 120,
+      operator: '张思思',
+      time: '"2020/06/30 12:31'
+    },{
+      key: '7',
+      farm: '养殖场001',
+      name: '********疫苗',
+      number: 1132,
+      operator: '张思思',
+      time: '"2020/06/30 12:31'
+    },{
+      key: '8',
+      farm: '养殖场001',
+      name: '********疫苗',
+      number: 18,
+      operator: '张思思',
+      time: '"2020/06/30 12:31'
     },
   ];
 
@@ -99,25 +128,34 @@ export default function VaccineManage() {
     onChange: onSelectChange,
   };
 
+  const onOk = () => {
+    setDrawerVisible(false);
+    message.success('新增成功');
+  }
+
   return (
     <div className="health-manage-container">
       <div className="health-manage-operator">
         已选择 {selectedRowKeys.length} 项
         <div className="operator-button">
-          <Button>
-            批量导出
-          </Button>
-          <Button type="primary" onClick={() => {setDrawerVisible(true)}}>
-            疫苗录入
-          </Button>
+          <Space>
+            <Button>
+              批量导出
+            </Button>
+            <Button type="primary" onClick={() => {setDrawerVisible(true)}}>
+              疫苗录入
+            </Button>
+          </Space>
+          
         </div>
       </div>
       <div className="health-manage-content">
         <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
       </div>
-      <CreateFarmDrawer
+      <CreateVaccineDrawer
         visible={drawerVisible} 
-        onClose={() => setDrawerVisible(false)} 
+        onClose={() => setDrawerVisible(false)}
+        onOk={onOk}
       />
     </div>
   )

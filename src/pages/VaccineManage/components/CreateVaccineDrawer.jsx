@@ -1,6 +1,6 @@
 import { Drawer, Form, Button, Col, Row, Input, Select, Radio } from 'antd';
 
-const CreateFarmDrawer = (props) => {
+const CreateVaccineDrawer = (props) => {
 
   const [form] = Form.useForm();
 
@@ -20,7 +20,7 @@ const CreateFarmDrawer = (props) => {
           <Button onClick={props.onClose} style={{ marginRight: 8 }}>
             取消
           </Button>
-          <Button onClick={props.onClose} type="primary">
+          <Button onClick={props.onOk} type="primary">
             确认
           </Button>
         </div>
@@ -82,4 +82,4 @@ const CreateFarmDrawer = (props) => {
   )
 }
 
-export default CreateFarmDrawer;
+export default CreateVaccineDrawer;

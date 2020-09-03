@@ -20,7 +20,7 @@ const CreateFarmDrawer = (props) => {
           <Button onClick={props.onClose} style={{ marginRight: 8 }}>
             取消
           </Button>
-          <Button onClick={props.onClose} type="primary">
+          <Button onClick={props.onOK} type="primary">
             确认
           </Button>
         </div>

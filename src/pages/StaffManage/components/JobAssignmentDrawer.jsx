@@ -43,7 +43,7 @@ const CreateFarmDrawer = (props) => {
                 },
               ]}
             >
-            <Select style={{ width: 120 }} options={[{label:'男', value:'male'},{label:'女', value:'female'}]}/>
+            <Select style={{ width: 120 }} options={[]}/>
           </Form.Item>
         </Col>
       </Row>
@@ -59,7 +59,7 @@ const CreateFarmDrawer = (props) => {
                 },
               ]}
             >
-            <Select style={{ width: 120 }} options={[{label:'男', value:'male'},{label:'女', value:'female'}]}/>
+            <Select style={{ width: 120 }} options={[]}/>
           </Form.Item>
         </Col>
       </Row>

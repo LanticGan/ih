@@ -6,17 +6,19 @@ import './index.less';
 
 const cardList =[{
   id: "farm",
+  path: '/farm-manage/farm-manage',
   name: '养殖场管理',
   detail: [{
     label: '养殖场数量',
-    value: '52'
+    value: '2'
   },{
     label: '异常数量',
-    value: '8'
+    value: '0'
   }]
 },
 {
   id: "animal",
+  path:  '/animal-manage/health-manage',
   name: '牲畜管理',
   detail: [{
     label: '活动异常',
@@ -27,6 +29,7 @@ const cardList =[{
   }]
 },{
   id: "device",
+  path:  '/animal-manage/device-manage',
   name: '设备管理',
   detail: [{
     label: '激活数量',
@@ -37,6 +40,7 @@ const cardList =[{
   }]
 },{
   id: "vaccine",
+  path: '/vaccine-manage',
   name: '疫苗管理',
 },
 {
@@ -45,6 +49,7 @@ const cardList =[{
 },
 {
   id: "params",
+  path: '/param-manage',
   name: '参数设置',
 }];
 
@@ -53,6 +58,11 @@ export default () => {
   const [needInitial, setNeedInitial] = useState(true);
   const [drawerVisible, setDialogVisible] = useState(false);
 
+  const onOk = () => {
+    setNeedInitial(false);
+    setDialogVisible(false);
+  }
+
   return (
     <>
       {
@@ -60,7 +70,7 @@ export default () => {
           (
             <div className="manage-card-container">
               {
-                cardList.map((v, i) => <ManageCard item={v} bgName={`bg-${v.id}`} key={i} />)
+                cardList.map((v, i) => <ManageCard paht={v.path} item={v} bgName={`bg-${v.id}`} key={i} />)
               }
             </div>
           ) : (
@@ -78,7 +88,7 @@ export default () => {
             </div>
           )
       }
-      <CreateNewFarmDrawer visible={drawerVisible} onClose={() => setDialogVisible(false)} />
+      <CreateNewFarmDrawer visible={drawerVisible} onOK={onOk} onClose={() => setDialogVisible(false)} />
     </>
   );
 };

@@ -1,11 +1,17 @@
 import React from 'react';
+import { Link, history  } from 'umi';
 import classnames from 'classnames';
 
 export default (props) => {
     const { item = {} } = props;
-    const { name, detail = [] } = item;
+    const { name, detail = [], path } = item;
+
+    const LinkTo = (path) => {
+      history.push(path);
+    }
+
     return (
-        <div className={classnames({
+        <div onClick={() => LinkTo(path)} className={classnames({
           "manage-card": true,
         })}>
             <div className={classnames({

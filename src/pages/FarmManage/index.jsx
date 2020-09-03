@@ -5,7 +5,8 @@ import {
     Col,
     Select,
     Button,
-    Pagination
+    Pagination,
+    message
  } from 'antd';
 import CreateFarmDrawer from './components/CreateFarmDrawer';
 import FarmCard from '@/components/FarmCard';
@@ -15,39 +16,22 @@ import './index.less';
 const mockFarmData = [
     {
         title: '001号养殖场',
-        count: 1675,
-        hdyc: 7,
-        jwzyc: 2,
-        jsyc: 2,
-        sbddl: 2,
-        isAbnormal: false
-    },
-    {
-        title: '002号养殖场',
-        count: 1675,
-        hdyc: 7,
-        jwzyc: 2,
-        jsyc: 2,
-        sbddl: 2,
-        isAbnormal: false
-    },
-    {
-        title: '003号养殖场',
-        count: 1675,
-        hdyc: 7,
-        jwzyc: 2,
-        jsyc: 2,
-        isAbnormal: true
-    },
-    {
-        title: '004号养殖场',
-        count: 1675,
+        count: 8,
         hdyc: 0,
         jwzyc: 0,
         jsyc: 0,
         sbddl: 0,
         isAbnormal: false
-    }
+    },
+    {
+        title: '002号养殖场',
+        count: 2,
+        hdyc: 0,
+        jwzyc: 0,
+        jsyc: 0,
+        sbddl: 0,
+        isAbnormal: false
+    },
 ]
 
 const FarmContentCard = (props) => {
@@ -68,6 +52,11 @@ const FarmManage = () => {
     const onFinish = (values) => {
         console.log('values', values);
     };
+
+    const onOK = () => {
+        setDrawerVisible(false);
+        message.success('新增成功');
+    }
     
     return (
         <div className="farm-manage-container">
@@ -84,8 +73,8 @@ const FarmManage = () => {
                             label="选择养殖场" 
                             name="farmName"
                         >
-                            <Select>
-                                <Select.Option value="demo">Demo</Select.Option>
+                            <Select defaultValue="all">
+                                <Select.Option value="all">全部</Select.Option>
                             </Select>
                         </Form.Item>
                     </Col>
@@ -139,7 +128,7 @@ const FarmManage = () => {
                     ))}
                 </Row>
             </div>
-            <CreateFarmDrawer visible={drawerVisible} onClose={() => setDrawerVisible(false)} />
+            <CreateFarmDrawer visible={drawerVisible} onOK={onOK} onClose={() => setDrawerVisible(false)} />
         </div>
 
     )

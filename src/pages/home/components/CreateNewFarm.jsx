@@ -20,7 +20,7 @@ const CreateFarmDrawer = (props) => {
           <Button onClick={props.onClose} style={{ marginRight: 8 }}>
             取消
           </Button>
-          <Button onClick={props.onClose} type="primary">
+          <Button onClick={props.onOK} type="primary">
             确认
           </Button>
         </div>
@@ -52,12 +52,6 @@ const CreateFarmDrawer = (props) => {
           <Form.Item
             name="address"
             label="选择地址"
-            rules={[
-              {
-                required: true,
-                message: '请选择地址',
-              },
-            ]}
            >
             <Select options={[]} placeholder="请选择地址" />
           </Form.Item>

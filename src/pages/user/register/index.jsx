@@ -265,6 +265,26 @@ const Register = ({ submitting, dispatch, userAndregister }) => {
             })}
           />
         </FormItem>
+        <FormItem
+          name="confirm"
+          rules={[
+            {
+              required: true,
+              message: formatMessage({
+                id: 'userandregister.confirm-password.required',
+              }),
+            },
+            {
+              validator: checkConfirm,
+            },
+          ]}
+        >
+          <Input
+            size="large"
+            type="password"
+            placeholder="授权码"
+          />
+        </FormItem>
         <InputGroup compact>
           <Select
             size="large"

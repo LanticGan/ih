@@ -104,10 +104,16 @@ export default defineConfig({
               component: './VaccineManage',
             },
             {
+              path: '/source-manage',
+              name: '溯源管理',
+              icon: 'smile',
+              component: './404',
+            },
+            {
               path: '/forage-manage',
               name: '饲料管理',
               icon: 'tablet',
-              component: './Welcome',
+              component: './404',
             },
             {
               path: '/staff-manage',

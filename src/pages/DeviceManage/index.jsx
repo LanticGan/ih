@@ -9,7 +9,8 @@ import {
   Table,
   Tag,
   Space,
-  Modal
+  Modal,
+  message
 } from 'antd';
 import cs from 'classnames';
 import './index.less';
@@ -39,24 +40,24 @@ export default function HealthMa0nage() {
   const columns = [
     {
       title: '所属养殖场',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'farm',
+      key: 'farm',
       render: text => <a>{text}</a>,
     },
     {
       title: '设备编号',
-      dataIndex: 'age',
-      key: 'age',
+      dataIndex: 'device',
+      key: 'device',
     },
     {
       title: '设备状态',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'status',
+      key: 'status',
     },
     {
       title: '设备电量',
-      dataIndex: 'sex',
-      key: 'sex',
+      dataIndex: 'charge',
+      key: 'charge',
     },
     {
       title: '操作',
@@ -72,24 +73,48 @@ export default function HealthMa0nage() {
   const data = [
     {
       key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
+      farm: '001号养殖场',
+      device: 'L1239397123412',
+      status: '绑定',
+      charge: '90%',
     },
     {
       key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
+      farm: '001号养殖场',
+      device: 'L1239397123413',
+      status: '绑定',
+      charge: '60%',
+    },{
+      key: '3',
+      farm: '001号养殖场',
+      device: 'L1239397123414',
+      status: '绑定',
+      charge: '75%',
+    },{
+      key: '4',
+      farm: '001号养殖场',
+      device: 'L1239397123415',
+      status: '绑定',
+      charge: '90%',
+    },{
+      key: '5',
+      farm: '001号养殖场',
+      device: 'L1239397123416',
+      status: '绑定',
+      charge: '90%',
+    },{
+      key: '6',
+      farm: '002号养殖场',
+      device: 'L1239397123417',
+      status: '绑定',
+      charge: '85%',
     },
     {
-      key: '3',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
+      key: '7',
+      farm: '002号养殖场',
+      device: 'L1239397123418',
+      status: '绑定',
+      charge: '85%',
     },
   ];
 
@@ -97,6 +122,11 @@ export default function HealthMa0nage() {
     selectedRowKeys,
     onChange: onSelectChange,
   };
+
+  const onOk = () => {
+    message.success('解绑成功')
+    setShowModal(false);
+  }
 
   return (
     <div className="health-manage-container">
@@ -113,8 +143,8 @@ export default function HealthMa0nage() {
                     label="选择养殖场" 
                     name="farmName"
                 >
-                    <Select>
-                        <Select.Option value="demo">Demo</Select.Option>
+                    <Select defaultValue="all">
+                        <Select.Option value="all">全部</Select.Option>
                     </Select>
                 </Form.Item>
             </Col>
@@ -137,17 +167,23 @@ export default function HealthMa0nage() {
       <div className="health-manage-operator">
         已选择 {selectedRowKeys.length} 项
         <div className="operator-button">
-          <Button>
-            批量导出
-          </Button>
+          <Space>
+            <Button>
+              导出
+            </Button>
+            <Button type="primary">
+              批量导入
+            </Button>
+          </Space>
+
         </div>
       </div>
       <div className="health-manage-content">
         <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
       </div>
       <div>
-        <Modal visible={showModal}>
-          cehsi
+        <Modal visible={showModal} onCancel={() => {setShowModal(false)}} onOk={onOk}>
+          确定解绑吗？
         </Modal>
       </div>
     </div>

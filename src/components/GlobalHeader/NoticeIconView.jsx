@@ -8,13 +8,13 @@ import styles from './index.less';
 
 class GlobalHeaderRight extends Component {
   componentDidMount() {
-    const { dispatch } = this.props;
+    // const { dispatch } = this.props;
 
-    if (dispatch) {
-      dispatch({
-        type: 'global/fetchNotices',
-      });
-    }
+    // if (dispatch) {
+    //   dispatch({
+    //     type: 'global/fetchNotices',
+    //   });
+    // }
   }
 
   changeReadState = clickedItem => {
@@ -42,7 +42,29 @@ class GlobalHeaderRight extends Component {
   };
 
   getNoticeData = () => {
-    const { notices = [] } = this.props;
+    const notices = [
+      {
+        avatar: "https://gw.alipayobjects.com/zos/rmsportal/ThXAXghbEsBCCSDihZxY.png",
+        datetime: "2020-06-30",
+        id: "000000001",
+        title: "设备解绑警告",
+        type: "notification",
+      },
+      {
+        avatar: "https://gw.alipayobjects.com/zos/rmsportal/ThXAXghbEsBCCSDihZxY.png",
+        datetime: "2020-06-30",
+        id: "000000002",
+        title: "牲畜异常",
+        type: "notification",
+      },
+      {
+        avatar: "https://gw.alipayobjects.com/zos/rmsportal/ThXAXghbEsBCCSDihZxY.png",
+        datetime: "2020-06-30",
+        id: "000000003",
+        title: "设备更换",
+        type: "notification",
+      }
+    ]
 
     if (!notices || notices.length === 0 || !Array.isArray(notices)) {
       return {};
@@ -124,22 +146,6 @@ class GlobalHeaderRight extends Component {
           list={noticeData.notification}
           title="通知"
           emptyText="你已查看所有通知"
-          showViewMore
-        />
-        <NoticeIcon.Tab
-          tabKey="message"
-          count={unreadMsg.message}
-          list={noticeData.message}
-          title="消息"
-          emptyText="您已读完所有消息"
-          showViewMore
-        />
-        <NoticeIcon.Tab
-          tabKey="event"
-          title="待办"
-          emptyText="你已完成所有待办"
-          count={unreadMsg.event}
-          list={noticeData.event}
           showViewMore
         />
       </NoticeIcon>

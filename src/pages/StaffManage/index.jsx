@@ -44,8 +44,8 @@ export default function HealthMa0nage() {
     },
     {
       title: '姓名',
-      dataIndex: 'age',
-      key: 'age',
+      dataIndex: 'name',
+      key: 'name',
     },
     {
       title: '性别',
@@ -54,23 +54,23 @@ export default function HealthMa0nage() {
     },
     {
       title: '身份证号',
-      dataIndex: 'age',
-      key: 'age',
+      dataIndex: 'identify',
+      key: 'identify',
     },
     {
       title: '手机号',
-      dataIndex: 'activity',
-      key: 'activity',
+      dataIndex: 'phone',
+      key: 'phone',
     },
     {
       title: '职务',
-      dataIndex: 'position',
-      key: 'position',
+      dataIndex: 'rule',
+      key: 'rule',
     },
     {
       title: '账号权限',
-      dataIndex: 'feed',
-      key: 'feed',
+      dataIndex: 'authority',
+      key: 'authority',
     },
     {
       title: '操作',
@@ -89,24 +89,25 @@ export default function HealthMa0nage() {
   const data = [
     {
       key: '1',
-      name: 'John Brown',
+      farm: '001号养殖场',
+      name: '张思思',
+      sex: '女',
+      identify: '452701198706212711',
       age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
+      phone: '15733829982',
+      rule: '兽医',
+      authority: '员工权限'
     },
     {
       key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      key: '3',
-      name: 'Joe Black',
+      farm: '001号养殖场',
+      name: '王强',
+      sex: '男',
+      identify: '543201198706212711',
       age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
+      phone: '18634821982',
+      rule: '饲养员',
+      authority: '员工权限'
     },
   ];
 

@@ -159,14 +159,17 @@ export default function HealthMa0nage() {
                     name="farmName"
                 >
                     <Select>
-                        <Select.Option value="demo">Demo</Select.Option>
+                        <Select.Option value="1">每小时1次</Select.Option>
+                        <Select.Option value="2">2小时1次</Select.Option>
+
                     </Select>
                 </Form.Item>
             </Col>
             <Col span={5}>
                 <Form.Item label="上传频次" name="activity" labelCol={{ span: 6 }}>
                     <Select>
-                        <Select.Option value="demo">Demo</Select.Option>
+                    <Select.Option value="4">4小时1次</Select.Option>
+                    <Select.Option value="8">8小时1次</Select.Option>
                     </Select>
                 </Form.Item>
             </Col>

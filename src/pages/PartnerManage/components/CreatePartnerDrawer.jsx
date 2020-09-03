@@ -101,8 +101,8 @@ const CreatePartnerDrawer = (props) => {
         </Dragger>
         </Col>
       </Row>
-      <div className="header-title">合同文本</div>
-      <Row justify="center">
+      <div className="header-title" style={{marginTop: 10}}>合同文本</div>
+      <Row justify="center" >
         <Col span={20}>
         <Dragger {...draggerProps}>
           <p className="ant-upload-drag-icon">

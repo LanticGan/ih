@@ -18,6 +18,7 @@ export default function HealthMa0nage() {
   
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const [targetAnimal, setTargetAnimal] = useState({});
 
   const [form] = Form.useForm();
   const onFinish = (values) => {
@@ -29,25 +30,26 @@ export default function HealthMa0nage() {
   }
 
   const openDetailDrawer = record => {
+    setTargetAnimal(record);
     setDrawerVisible(true);
   }
 
   const columns = [
     {
       title: '所属养殖场',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'farm',
+      key: 'farm',
       render: text => <a>{text}</a>,
     },
     {
       title: '设备编号',
-      dataIndex: 'age',
-      key: 'age',
+      dataIndex: 'device',
+      key: 'device',
     },
     {
       title: '品种',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'type',
+      key: 'type',
     },
     {
       title: '性别',
@@ -75,11 +77,6 @@ export default function HealthMa0nage() {
       key: 'feed',
     },
     {
-      title: '日龄',
-      dataIndex: 'dailyAge',
-      key: 'dailyAge',
-    },
-    {
       title: '数据更新时间',
       dataIndex: 'updateTime',
       key: 'updateTime',
@@ -98,24 +95,111 @@ export default function HealthMa0nage() {
   const data = [
     {
       key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
+      farm: '养殖场001',
+      device: 'L1239397123412',
+      type: '约克夏鹿',
+      sex: '母',
+      age: 30,
+      activity: '正常',
+      position: '正常',
+      feed: '正常',
+      updateTime: "2020/06/30 12:31"
     },
     {
       key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
+      farm: '养殖场001',
+      device: 'L1239397123413',
+      type: '约克夏鹿',
+      sex: '母',
+      age: 25,
+      activity: '正常',
+      position: '正常',
+      feed: '正常',
+      updateTime: "2020/06/30 12:31"
     },
     {
       key: '3',
-      name: 'Joe Black',
+      farm: '养殖场001',
+      device: 'L1239397123413',
+      type: '约克夏鹿',
+      sex: '公',
       age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
+      activity: '正常',
+      position: '正常',
+      feed: '正常',
+      updateTime: "2020/06/30 12:31"
+    },
+    {
+      key: '4',
+      farm: '养殖场001',
+      device: 'L1239397123414',
+      type: '约克夏鹿',
+      sex: '母',
+      age: 30,
+      activity: '正常',
+      position: '正常',
+      feed: '正常',
+      updateTime: "2020/06/30 12:31"
+    },
+    {
+      key: '5',
+      farm: '养殖场001',
+      device: 'L1239397123415',
+      type: '约克夏鹿',
+      sex: '母',
+      age: 42,
+      activity: '正常',
+      position: '正常',
+      feed: '正常',
+      updateTime: "2020/06/30 12:31"
+    },
+    {
+      key: '6',
+      farm: '养殖场001',
+      device: 'L1239397123416',
+      type: '约克夏鹿',
+      sex: '母',
+      age: 30,
+      activity: '正常',
+      position: '正常',
+      feed: '正常',
+      updateTime: "2020/06/30 12:31"
+    },
+    {
+      key: '7',
+      farm: '养殖场001',
+      device: 'L1239397123417',
+      type: '约克夏鹿',
+      sex: '母',
+      age: 27,
+      activity: '正常',
+      position: '正常',
+      feed: '正常',
+      updateTime: "2020/06/30 12:31"
+    },
+    {
+      key: '8',
+      farm: '养殖场001',
+      device: 'L1239397123418',
+      type: '约克夏鹿',
+      sex: '公',
+      age: 30,
+      activity: '正常',
+      position: '正常',
+      feed: '正常',
+      updateTime: "2020/06/30 12:31"
+    },
+    {
+      key: '9',
+      farm: '养殖场002',
+      device: 'L1239397123412',
+      type: '约克夏鹿',
+      sex: '母',
+      age: 30,
+      activity: '正常',
+      position: '正常',
+      feed: '正常',
+      updateTime: "2020/06/30 12:31"
     },
   ];
 
@@ -139,8 +223,8 @@ export default function HealthMa0nage() {
                     label="选择养殖场" 
                     name="farmName"
                 >
-                    <Select>
-                        <Select.Option value="demo">Demo</Select.Option>
+                    <Select defaultValue="all">
+                        <Select.Option value="all">全部</Select.Option>
                     </Select>
                 </Form.Item>
             </Col>
@@ -177,9 +261,12 @@ export default function HealthMa0nage() {
       <div className="health-manage-operator">
         已选择 {selectedRowKeys.length} 项
         <div className="operator-button">
+        <Space>
           <Button>
-            批量导出
+            导出
           </Button>
+        </Space>
+
         </div>
       </div>
       <div className="health-manage-content">
@@ -187,7 +274,7 @@ export default function HealthMa0nage() {
       </div>
       <DetailDrawer
         visible={drawerVisible} 
-        onClose={() => setDrawerVisible(false)} 
+        onClose={() => setDrawerVisible(false)}
       />
     </div>
   )

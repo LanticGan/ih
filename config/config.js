@@ -22,6 +22,9 @@ export default defineConfig({
   targets: {
     ie: 11,
   },
+  history: {
+    type: "hash"
+  },
   // umi routes: https://umijs.org/docs/routing
   routes: [
     {
@@ -30,12 +33,12 @@ export default defineConfig({
       routes: [
         {
           name: 'login',
-          path: '/login',
+          path: '/user/login',
           component: './user/login',
         },
         {
           name: 'login',
-          path: '/register',
+          path: '/user/register',
           component: './user/register',
         },
       ],

@@ -26,12 +26,16 @@ class AvatarDropdown extends React.Component {
 
   render() {
     const {
-      currentUser = {
-        avatar: '',
-        name: '云牧',
-      },
+      // currentUser = {
+      //   avatar: '',
+      //   name: '云牧',
+      // },
       menu,
     } = this.props;
+    const currentUser = {
+      avatar: '',
+      name: '云牧',
+    };
     const menuHeaderDropdown = (
       <Menu className={styles.menu} selectedKeys={[]} onClick={this.onMenuClick}>
         {menu && (

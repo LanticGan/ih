@@ -55,18 +55,19 @@ const cardList =[{
 
 export default () => {
 
-  const [needInitial, setNeedInitial] = useState(true);
   const [drawerVisible, setDialogVisible] = useState(false);
 
+  const hasCreateCompany = localStorage.getItem('company');
+
   const onOk = () => {
-    setNeedInitial(false);
+    localStorage.setItem('company', true)
     setDialogVisible(false);
   }
 
   return (
     <>
       {
-        !needInitial ? 
+        hasCreateCompany ? 
           (
             <div className="manage-card-container">
               {

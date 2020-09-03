@@ -30,12 +30,12 @@ export default defineConfig({
       routes: [
         {
           name: 'login',
-          path: '/user/login',
+          path: '/login',
           component: './user/login',
         },
         {
           name: 'login',
-          path: '/user/register',
+          path: '/register',
           component: './user/register',
         },
       ],

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { history } from 'umi';
 import {
     Form, 
     Row, 
@@ -37,7 +38,7 @@ const mockFarmData = [
 const FarmContentCard = (props) => {
     const { data = {} } = props;
     return (
-        <Col span={8} className="farm-card-col">
+        <Col span={8} className="farm-card-col" onClick={() => history.push('/animal-manage/health-manage')}>
             <FarmCard data={data} />
         </Col>
     )

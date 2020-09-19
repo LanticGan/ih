@@ -20,25 +20,24 @@ const LoginMessage = ({ content }) => (
 
 const Login = props => {
   const { userLogin = {}, submitting } = props;
-  const { status, type: loginType } = userLogin;
+  const { status, message } = userLogin;
   const [autoLogin, setAutoLogin] = useState(true);
   const [type, setType] = useState('account');
 
   const handleSubmit = values => {
     const { dispatch } = props;
-    window.location.href = '/';
-    // dispatch({
-    //   type: 'login/login',
-    //   payload: { ...values, type },
-    // });
+    dispatch({
+      type: 'login/login',
+      payload: { ...values, type },
+    });
   };
 
   return (
     <div className={styles.main}>
       <LoginForm activeKey={type} onTabChange={setType} onSubmit={handleSubmit}>
         <Tab key="account" tab="账户密码登录">
-          {status === 'error' && loginType === 'account' && !submitting && (
-            <LoginMessage content="账户或密码错误（admin/ant.design）" />
+          {status == '500' && !submitting && (
+            <LoginMessage content={message} />
           )}
 
           <UserName
@@ -63,11 +62,11 @@ const Login = props => {
           />
         </Tab>
         <Tab key="mobile" tab="手机号登录">
-          {status === 'error' && loginType === 'mobile' && !submitting && (
-            <LoginMessage content="验证码错误" />
+          {status == '500' && !submitting && (
+            <LoginMessage content={message} />
           )}
           <Mobile
-            name="mobile"
+            name="phone"
             placeholder="手机号"
             rules={[
               {
@@ -81,7 +80,7 @@ const Login = props => {
             ]}
           />
           <Captcha
-            name="captcha"
+            name="smsCode"
             placeholder="验证码"
             countDown={120}
             getCaptchaButtonText=""

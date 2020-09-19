@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { history } from 'umi';
+import React, { useState, useCallback, useEffect  } from 'react';
+import { history, connect } from 'umi';
 import {
     Form, 
     Row, 
@@ -11,29 +11,9 @@ import {
  } from 'antd';
 import CreateFarmDrawer from './components/CreateFarmDrawer';
 import FarmCard from '@/components/FarmCard';
+import { getFarmList, createFarm } from '@/services/farm';
 import cs from 'classnames';
 import './index.less';
-
-const mockFarmData = [
-    {
-        title: '001号养殖场',
-        count: 8,
-        hdyc: 0,
-        jwzyc: 0,
-        jsyc: 0,
-        sbddl: 0,
-        isAbnormal: false
-    },
-    {
-        title: '002号养殖场',
-        count: 2,
-        hdyc: 0,
-        jwzyc: 0,
-        jsyc: 0,
-        sbddl: 0,
-        isAbnormal: false
-    },
-]
 
 const FarmContentCard = (props) => {
     const { data = {} } = props;
@@ -45,19 +25,59 @@ const FarmContentCard = (props) => {
 }
 
 
-const FarmManage = () => {
+const FarmManage = (props) => {
 
     const [form] = Form.useForm();
     const [drawerVisible, setDrawerVisible] = useState(false);
+    const [page, setPage] = useState({
+        current: 1,
+        total: 0,
+        pageSize: 10,
+    });
+    const [famrList, setFarmList] = useState([]);
+    const { companyDetail = {} } = props;
+    const { companyId } = companyDetail;
 
     const onFinish = (values) => {
-        console.log('values', values);
+        fetchFarmList({ companyId, ...values })
     };
 
-    const onOK = () => {
+    const onOK = async (values) => {
+        const res = await createFarm({ ...values, companyId });
+        const { code, message: info } = res;
+        if (code == 500) {
+            message.error(info);
+            return;
+        }
         setDrawerVisible(false);
+        fetchFarmList({ companyId })
         message.success('新增成功');
+    };
+
+    const fetchFarmList = useCallback(async ({ companyId, ...restPrams }) => {
+        const res = await getFarmList({ companyId, ...restPrams });
+        const { code, message: info, data = {} } = res;
+        const { list = [], currPage, pageSize, totalCount } = data;
+        if (code == 500) {
+            message.error(info);
+            return;
+        }
+        setFarmList(list);
+        setPage({
+            current: currPage,
+            pageSize,
+            total: totalCount
+        });
+    }, []);
+
+    const changePage = (page, pageSize) => {
+        console.log(page, pageSize);
     }
+
+    useEffect(() => {
+        fetchFarmList({ companyId })
+    }, [companyId])
+
     
     return (
         <div className="farm-manage-container">
@@ -82,29 +102,30 @@ const FarmManage = () => {
                     <Col span={5}>
                         <Form.Item label="活动" name="activity" labelCol={{ span: 6 }}>
                             <Select>
-                                <Select.Option value="demo">Demo</Select.Option>
+                                <Select.Option value="normal">正常</Select.Option>
+                                <Select.Option value="demo">异常</Select.Option>
                             </Select>
                         </Form.Item>
                     </Col>
                     <Col span={4}>
                         <Form.Item label="位置" name="position" labelCol={{ span: 6 }}>
                             <Select>
-                                <Select.Option value="demo">Demo</Select.Option>
-                            </Select>
+                            <Select.Option value="normal">正常</Select.Option>
+                                <Select.Option value="demo">异常</Select.Option>                            </Select>
                         </Form.Item>
                     </Col>
                     <Col span={4}>
                         <Form.Item label="进食" name="food" labelCol={{ span: 6 }}>
                             <Select>
-                                <Select.Option value="demo">Demo</Select.Option>
-                            </Select>
+                            <Select.Option value="normal">正常</Select.Option>
+                                <Select.Option value="demo">异常</Select.Option>                            </Select>
                         </Form.Item>
                     </Col>
                     <Col span={4}>
                         <Form.Item label="设备电量" name="deviceCharge">
                             <Select>
-                                <Select.Option value="demo">Demo</Select.Option>
-                            </Select>
+                            <Select.Option value="normal">正常</Select.Option>
+                                <Select.Option value="demo">异常</Select.Option>                            </Select>
                         </Form.Item>
                     </Col>
                     <Col span={2}>
@@ -120,14 +141,21 @@ const FarmManage = () => {
                 <Button type="primary" onClick={() => setDrawerVisible(true)}>
                     新增养殖场
                 </Button>
-                <Pagination  defaultCurrent={1} total={50} />
+                <Pagination  defaultCurrent={1} current={page.current} pageSize={page.pageSize} total={page.total} onChange={changePage} />
             </div>
             <div className="content-area">
-                <Row gutter={16}>
-                    {mockFarmData.map(d => (
-                        <FarmContentCard data={d} />
-                    ))}
-                </Row>
+                {
+                    famrList.length > 0 ? (
+                        <Row gutter={16}>
+                            {famrList.map(d => (
+                                <FarmContentCard data={d} />
+                            ))}
+                        </Row>
+                    ) : <div className="no-data">
+                        暂无数据
+                    </div>
+                }
+                
             </div>
             <CreateFarmDrawer visible={drawerVisible} onOK={onOK} onClose={() => setDrawerVisible(false)} />
         </div>
@@ -135,4 +163,6 @@ const FarmManage = () => {
     )
 }
 
-export default FarmManage;
+export default connect(({ company }) => ({
+    companyDetail: company.companyDetail
+}))(FarmManage);

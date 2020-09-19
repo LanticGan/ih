@@ -5,7 +5,8 @@ import './index.less';
 
 const FarmContentCard = (props) => {
   const { data = {} } = props;
-  const { title, number, hdyc, jwzyc, jsyc, sbddl = '-', isAbnormal } = data;
+  const { farmName, animalUnits, activityTotal, locationTotal, eatTotal, batteryTotal = '-' } = data;
+  const isAbnormal = activityTotal > 0 || locationTotal > 0 || eatTotal > 0 || batteryTotal > 0;
 
   return (
     <div className={
@@ -15,34 +16,34 @@ const FarmContentCard = (props) => {
             "normal": !isAbnormal
         })
     }>
-        <div className="title">{title}</div>
+        <div className="title">{farmName}</div>
         <div className="monitor-count">
-            <div className="count-value">{number}</div>
+            <div className="count-value">{animalUnits}</div>
             <div className="count-label">监控数量</div>
         </div>
         <div className="detail-list">
             <Row>
                 <Col span={6}>
                     <div className="detail">
-                        <div className="detail-value">{hdyc}</div>
+                        <div className="detail-value">{activityTotal}</div>
                         <div className="detail-label">活动异常</div>
                     </div>
                 </Col>
                 <Col span={6}>
                     <div className="detail">
-                        <div className="detail-value">{jwzyc}</div>
-                        <div className="detail-label">进位置异常</div>
+                        <div className="detail-value">{locationTotal}</div>
+                        <div className="detail-label">位置异常</div>
                     </div>
                 </Col>
                 <Col span={6}>
                     <div className="detail">
-                        <div className="detail-value">{jsyc}</div>
+                        <div className="detail-value">{eatTotal}</div>
                         <div className="detail-label">进食异常</div>
                     </div>
                 </Col>
                 <Col span={6}>
                     <div className="detail">
-                        <div className="detail-value">{sbddl}</div>
+                        <div className="detail-value">{batteryTotal}</div>
                         <div className="detail-label">设备低电量</div>
                     </div>
                 </Col>

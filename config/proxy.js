@@ -7,13 +7,17 @@
  */
 export default {
   dev: {
-    '/api/': {
-      target: 'https://preview.pro.ant.design',
+    // '/api/': {
+    //   target: 'https://preview.pro.ant.design',
+    //   changeOrigin: true,
+    //   pathRewrite: {
+    //     '^': '',
+    //   },
+    // },
+    '/yunmu': {
+      target: 'http://47.110.59.191',
       changeOrigin: true,
-      pathRewrite: {
-        '^': '',
-      },
-    },
+    }
   },
   test: {
     '/api/': {

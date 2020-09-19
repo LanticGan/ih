@@ -1,7 +1,7 @@
 import { Button, Col, Input, Row, Form, message } from 'antd';
 import React, { useState, useCallback, useEffect } from 'react';
 import omit from 'omit.js';
-import { getFakeCaptcha } from '@/services/login';
+import { getFakeCaptcha, sendSms } from '@/services/login';
 import ItemMap from './map';
 import LoginContext from './LoginContext';
 import styles from './index.less';
@@ -41,14 +41,12 @@ const LoginItem = props => {
     tabUtil,
     ...restProps
   } = props;
-  const onGetCaptcha = useCallback(async mobile => {
-    const result = await getFakeCaptcha(mobile);
 
-    if (result === false) {
-      return;
+  const onGetCaptcha = useCallback(async phone => {
+    if (!phone) {
+      return
     }
-
-    message.success('获取验证码成功！验证码为：1234');
+    const result = await sendSms({ phone });
     setTiming(true);
   }, []);
   useEffect(() => {
@@ -97,7 +95,7 @@ const LoginItem = props => {
                 className={styles.getCaptcha}
                 size="large"
                 onClick={() => {
-                  const value = getFieldValue('mobile');
+                  const value = getFieldValue('phone');
                   onGetCaptcha(value);
                 }}
               >

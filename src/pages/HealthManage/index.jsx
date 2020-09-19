@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback  } from 'react';
 import {
   Form, 
   Row, 
@@ -11,18 +11,22 @@ import {
   Space
 } from 'antd';
 import DetailDrawer from './components/DetailDrawer';
+import { getAnimalList, getAnimalDetail } from '@/services/animal';
+
 import cs from 'classnames';
 import './index.less';
+import { useEffect } from 'react';
 
 export default function HealthMa0nage() {
   
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [targetAnimal, setTargetAnimal] = useState({});
+  const [animalList, setAnimalList] = useState([]);
 
   const [form] = Form.useForm();
   const onFinish = (values) => {
-      console.log('values', values);
+    fetchAnimalList(values)
   };
 
   const onSelectChange = selectedRowKeys => {
@@ -34,47 +38,95 @@ export default function HealthMa0nage() {
     setDrawerVisible(true);
   }
 
+  const fetchAnimalList = useCallback(async params => {
+    const res = await getAnimalList({ ...params });
+    const { code, message: info, data = {} } = res;
+    if (code == 500) {
+        message.error(info);
+        return;
+    }
+    const { list = [], currPage, pageSize, totalCount } = data;
+    setAnimalList(list);
+  }, []);
+
+  useEffect(() => {
+    fetchAnimalList();
+  }, [])
+
   const columns = [
     {
       title: '所属养殖场',
-      dataIndex: 'farm',
-      key: 'farm',
-      render: text => <a>{text}</a>,
+      dataIndex: 'farmName',
+      key: 'farmName',
     },
     {
       title: '设备编号',
-      dataIndex: 'device',
-      key: 'device',
+      dataIndex: 'equipmentNo',
+      key: 'equipmentNo',
     },
     {
       title: '品种',
-      dataIndex: 'type',
-      key: 'type',
+      dataIndex: 'animalBreed',
+      key: 'animalBreed',
     },
     {
       title: '性别',
-      dataIndex: 'sex',
-      key: 'sex',
+      dataIndex: 'animalSex',
+      key: 'animalSex',
+      render: v => v == '1' ? '母' : '公'
     },
     {
       title: '日龄',
-      dataIndex: 'age',
-      key: 'age',
+      dataIndex: 'dailyAges',
+      key: 'dailyAges',
     },
     {
       title: '活动',
       dataIndex: 'activity',
       key: 'activity',
+      render: v => {
+        let text = "";
+        if (v == '0') {
+          text = '正常'
+        } else if (v == '1') {
+          text = '偏少'
+        } else {
+          text = '异常'
+        }
+        return text;
+      }
     },
     {
       title: '位置',
-      dataIndex: 'position',
-      key: 'position',
+      dataIndex: 'location',
+      key: 'location',
+      render: v => {
+        let text = "";
+        if (v == '0') {
+          text = '正常'
+        } else if (v == '1') {
+          text = '偏少'
+        } else {
+          text = '异常'
+        }
+        return text;
+      }
     },
     {
       title: '进食',
-      dataIndex: 'feed',
-      key: 'feed',
+      dataIndex: 'eat',
+      key: 'eat',
+      render: v => {
+        let text = "";
+        if (v == '0') {
+          text = '正常'
+        } else if (v == '1') {
+          text = '偏少'
+        } else {
+          text = '异常'
+        }
+        return text;
+      }
     },
     {
       title: '数据更新时间',
@@ -89,117 +141,6 @@ export default function HealthMa0nage() {
           <a onClick={() => openDetailDrawer(record)} >详情</a>
         </Space>
       ),
-    },
-  ];
-  
-  const data = [
-    {
-      key: '1',
-      farm: '养殖场001',
-      device: 'L1239397123412',
-      type: '约克夏鹿',
-      sex: '母',
-      age: 30,
-      activity: '正常',
-      position: '正常',
-      feed: '正常',
-      updateTime: "2020/06/30 12:31"
-    },
-    {
-      key: '2',
-      farm: '养殖场001',
-      device: 'L1239397123413',
-      type: '约克夏鹿',
-      sex: '母',
-      age: 25,
-      activity: '正常',
-      position: '正常',
-      feed: '正常',
-      updateTime: "2020/06/30 12:31"
-    },
-    {
-      key: '3',
-      farm: '养殖场001',
-      device: 'L1239397123413',
-      type: '约克夏鹿',
-      sex: '公',
-      age: 32,
-      activity: '正常',
-      position: '正常',
-      feed: '正常',
-      updateTime: "2020/06/30 12:31"
-    },
-    {
-      key: '4',
-      farm: '养殖场001',
-      device: 'L1239397123414',
-      type: '约克夏鹿',
-      sex: '母',
-      age: 30,
-      activity: '正常',
-      position: '正常',
-      feed: '正常',
-      updateTime: "2020/06/30 12:31"
-    },
-    {
-      key: '5',
-      farm: '养殖场001',
-      device: 'L1239397123415',
-      type: '约克夏鹿',
-      sex: '母',
-      age: 42,
-      activity: '正常',
-      position: '正常',
-      feed: '正常',
-      updateTime: "2020/06/30 12:31"
-    },
-    {
-      key: '6',
-      farm: '养殖场001',
-      device: 'L1239397123416',
-      type: '约克夏鹿',
-      sex: '母',
-      age: 30,
-      activity: '正常',
-      position: '正常',
-      feed: '正常',
-      updateTime: "2020/06/30 12:31"
-    },
-    {
-      key: '7',
-      farm: '养殖场001',
-      device: 'L1239397123417',
-      type: '约克夏鹿',
-      sex: '母',
-      age: 27,
-      activity: '正常',
-      position: '正常',
-      feed: '正常',
-      updateTime: "2020/06/30 12:31"
-    },
-    {
-      key: '8',
-      farm: '养殖场001',
-      device: 'L1239397123418',
-      type: '约克夏鹿',
-      sex: '公',
-      age: 30,
-      activity: '正常',
-      position: '正常',
-      feed: '正常',
-      updateTime: "2020/06/30 12:31"
-    },
-    {
-      key: '9',
-      farm: '养殖场002',
-      device: 'L1239397123412',
-      type: '约克夏鹿',
-      sex: '母',
-      age: 30,
-      activity: '正常',
-      position: '正常',
-      feed: '正常',
-      updateTime: "2020/06/30 12:31"
     },
   ];
 
@@ -223,29 +164,36 @@ export default function HealthMa0nage() {
                     label="选择养殖场" 
                     name="farmName"
                 >
-                    <Select defaultValue="all">
-                        <Select.Option value="all">全部</Select.Option>
+                    <Select allowClear>
+                        <Select.Option value="">全部</Select.Option>
                     </Select>
                 </Form.Item>
             </Col>
             <Col span={5}>
                 <Form.Item label="活动" name="activity" labelCol={{ span: 6 }}>
-                    <Select>
-                        <Select.Option value="demo">Demo</Select.Option>
+                    <Select allowClear>
+                        <Select.Option value="0">正常</Select.Option>
+                        <Select.Option value="1">偏少</Select.Option>
+                        <Select.Option value="2">异常</Select.Option>
+
                     </Select>
                 </Form.Item>
             </Col>
             <Col span={4}>
-                <Form.Item label="位置" name="position" labelCol={{ span: 6 }}>
-                    <Select>
-                        <Select.Option value="demo">Demo</Select.Option>
+                <Form.Item label="位置" name="location" labelCol={{ span: 6 }}>
+                    <Select allowClear>
+                    <Select.Option value="0">正常</Select.Option>
+                        <Select.Option value="1">围栏内</Select.Option>
+                        <Select.Option value="2">围栏外</Select.Option>                   
                     </Select>
                 </Form.Item>
             </Col>
             <Col span={4}>
-                <Form.Item label="进食" name="food" labelCol={{ span: 6 }}>
-                    <Select>
-                        <Select.Option value="demo">Demo</Select.Option>
+                <Form.Item label="进食" name="eat" labelCol={{ span: 6 }}>
+                    <Select allowClear>
+                    <Select.Option value="0">正常</Select.Option>
+                        <Select.Option value="1">偏少</Select.Option>
+                        <Select.Option value="2">异常</Select.Option>                    
                     </Select>
                 </Form.Item>
             </Col>
@@ -270,9 +218,10 @@ export default function HealthMa0nage() {
         </div>
       </div>
       <div className="health-manage-content">
-        <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
+        <Table rowKey="id" rowSelection={rowSelection} columns={columns} dataSource={animalList} />
       </div>
       <DetailDrawer
+        targetAnimal={targetAnimal}
         visible={drawerVisible} 
         onClose={() => setDrawerVisible(false)}
       />

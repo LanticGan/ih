@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Spin, Button, Result } from 'antd';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Spin, Button, Result, message } from 'antd';
+import { createCompany } from '@/services/company';
+import { Link, connect } from 'umi';
 import CreateNewFarmDrawer from './components/createNewFarm';
 import ManageCard from './components/ManageCard';
 import './index.less';
@@ -53,21 +55,55 @@ const cardList =[{
   name: '参数设置',
 }];
 
-export default () => {
+const Home = (props) => {
 
   const [drawerVisible, setDialogVisible] = useState(false);
+  const [needCreateCompany, setNeedCreateCompany] = useState(false);
+  const { company, dispatch } = props;
+  const { companyList, companyDetail } = company;
 
-  const hasCreateCompany = localStorage.getItem('company');
+  const onCreateCompany = useCallback(async (values) => {
+    const res = await createCompany(values);
+    const { code } = res;
+    const { companyId = 1 } = res.data || {};
+    if (code == 0) {
+      message.success('创建成功!');
+      fetchCompanyDetail(companyId);
+      setDialogVisible(false);
+    }
+  }, []);
 
-  const onOk = () => {
-    localStorage.setItem('company', true)
-    setDialogVisible(false);
-  }
+  const fetchCompanyDetail = useCallback((companyId) => {
+    dispatch({
+      type: 'company/getCompanyDetail',
+      payload: {
+        companyId
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    dispatch({
+      type: 'company/findPageInfo'
+    })
+  }, []);
+
+  useEffect(() => {
+    if (companyList.length === 0) {
+      setNeedCreateCompany(true);
+      return;
+    } else {
+      setNeedCreateCompany(false);
+      const targetCompany = companyList[0];
+      const { companyId } = targetCompany;
+      fetchCompanyDetail(companyId);
+    }
+  }, [companyList]);
 
   return (
     <>
       {
-        hasCreateCompany ? 
+        !needCreateCompany ? 
           (
             <div className="manage-card-container">
               {
@@ -89,7 +125,11 @@ export default () => {
             </div>
           )
       }
-      <CreateNewFarmDrawer visible={drawerVisible} onOK={onOk} onClose={() => setDialogVisible(false)} />
+      <CreateNewFarmDrawer visible={drawerVisible} onCreateCompany={onCreateCompany} onClose={() => setDialogVisible(false)} />
     </>
   );
 };
+
+export default connect(({ company }) => ({
+  company
+}))(Home);

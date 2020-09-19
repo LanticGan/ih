@@ -42,15 +42,10 @@ const Register = ({ submitting, dispatch, userAndregister }) => {
       return;
     }
 
-    const account = form.getFieldValue('mail');
-
-    if (userAndregister.status === 'ok') {
+    if (userAndregister.status == 'ok') {
       message.success('注册成功！');
       history.push({
-        pathname: '/user/register-result',
-        state: {
-          account,
-        },
+        pathname: '/user/login',
       });
     }
   }, [userAndregister]);
@@ -62,6 +57,12 @@ const Register = ({ submitting, dispatch, userAndregister }) => {
   );
 
   const onGetCaptcha = () => {
+    const phone = form.getFieldValue('phone');
+    if (!phone) { return };
+    dispatch({
+      type: 'userAndregister/sendSms',
+      payload: { phone },
+    });
     let counts = 59;
     setcount(counts);
     interval = window.setInterval(() => {
@@ -165,27 +166,17 @@ const Register = ({ submitting, dispatch, userAndregister }) => {
       </h3>
       <Form form={form} name="UserRegister" onFinish={onFinish}>
         <FormItem
-          name="mail"
+          name="account"
           rules={[
             {
               required: true,
-              message: formatMessage({
-                id: 'userandregister.email.required',
-              }),
-            },
-            {
-              type: 'email',
-              message: formatMessage({
-                id: 'userandregister.email.wrong-format',
-              }),
-            },
+              message: '请输入用户名!',
+            }
           ]}
         >
           <Input
             size="large"
-            placeholder={formatMessage({
-              id: 'userandregister.email.placeholder',
-            })}
+            placeholder="用户名"
           />
         </FormItem>
         <Popover
@@ -244,7 +235,7 @@ const Register = ({ submitting, dispatch, userAndregister }) => {
           </FormItem>
         </Popover>
         <FormItem
-          name="confirm"
+          name="confirmPassword"
           rules={[
             {
               required: true,
@@ -266,16 +257,11 @@ const Register = ({ submitting, dispatch, userAndregister }) => {
           />
         </FormItem>
         <FormItem
-          name="confirm"
+          name="inviteCode"
           rules={[
             {
               required: true,
-              message: formatMessage({
-                id: 'userandregister.confirm-password.required',
-              }),
-            },
-            {
-              validator: checkConfirm,
+              message: '请输入授权码!'
             },
           ]}
         >
@@ -301,7 +287,7 @@ const Register = ({ submitting, dispatch, userAndregister }) => {
             style={{
               width: '80%',
             }}
-            name="mobile"
+            name="phone"
             rules={[
               {
                 required: true,
@@ -328,7 +314,7 @@ const Register = ({ submitting, dispatch, userAndregister }) => {
         <Row gutter={8}>
           <Col span={16}>
             <FormItem
-              name="captcha"
+              name="smsCode"
               rules={[
                 {
                   required: true,

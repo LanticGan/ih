@@ -4,6 +4,10 @@ const CreateFarmDrawer = (props) => {
 
   const [form] = Form.useForm();
 
+  const onFinish = values => {
+    props.onCreateCompany(values);
+  }
+  
   return (
     <Drawer
       title="基础信息录入"
@@ -20,7 +24,7 @@ const CreateFarmDrawer = (props) => {
           <Button onClick={props.onClose} style={{ marginRight: 8 }}>
             取消
           </Button>
-          <Button onClick={props.onOK} type="primary">
+          <Button onClick={() => form.submit()} type="primary">
             确认
           </Button>
         </div>
@@ -30,11 +34,12 @@ const CreateFarmDrawer = (props) => {
       form={form}
       labelCol={{ span: 6 }}
       wrapperCol={{ span: 18 }}
+      onFinish={onFinish}
     >
       <Row justify="center">
         <Col span={20}>
         <Form.Item
-          name="name"
+          name="companyName"
           label="公司名称"
           rules={[
               {
@@ -50,17 +55,17 @@ const CreateFarmDrawer = (props) => {
       <Row justify="center">
         <Col span={20}>
           <Form.Item
-            name="address"
-            label="选择地址"
+            name="companyAddr"
+            label="地址"
            >
-            <Select options={[]} placeholder="请选择地址" />
+            <Input placeholder="请输入公司地址" />
           </Form.Item>
         </Col>
       </Row>
       <Row justify="center">
         <Col span={20}>
           <Form.Item
-            name="insuranceCompany"
+            name="insurance"
             label="所属保险公司"
            >
             <Input placeholder="请输入所属保险公司" />

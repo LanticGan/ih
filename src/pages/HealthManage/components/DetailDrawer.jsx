@@ -1,32 +1,58 @@
-import { Drawer, Form, Button, Card, Descriptions, Divider, Table } from 'antd';
+import { useEffect, useState, useCallback } from 'react';
+import { Drawer, Form, Button, Card, Descriptions, Divider, Table, message  } from 'antd';
+import { getAnimaDetail } from '@/services/animal';
 
-const goodsColumns = [
+const animalColumns = [
   {
     title: '活动',
-    dataIndex: 'name',
-    key: 'name',
+    dataIndex: 'activity',
+    key: 'activity',
 
   },
   {
     title: '位置',
-    dataIndex: 'barcode',
-    key: 'barcode',
+    dataIndex: 'location',
+    key: 'location',
 
   },
   {
     title: '进食',
-    dataIndex: 'price',
-    key: 'price',
+    dataIndex: 'eat',
+    key: 'eat',
     align: 'right',
   },
   {
     title: '设备电量',
-    dataIndex: 'device',
-    key: 'device',
-    align: 'right',  },
+    dataIndex: 'battery',
+    key: 'battery',
+    align: 'right',  
+  },
 ];
 
 const CreateFarmDrawer = (props) => {
+
+  const { targetAnimal } = props;
+  const { id, equipmentNo, dailyAges, breedType, farmName, bindTime, farmAddr, battery } = targetAnimal;
+  const [animalHistory, setAnimalHistory] = useState([]);
+
+
+  const getAnimalDetail = useCallback(async id => {
+    if (!id) {
+      return;
+    }
+    const res = await getAnimaDetail({ animalId: id });
+    const { code, message: info, data = {} } = res;
+    if (code == 500) {
+        message.error(info);
+        return;
+    }
+    const { syncHistoryDTOS = [] } = data;
+    setAnimalHistory(syncHistoryDTOS);
+  }, [])
+
+  useEffect(() => {
+    getAnimalDetail(id);
+  }, [id])
 
   return (
     <Drawer
@@ -50,16 +76,16 @@ const CreateFarmDrawer = (props) => {
         </div>
       }
     >
-    <div bordered={false}>
+    <div>
           <Descriptions title="基本信息" style={{ marginBottom: 32 }}>
-            <Descriptions.Item label="设备编号">L1239397123412</Descriptions.Item>
-            <Descriptions.Item label="所属养殖场">养殖场001</Descriptions.Item>
-            <Descriptions.Item label="日龄">30天</Descriptions.Item>
-            <Descriptions.Item label="养殖类型">散养</Descriptions.Item>
-            <Descriptions.Item label="佩戴时间">2020/06/30 12:31</Descriptions.Item>
-            <Descriptions.Item label="地址">内蒙古XXXX市XXX牧场</Descriptions.Item>
+            <Descriptions.Item label="设备编号">{equipmentNo}</Descriptions.Item>
+            <Descriptions.Item label="所属养殖场">{farmName}</Descriptions.Item>
+            <Descriptions.Item label="日龄">{dailyAges}</Descriptions.Item>
+            <Descriptions.Item label="养殖类型">{breedType}</Descriptions.Item>
+            <Descriptions.Item label="佩戴时间">{bindTime}</Descriptions.Item>
+            <Descriptions.Item label="地址">{farmAddr}</Descriptions.Item>
             <Descriptions.Item label="设备状态">已激活</Descriptions.Item>
-            <Descriptions.Item label="设备电量">95%</Descriptions.Item>
+            <Descriptions.Item label="设备电量">{battery}%</Descriptions.Item>
 
           </Descriptions>
           <Divider style={{ marginBottom: 32 }} />
@@ -67,8 +93,8 @@ const CreateFarmDrawer = (props) => {
           <Table
             style={{ marginBottom: 24 }}
             pagination={false}
-            dataSource={[]}
-            columns={goodsColumns}
+            dataSource={animalHistory}
+            columns={animalColumns}
             rowKey="id"
           />
       </div>

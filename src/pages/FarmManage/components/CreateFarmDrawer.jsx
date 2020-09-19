@@ -4,6 +4,10 @@ const CreateFarmDrawer = (props) => {
 
   const [form] = Form.useForm();
 
+  const finish = (values) => {
+    props.onOK(values);
+  }
+
   return (
     <Drawer
       title="新建养殖场"
@@ -20,7 +24,7 @@ const CreateFarmDrawer = (props) => {
           <Button onClick={props.onClose} style={{ marginRight: 8 }}>
             取消
           </Button>
-          <Button onClick={props.onOK} type="primary">
+          <Button onClick={() => form.submit()} type="primary">
             确认
           </Button>
         </div>
@@ -30,16 +34,24 @@ const CreateFarmDrawer = (props) => {
       form={form}
       labelCol={{ span: 6 }}
       wrapperCol={{ span: 18 }}
+      onFinish={finish}
     >
       <Row justify="center">
         <Col span={20}>
           <Form.Item
-            name="type"
+            name="breedType"
             label="养殖场类型"
+            rules={[
+              {
+                required: true,
+                message: '请选择养殖场类型',
+              },
+            ]}
           >
-            <Radio.Group defaultValue={"a"}>
-              <Radio value="a">散养</Radio>
-              <Radio value="b">圈养</Radio>
+            <Radio.Group>
+              <Radio value="1">散养</Radio>
+              <Radio value="2">圈养</Radio>
+              <Radio value="3">牧场</Radio>
             </Radio.Group>
           </Form.Item>
         </Col>
@@ -47,7 +59,7 @@ const CreateFarmDrawer = (props) => {
       <Row justify="center">
         <Col span={20}>
         <Form.Item
-          name="name"
+          name="farmName"
           label="养殖场名称"
           rules={[
                 {
@@ -63,7 +75,7 @@ const CreateFarmDrawer = (props) => {
       <Row justify="center">
         <Col span={20}>
           <Form.Item
-            name="cll"
+            name="animalUnits"
             label="存栏量"
            >
             <Input placeholder="请输入存栏量" />

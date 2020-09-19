@@ -6,11 +6,11 @@
 import ProLayout, { DefaultFooter } from '@ant-design/pro-layout';
 import React, { useEffect } from 'react';
 import { Link, useIntl, connect, history } from 'umi';
-import { GithubOutlined } from '@ant-design/icons';
 import { Result, Button } from 'antd';
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { getAuthorityFromRouter } from '@/utils/utils';
+import { stringify } from 'querystring';
 
 import logo from '../assets/logo-white.png';
 
@@ -53,16 +53,23 @@ const BasicLayout = props => {
    * constructor
    */
 
-  // useEffect(() => {
-  //   if (dispatch) {
-  //     dispatch({
-  //       type: 'user/fetchCurrent',
-  //     });
-  //   }
-  // }, []);
-  /**
-   * init variables
-   */
+  useEffect(() => {
+    const { isLogin } = props;
+    const sessionLogin = sessionStorage.getItem('isLogin');
+
+    if (isLogin || sessionLogin) {
+      return;
+    }
+
+    history.replace({
+      pathname: '/user/login',
+      search: stringify({
+        redirect: window.location.href,
+      }),
+    });    
+    
+  }, [])
+ 
 
   const handleMenuCollapse = payload => {
     if (dispatch) {
@@ -74,8 +81,9 @@ const BasicLayout = props => {
   }; // get children authority
 
   const authorized = getAuthorityFromRouter(props.route.routes, location.pathname || '/') || {
-    authority: 'admin',
+    authority: undefined,
   };
+
   const { formatMessage } = useIntl();
   return (
     <ProLayout
@@ -120,7 +128,8 @@ const BasicLayout = props => {
   );
 };
 
-export default connect(({ global, settings }) => ({
+export default connect(({ global, settings, login }) => ({
   collapsed: global.collapsed,
   settings,
+  isLogin: login.isLogin
 }))(BasicLayout);

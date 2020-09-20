@@ -16,6 +16,7 @@ import {
 } from 'antd';
 import { getDeviceList } from '@/services/device';
 import { getFarmOptions } from '@/services/farm';
+import { exportAnimal } from '@/services/animal';
 import cs from 'classnames';
 import './index.less';
 
@@ -43,6 +44,16 @@ export default function HealthMa0nage() {
   const openDetailDrawer = record => {
     setDrawerVisible(true);
   }
+
+  const exportAll = useCallback(async params => {
+    const res = await exportAnimal({});
+    const { code, message: info, data = {} } = res;
+    if (code == 500) {
+        message.error(info);
+        return;
+    }
+    console.log('res', res);
+  }, [])
 
   const fetchDeviceList = useCallback(async params => {
     const res = await getDeviceList({ ...params });
@@ -200,7 +211,7 @@ export default function HealthMa0nage() {
         {/* 已选择 {selectedRowKeys.length} 项 */}
         <div className="operator-button">
           <Space>
-            <Button onClick={() => message.error('导出失败')}>
+            <Button onClick={exportAll}>
               导出
             </Button>
             <Button onClick={download}>

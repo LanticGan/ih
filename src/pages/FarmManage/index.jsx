@@ -118,7 +118,7 @@ const FarmManage = (props) => {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col span={5}>
+                    {/* <Col span={5}>
                         <Form.Item label="活动" name="activity" labelCol={{ span: 6 }} allowClear>
                             <Select>
                                 <Select.Option value="normal">正常</Select.Option>
@@ -146,7 +146,7 @@ const FarmManage = (props) => {
                             <Select.Option value="normal">正常</Select.Option>
                                 <Select.Option value="demo">异常</Select.Option>                            </Select>
                         </Form.Item>
-                    </Col>
+                    </Col> */}
                     <Col span={2}>
                         <div className="search-button">
                             <Button type="primary" htmlType="submit">

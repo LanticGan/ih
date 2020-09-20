@@ -15,7 +15,7 @@ const cardList =[{
     label: '养殖场数量',
     value: '0'
   },{
-    key: 'abFarmTotal',
+    key: 'farmErrorTotal',
     label: '异常数量',
     value: '0'
   }]
@@ -89,7 +89,7 @@ const Home = (props) => {
     } else {
       setNeedCreateCompany(false);
     }
-  }, []);
+  }, [companyDetail]);
 
   useEffect(() => {
     console.log('companyDetail', companyDetail)

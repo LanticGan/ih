@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   Form, 
   Row, 
@@ -11,7 +11,8 @@ import {
   Space,
   message
 } from 'antd';
-import cs from 'classnames';
+import { updateConfig, getConfig } from '@/services/params';
+
 import './index.less';
 
 export default function HealthMa0nage() {
@@ -20,8 +21,35 @@ export default function HealthMa0nage() {
   const [drawerVisible, setDrawerVisible] = useState(false);
 
   const [form] = Form.useForm();
+
+  const updateParams = useCallback(async params => {
+    const res = await updateConfig({ type: 1, content: params });
+    const { code, message: info, data = {} } = res;
+    if (code == 500) {
+        message.error(info);
+        return;
+    } else {
+      message.success('保存成功')
+    }
+  }, []);
+
+  const getParams = useCallback(async () => {
+    const res = await getConfig({ type: 1 });
+    const { code, message: info, data = {} } = res;
+    if (code == 500) {
+      message.error(info);
+      return;
+    }
+    const { content } = data;
+    form.setFieldsValue(content)
+  }, []);
+
+  useEffect(() => {
+    getParams();
+  }, [])
+
   const onFinish = (values) => {
-    message.success('保存成功')
+    updateParams(values);
   };
 
   const onSelectChange = selectedRowKeys => {
@@ -114,35 +142,6 @@ export default function HealthMa0nage() {
       ),
     },
   ];
-  
-  const data = [
-    {
-      key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      key: '3',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-  ];
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
 
   return (
     <div className="health-manage-container">
@@ -157,20 +156,20 @@ export default function HealthMa0nage() {
             <Col span={5} >
                 <Form.Item 
                     label="采集频次" 
-                    name="farmName"
+                    name="collectRate"
                 >
                     <Select>
-                        <Select.Option value="1">每小时1次</Select.Option>
-                        <Select.Option value="2">2小时1次</Select.Option>
+                        <Select.Option value={1}>每小时1次</Select.Option>
+                        <Select.Option value={2}>2小时1次</Select.Option>
 
                     </Select>
                 </Form.Item>
             </Col>
             <Col span={5}>
-                <Form.Item label="上传频次" name="activity" labelCol={{ span: 6 }}>
+                <Form.Item label="上传频次" name="uploadRate" labelCol={{ span: 6 }}>
                     <Select>
-                    <Select.Option value="4">4小时1次</Select.Option>
-                    <Select.Option value="8">8小时1次</Select.Option>
+                    <Select.Option value={1}>4小时1次</Select.Option>
+                    <Select.Option value={2}>8小时1次</Select.Option>
                     </Select>
                 </Form.Item>
             </Col>

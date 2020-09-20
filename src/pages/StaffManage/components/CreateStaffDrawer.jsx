@@ -97,6 +97,12 @@ const CreateStaffDrawer = (props) => {
           <Form.Item
             name="phone"
             label="手机号"
+            rules={[
+              {
+                required: true,
+                message: '手机号不能为空',
+              },
+            ]}
            >
             <Input placeholder="请输入手机号" />
           </Form.Item>

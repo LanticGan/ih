@@ -116,6 +116,7 @@ export default function HealthMa0nage() {
           return;
       }
       setDrawerVisible(false);
+      setJobDrawerVisible(false);
       fetchUserList();
       message.success('编辑成功');
   }
@@ -211,7 +212,7 @@ export default function HealthMa0nage() {
             </Col>
             <Col span={4}>
                 <Form.Item label="职务" name="jobTitle" labelCol={{ span: 6 }}>
-                    <Select>
+                    <Select allowClear>
                       <Select.Option value="1">管理员</Select.Option>
                       <Select.Option value="2">兽医</Select.Option>
                       <Select.Option value="3">饲养员</Select.Option>

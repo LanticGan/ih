@@ -52,7 +52,12 @@ const CreateFarmDrawer = (props) => {
                 },
               ]}
             >
-            <Select style={{ width: 160 }} options={[]}/>
+            <Select style={{ width: 160 }}>
+                <Select.Option value="1">管理员</Select.Option>
+                <Select.Option value="2">兽医</Select.Option>
+                <Select.Option value="3">饲养员</Select.Option>
+                <Select.Option value="4">其他</Select.Option>
+            </Select>
           </Form.Item>
         </Col>
       </Row>

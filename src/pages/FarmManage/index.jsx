@@ -11,7 +11,7 @@ import {
  } from 'antd';
 import CreateFarmDrawer from './components/CreateFarmDrawer';
 import FarmCard from '@/components/FarmCard';
-import { getFarmList, createFarm } from '@/services/farm';
+import { getFarmList, createFarm, getFarmOptions } from '@/services/farm';
 import cs from 'classnames';
 import './index.less';
 
@@ -35,6 +35,7 @@ const FarmManage = (props) => {
         pageSize: 10,
     });
     const [famrList, setFarmList] = useState([]);
+    const [farmOptions, setFarmOptions] = useState([]);
     const { companyDetail = {} } = props;
     const { companyId } = companyDetail;
 
@@ -54,14 +55,14 @@ const FarmManage = (props) => {
         message.success('新增成功');
     };
 
-    const fetchFarmList = useCallback(async ({ companyId, ...restPrams }) => {
-        const res = await getFarmList({ companyId, ...restPrams });
+    const fetchFarmList = useCallback(async params => {
+        const res = await getFarmList({ companyId, ...params });
         const { code, message: info, data = {} } = res;
-        const { list = [], currPage, pageSize, totalCount } = data;
         if (code == 500) {
             message.error(info);
             return;
         }
+        const { list = [], currPage, pageSize, totalCount } = data;
         setFarmList(list);
         setPage({
             current: currPage,
@@ -70,9 +71,28 @@ const FarmManage = (props) => {
         });
     }, []);
 
+    const fetchFarmOptions = useCallback(async () => {
+        const res = await getFarmOptions({companyId: 1});
+        const { code, message: info, data = {} } = res;
+        if (code == 500) {
+            message.error(info);
+            return;
+        }
+        const { list = [] } = data;
+        const farmOptions = list.map(({ farmName, id }) => ({
+            label: farmName,
+            value: id
+        }));
+        setFarmOptions(farmOptions);
+    }, []);
+
     const changePage = (page, pageSize) => {
-        console.log(page, pageSize);
+        fetchFarmList({ pageNum: page, pageSize})
     }
+
+    useEffect(() => {
+        fetchFarmOptions();
+    }, [])
 
     useEffect(() => {
         fetchFarmList({ companyId })
@@ -92,15 +112,14 @@ const FarmManage = (props) => {
                     <Col span={5} >
                         <Form.Item 
                             label="选择养殖场" 
-                            name="farmName"
+                            name="farmId"
                         >
-                            <Select defaultValue="all">
-                                <Select.Option value="all">全部</Select.Option>
+                            <Select allowClear options={farmOptions}>
                             </Select>
                         </Form.Item>
                     </Col>
                     <Col span={5}>
-                        <Form.Item label="活动" name="activity" labelCol={{ span: 6 }}>
+                        <Form.Item label="活动" name="activity" labelCol={{ span: 6 }} allowClear>
                             <Select>
                                 <Select.Option value="normal">正常</Select.Option>
                                 <Select.Option value="demo">异常</Select.Option>
@@ -108,21 +127,21 @@ const FarmManage = (props) => {
                         </Form.Item>
                     </Col>
                     <Col span={4}>
-                        <Form.Item label="位置" name="position" labelCol={{ span: 6 }}>
+                        <Form.Item label="位置" name="position" labelCol={{ span: 6 }} allowClear>
                             <Select>
                             <Select.Option value="normal">正常</Select.Option>
                                 <Select.Option value="demo">异常</Select.Option>                            </Select>
                         </Form.Item>
                     </Col>
                     <Col span={4}>
-                        <Form.Item label="进食" name="food" labelCol={{ span: 6 }}>
+                        <Form.Item label="进食" name="food" labelCol={{ span: 6 }} allowClear>
                             <Select>
                             <Select.Option value="normal">正常</Select.Option>
                                 <Select.Option value="demo">异常</Select.Option>                            </Select>
                         </Form.Item>
                     </Col>
                     <Col span={4}>
-                        <Form.Item label="设备电量" name="deviceCharge">
+                        <Form.Item label="设备电量" name="deviceCharge" allowClear>
                             <Select>
                             <Select.Option value="normal">正常</Select.Option>
                                 <Select.Option value="demo">异常</Select.Option>                            </Select>

@@ -8,10 +8,11 @@ import {
   Pagination,
   Table,
   Tag,
-  Space
+  Space, message
 } from 'antd';
 import DetailDrawer from './components/DetailDrawer';
 import { getAnimalList, getAnimalDetail } from '@/services/animal';
+import { getFarmOptions } from '@/services/farm';
 
 import cs from 'classnames';
 import './index.less';
@@ -23,6 +24,12 @@ export default function HealthMa0nage() {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [targetAnimal, setTargetAnimal] = useState({});
   const [animalList, setAnimalList] = useState([]);
+  const [farmOptions, setFarmOptions] = useState([]);
+  const [paging, setPaging] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  })
 
   const [form] = Form.useForm();
   const onFinish = (values) => {
@@ -38,8 +45,27 @@ export default function HealthMa0nage() {
     setDrawerVisible(true);
   }
 
+  const fetchFarmOptions = useCallback(async () => {
+    const res = await getFarmOptions({companyId: 1});
+    const { code, message: info, data = {} } = res;
+    if (code == 500) {
+        message.error(info);
+        return;
+    }
+    const { list = [] } = data;
+    const farmOptions = list.map(({ farmName, id }) => ({
+        label: farmName,
+        value: id
+    }));
+    setFarmOptions(farmOptions);
+}, []);
+
+useEffect(() => {
+  fetchFarmOptions();
+}, [])
+
   const fetchAnimalList = useCallback(async params => {
-    const res = await getAnimalList({ ...params });
+    const res = await getAnimalList({ ...params, pageSize: 5 });
     const { code, message: info, data = {} } = res;
     if (code == 500) {
         message.error(info);
@@ -47,6 +73,11 @@ export default function HealthMa0nage() {
     }
     const { list = [], currPage, pageSize, totalCount } = data;
     setAnimalList(list);
+    setPaging({
+      ...paging,
+      current: currPage,
+      total: totalCount,
+    })
   }, []);
 
   useEffect(() => {
@@ -149,6 +180,11 @@ export default function HealthMa0nage() {
     onChange: onSelectChange,
   };
 
+  const changePagination = v => {
+    const { current } = v;
+    fetchAnimalList({ pageNum: current });
+  }
+
   return (
     <div className="health-manage-container">
       <Form
@@ -162,10 +198,9 @@ export default function HealthMa0nage() {
             <Col span={5} >
                 <Form.Item 
                     label="选择养殖场" 
-                    name="farmName"
+                    name="farmId"
                 >
-                    <Select allowClear>
-                        <Select.Option value="">全部</Select.Option>
+                    <Select allowClear options={farmOptions}>
                     </Select>
                 </Form.Item>
             </Col>
@@ -207,10 +242,10 @@ export default function HealthMa0nage() {
         </Row>
       </Form>
       <div className="health-manage-operator">
-        已选择 {selectedRowKeys.length} 项
+        {/* 已选择 {selectedRowKeys.length} 项 */}
         <div className="operator-button">
         <Space>
-          <Button>
+          <Button onClick={() => message.error('导出失败')}>
             导出
           </Button>
         </Space>
@@ -218,7 +253,13 @@ export default function HealthMa0nage() {
         </div>
       </div>
       <div className="health-manage-content">
-        <Table rowKey="id" rowSelection={rowSelection} columns={columns} dataSource={animalList} />
+        <Table 
+          rowKey="id" 
+          columns={columns} 
+          dataSource={animalList}
+          pagination={paging}
+          onChange={changePagination}
+        />
       </div>
       <DetailDrawer
         targetAnimal={targetAnimal}

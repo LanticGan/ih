@@ -15,9 +15,15 @@ import {
 import CreateStaffDrawer from './components/CreateStaffDrawer';
 import JobAssignmentDrawer from './components/JobAssignmentDrawer';
 import { getUserList, updateUser, createUser } from '@/services/users';
-
 import cs from 'classnames';
 import './index.less';
+
+const jobTitleEnum = { 
+  "1": "管理员",
+  "2": "兽医",
+  "3": "饲养员",
+  "4": "其他"
+}
 
 export default function HealthMa0nage() {
   
@@ -112,6 +118,7 @@ export default function HealthMa0nage() {
       title: '职务',
       dataIndex: 'jobTitle',
       key: 'jobTitle',
+      render: v => jobTitleEnum[v]
     },
     {
       title: '账号权限',
@@ -176,7 +183,12 @@ export default function HealthMa0nage() {
             </Col>
             <Col span={4}>
                 <Form.Item label="职务" name="jobTitle" labelCol={{ span: 6 }}>
-                    <Input /> 
+                    <Select>
+                      <Select.Option value="1">管理员</Select.Option>
+                      <Select.Option value="2">兽医</Select.Option>
+                      <Select.Option value="3">饲养员</Select.Option>
+                      <Select.Option value="4">其他</Select.Option>
+                    </Select>
                 </Form.Item>
             </Col>
             <Col span={2}>
@@ -189,7 +201,7 @@ export default function HealthMa0nage() {
         </Row>
       </Form>
       <div className="health-manage-operator">
-        已选择 {selectedRowKeys.length} 项
+        {/* 已选择 {selectedRowKeys.length} 项 */}
         <div className="operator-button">
         <Space>
           <Button>
@@ -202,7 +214,7 @@ export default function HealthMa0nage() {
         </div>
       </div>
       <div className="health-manage-content">
-        <Table rowKey="id" rowSelection={rowSelection} columns={columns} dataSource={userList} />
+        <Table rowKey="id" columns={columns} dataSource={userList} />
       </div>
       <CreateStaffDrawer
         visible={drawerVisible} 

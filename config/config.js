@@ -134,7 +134,7 @@ export default defineConfig({
               name: '合作方管理',
               icon: 'team',
               path: '/profilebasic',
-              component: './PartnerManage',
+              component: './404',
             },
             {
               component: './404',

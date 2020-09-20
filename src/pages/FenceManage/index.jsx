@@ -1,6 +1,11 @@
 import React from 'react';
 import Widget from './components/Widget';
 import FarmCard from '@/components/FarmCard';
+import { message } from 'antd';
+import { getFarmList } from '@/services/farm';
+import { getFenceList } from '@/services/fence';
+import { history, connect } from 'umi';
+
 import './index.less';
 
 const farms = [{
@@ -63,7 +68,7 @@ const farms = [{
   ]
 }]
 
-export default class FenceManage extends React.Component {
+class FenceManage extends React.Component {
 
   state = {
     showFarmCard: false,
@@ -73,8 +78,29 @@ export default class FenceManage extends React.Component {
     farmAreaValue: 'all',
   }
 
-  renderFarmCard = () => {
+  fetchFenceList = async params => {
+    const res = await getFenceList({ ...params });
+    const { code, message: info, data = {} } = res;
+    const { list = [], currPage, pageSize, totalCount } = data;
+    if (code == 500) {
+        message.error(info);
+        return;
+    }
+    console.log('list', list);
+  }
 
+  fetchFarmList = async params => {
+    const { companyId } = this.props;
+    const res = await getFarmList({ companyId, ...params });
+    const { code, message: info, data = {} } = res;
+    const { list = [], currPage, pageSize, totalCount } = data;
+    if (code == 500) {
+        message.error(info);
+        return;
+    }
+  }
+
+  renderFarmCard = () => {
     const { targetFarm = {} } = this.state;
     const { x = 0, y = 0 } = targetFarm;
 
@@ -253,7 +279,7 @@ export default class FenceManage extends React.Component {
       zoom: 5,//级别
       center: [109, 33],//中心点坐标
     });
-
+    this.fetchFenceList();
     this.addFarmsMarker();
     this.setState({
       farmsDistribution: farms
@@ -277,3 +303,7 @@ export default class FenceManage extends React.Component {
     )
   }
 } 
+
+export default connect(({ company }) => ({
+  companyDetail: company.companyDetail
+}))(FenceManage);

@@ -10,6 +10,7 @@ import { Result, Button } from 'antd';
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { getAuthorityFromRouter } from '@/utils/utils';
+import cookie from 'js-cookie';
 import { stringify } from 'querystring';
 
 import logo from '../assets/logo-white.png';
@@ -55,9 +56,9 @@ const BasicLayout = props => {
 
   useEffect(() => {
     const { isLogin } = props;
-    const sessionLogin = sessionStorage.getItem('isLogin');
+    const token = cookie.get('token');
 
-    if (isLogin || sessionLogin) {
+    if (isLogin || token) {
       return;
     }
 

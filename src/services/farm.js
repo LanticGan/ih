@@ -14,3 +14,9 @@ export async function getFarmList(params) {
   });
 }
 
+export async function getFarmOptions(params) {
+  return request('/yunmu/api/farm/list', {
+    method: 'POST',
+    data: params,
+  });
+}

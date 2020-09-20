@@ -62,7 +62,7 @@ const Model = {
       }
     },
 
-    *logout() {
+    *logout({ payload }, { call, put }) {
       const { redirect } = getPageQuery(); // Note: There may be security issues, please note
       
       yield put({

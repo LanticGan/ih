@@ -29,11 +29,13 @@ const codeMessage = {
 const errorHandler = error => {
   const { response } = error;
 
-  if (response && response.status) {
-    const errorText = codeMessage[response.status] || response.statusText;
-    const { status, url } = response;
+  console.log('error', response)
+
+  if (response && response.code == 500) {
+    const errorText = response.message;
+    const { url, code } = response;
     notification.error({
-      message: `请求错误 ${status}: ${url}`,
+      message: `请求错误 ${code}: ${url}`,
       description: errorText,
     });
   } else if (!response) {

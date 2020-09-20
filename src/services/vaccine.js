@@ -14,3 +14,11 @@ export async function getVaccineList(params) {
   });
 }
 
+export async function exportVaccine(params) {
+  return request('/yunmu/api/vaccine/export', {
+    method: 'GET',
+    params,
+  });
+}
+
+

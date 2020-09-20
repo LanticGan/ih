@@ -95,9 +95,9 @@ const Login = props => {
         </Tab>
         <Submit loading={submitting}>登录</Submit>
         <div className={styles.other}>
-          <Link className={styles.operate} to="/user/register">
+          {/* <Link className={styles.operate} to="/user/register">
             忘记密码
-          </Link>
+          </Link> */}
           <Link className={styles.operate} to="/user/register">
             注册账户
           </Link>

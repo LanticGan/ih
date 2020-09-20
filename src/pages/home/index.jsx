@@ -12,7 +12,7 @@ const cardList =[{
   name: '养殖场管理',
   detail: [{
     label: '养殖场数量',
-    value: '2'
+    value: '0'
   },{
     label: '异常数量',
     value: '0'
@@ -24,10 +24,10 @@ const cardList =[{
   name: '牲畜管理',
   detail: [{
     label: '活动异常',
-    value: '5'
+    value: '0'
   },{
     label: '位置异常',
-    value: '33'
+    value: '0'
   }]
 },{
   id: "device",
@@ -35,10 +35,10 @@ const cardList =[{
   name: '设备管理',
   detail: [{
     label: '激活数量',
-    value: '3333'
+    value: '0'
   },{
     label: '异常数量',
-    value: '33'
+    value: '0'
   }]
 },{
   id: "vaccine",

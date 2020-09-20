@@ -13,7 +13,8 @@ import {
   Input
 } from 'antd';
 import CreateVaccineDrawer from './components/CreateVaccineDrawer';
-import { getVaccineList, createVaccine } from '@/services/vaccine'
+import { getFarmOptions } from '@/services/farm';
+import { getVaccineList, createVaccine, exportVaccine } from '@/services/vaccine'
 import cs from 'classnames';
 import './index.less';
 
@@ -22,7 +23,13 @@ export default function VaccineManage() {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [vaccineList, setVaccineList] = useState([]);
+  const [farmOptions, setFarmOptions] = useState([]);
 
+  const [paging, setPaging] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  })
 
   const [form] = Form.useForm();
 
@@ -51,6 +58,25 @@ export default function VaccineManage() {
     message.success('新增成功');
 };
 
+  const fetchFarmOptions = useCallback(async () => {
+    const res = await getFarmOptions({companyId: 1});
+    const { code, message: info, data = {} } = res;
+    if (code == 500) {
+        message.error(info);
+        return;
+    }
+    const { list = [] } = data;
+    const farmOptions = list.map(({ farmName, id }) => ({
+        label: farmName,
+        value: id
+    }));
+    setFarmOptions(farmOptions);
+  }, []);
+
+  useEffect(() => {
+    fetchFarmOptions();
+  }, [])
+
   const fetchVaccineList = useCallback(async params => {
     const res = await getVaccineList({ ...params });
     const { code, message: info, data = {} } = res;
@@ -60,7 +86,27 @@ export default function VaccineManage() {
     }
     const { list = [], currPage, pageSize, totalCount } = data;
     setVaccineList(list);
+    setPaging({
+      ...paging,
+      current: currPage,
+      total: totalCount,
+    })
   }, []);
+
+  const changePagination = v => {
+    const { current } = v;
+    fetchVaccineList({ pageNum: current });
+  }
+
+  const exportVa = async () => {
+    const { farmId }= form.getFieldsValue();
+    const res = await exportVaccine({ farmId });
+    const { code, message: info, data = {} } = res;
+    if (code == 500) {
+      message.error(info);
+      return;
+    }
+  }
 
   useEffect(() => {
     fetchVaccineList();
@@ -112,10 +158,9 @@ export default function VaccineManage() {
             <Col span={5} >
                 <Form.Item 
                     label="选择养殖场" 
-                    name="farmName"
+                    name="farmId"
                 >
-                    <Select defaultValue="all">
-                        <Select.Option value="all">全部</Select.Option>
+                       <Select allowClear options={farmOptions}>
                     </Select>
                 </Form.Item>
             </Col>
@@ -134,10 +179,10 @@ export default function VaccineManage() {
         </Row>
       </Form>
       <div className="health-manage-operator">
-        已选择 {selectedRowKeys.length} 项
+        {/* 已选择 {selectedRowKeys.length} 项 */}
         <div className="operator-button">
           <Space>
-            <Button>
+            <Button onClick={exportVa}>
               批量导出
             </Button>
             <Button type="primary" onClick={() => {setDrawerVisible(true)}}>
@@ -148,7 +193,14 @@ export default function VaccineManage() {
         </div>
       </div>
       <div className="health-manage-content">
-        <Table rowKey="id" rowSelection={rowSelection} columns={columns} dataSource={vaccineList} />
+        {/* rowSelection={rowSelection} */}
+        <Table 
+          rowKey="id" 
+          columns={columns} 
+          dataSource={vaccineList}
+          pagination={paging}
+          onChange={changePagination}
+        />
       </div>
       <CreateVaccineDrawer
         visible={drawerVisible} 

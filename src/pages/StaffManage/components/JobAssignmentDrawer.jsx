@@ -1,8 +1,16 @@
 import { Drawer, Form, Button, Col, Row, Input, Select, Radio } from 'antd';
 
 const CreateFarmDrawer = (props) => {
+  const { targetUser = {} } = props;
 
   const [form] = Form.useForm();
+
+  const onFinish = values =>{
+    if (targetUser) {
+      targetUser.userId = targetUser.id;
+      props.onUpdateUser({...targetUser, ...values});
+    }
+  }
 
   return (
     <Drawer
@@ -20,7 +28,7 @@ const CreateFarmDrawer = (props) => {
           <Button onClick={props.onClose} style={{ marginRight: 8 }}>
             取消
           </Button>
-          <Button onClick={props.onClose} type="primary">
+          <Button onClick={() => form.submit()} type="primary">
             确认
           </Button>
         </div>
@@ -30,11 +38,12 @@ const CreateFarmDrawer = (props) => {
       form={form}
       labelCol={{ span: 6 }}
       wrapperCol={{ span: 18 }}
+      onFinish={onFinish}
     >
       <Row justify="center">
         <Col span={20}>
         <Form.Item
-          name="job"
+          name="jobTitle"
           label="职务类型"
           rules={[
                 {
@@ -43,7 +52,7 @@ const CreateFarmDrawer = (props) => {
                 },
               ]}
             >
-            <Select style={{ width: 120 }} options={[]}/>
+            <Select style={{ width: 160 }} options={[]}/>
           </Form.Item>
         </Col>
       </Row>
@@ -59,7 +68,11 @@ const CreateFarmDrawer = (props) => {
                 },
               ]}
             >
-            <Select style={{ width: 120 }} options={[]}/>
+            <Select style={{ width: 160 }} options={[
+              {label:'超级管理员', value:1},
+              {label:'管理员', value:2},
+              {label:'普通员工', value:3}
+            ]}/>
           </Form.Item>
         </Col>
       </Row>

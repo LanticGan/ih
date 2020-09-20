@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback  } from 'react';
 import {
   Form, 
   Row, 
@@ -10,8 +10,10 @@ import {
   Tag,
   Space,
   Modal,
-  message
+  message,
+  InputNumber
 } from 'antd';
+import { getDeviceList } from '@/services/device';
 import cs from 'classnames';
 import './index.less';
 
@@ -19,10 +21,11 @@ export default function HealthMa0nage() {
   
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [deviceList, setDeviceList] = useState([]);
 
   const [form] = Form.useForm();
   const onFinish = (values) => {
-      console.log('values', values);
+    fetchDeviceList(values);
   };
 
   const onSelectChange = selectedRowKeys => {
@@ -33,6 +36,21 @@ export default function HealthMa0nage() {
     setDrawerVisible(true);
   }
 
+  const fetchDeviceList = useCallback(async params => {
+    const res = await getDeviceList({ ...params });
+    const { code, message: info, data = {} } = res;
+    if (code == 500) {
+        message.error(info);
+        return;
+    }
+    const { list = [], currPage, pageSize, totalCount } = data;
+    setDeviceList(list);
+  }, []);
+
+  useEffect(() => {
+    fetchDeviceList();
+  }, []);
+
   const confirmUnbind = () => {
     setShowModal(true);
   }
@@ -40,14 +58,13 @@ export default function HealthMa0nage() {
   const columns = [
     {
       title: '所属养殖场',
-      dataIndex: 'farm',
-      key: 'farm',
-      render: text => <a>{text}</a>,
+      dataIndex: 'farmName',
+      key: 'farmName',
     },
     {
       title: '设备编号',
-      dataIndex: 'device',
-      key: 'device',
+      dataIndex: 'equipmentNo',
+      key: 'equipmentNo',
     },
     {
       title: '设备状态',
@@ -56,18 +73,18 @@ export default function HealthMa0nage() {
     },
     {
       title: '设备电量',
-      dataIndex: 'charge',
-      key: 'charge',
+      dataIndex: 'battery',
+      key: 'battery',
     },
-    {
-      title: '操作',
-      key: 'action',
-      render: (text, record) => (
-        <Space size="middle">
-          <a onClick={confirmUnbind}>设备解绑</a>
-        </Space>
-      ),
-    },
+    // {
+    //   title: '操作',
+    //   key: 'action',
+    //   render: (text, record) => (
+    //     <Space size="middle">
+    //       <a onClick={confirmUnbind}>设备解绑</a>
+    //     </Space>
+    //   ),
+    // },
   ];
   
   const data = [
@@ -149,10 +166,8 @@ export default function HealthMa0nage() {
                 </Form.Item>
             </Col>
             <Col span={5}>
-                <Form.Item label="设备电量" name="activity" labelCol={{ span: 6 }}>
-                    <Select>
-                        <Select.Option value="demo">Demo</Select.Option>
-                    </Select>
+                <Form.Item label="设备电量" name="battery" labelCol={{ span: 6 }}>
+                  <InputNumber mix={0} max={100} />
                 </Form.Item>
             </Col>
             <Col span={2}>
@@ -179,7 +194,7 @@ export default function HealthMa0nage() {
         </div>
       </div>
       <div className="health-manage-content">
-        <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
+        <Table rowKey="id" rowSelection={rowSelection} columns={columns} dataSource={deviceList} />
       </div>
       <div>
         <Modal visible={showModal} onCancel={() => {setShowModal(false)}} onOk={onOk}>

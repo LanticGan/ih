@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   Form, 
   Row, 
@@ -9,9 +9,11 @@ import {
   Table,
   Tag,
   Space,
-  message
+  message,
+  Input
 } from 'antd';
 import CreateVaccineDrawer from './components/CreateVaccineDrawer';
+import { getVaccineList, createVaccine } from '@/services/vaccine'
 import cs from 'classnames';
 import './index.less';
 
@@ -19,10 +21,13 @@ export default function VaccineManage() {
   
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const [vaccineList, setVaccineList] = useState([]);
+
 
   const [form] = Form.useForm();
+
   const onFinish = (values) => {
-      console.log('values', values);
+    fetchVaccineList(values);
   };
 
   const onSelectChange = selectedRowKeys => {
@@ -33,93 +38,59 @@ export default function VaccineManage() {
     setDrawerVisible(true);
   }
 
+  const onOk = async (values) => {
+    const res = await createVaccine({ ...values, farmId: 2 });
+    const { code, message: info } = res;
+    if (code == 500) {
+        message.error(info);
+        return;
+    }
+
+    setDrawerVisible(false);
+    fetchVaccineList();
+    message.success('新增成功');
+};
+
+  const fetchVaccineList = useCallback(async params => {
+    const res = await getVaccineList({ ...params });
+    const { code, message: info, data = {} } = res;
+    if (code == 500) {
+        message.error(info);
+        return;
+    }
+    const { list = [], currPage, pageSize, totalCount } = data;
+    setVaccineList(list);
+  }, []);
+
+  useEffect(() => {
+    fetchVaccineList();
+  }, []);
+
   const columns = [
     {
       title: '所属养殖场',
-      dataIndex: 'farm',
-      key: 'farm',
-      render: text => <a>{text}</a>,
+      dataIndex: 'farmName',
+      key: 'farmName',
     },
     {
       title: '疫苗名称',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'vaccineName',
+      key: 'vaccineName',
     },
     {
       title: '注射数量',
-      dataIndex: 'number',
-      key: 'number',
+      dataIndex: 'nums',
+      key: 'nums',
     },
     {
       title: '注射人',
-      dataIndex: 'operator',
-      key: 'operator',
+      dataIndex: 'userName',
+      key: 'userName',
     },
     {
       title: '注射时间',
-      dataIndex: 'time',
-      key: 'time',
-    },
-  ];
-  
-  const data = [
-    {
-      key: '1',
-      farm: '养殖场001',
-      name: '********疫苗',
-      number: 120,
-      operator: '张思思',
-      time: '"2020/06/30 12:31'
-    },
-    {
-      key: '2',
-      farm: '养殖场001',
-      name: '********疫苗',
-      number: 1556,
-      operator: '王强',
-      time: '"2020/06/30 12:31'
-    },{
-      key: '3',
-      farm: '养殖场001',
-      name: '********疫苗',
-      number: 23,
-      operator: '张思思',
-      time: '"2020/06/30 12:31'
-    },{
-      key: '4',
-      farm: '养殖场001',
-      name: '********疫苗',
-      number: 45,
-      operator: '张思思',
-      time: '"2020/06/30 12:31'
-    },{
-      key: '5',
-      farm: '养殖场001',
-      name: '********疫苗',
-      number: 22,
-      operator: '张思思',
-      time: '"2020/06/30 12:31'
-    },{
-      key: '6',
-      farm: '养殖场001',
-      name: '********疫苗',
-      number: 120,
-      operator: '张思思',
-      time: '"2020/06/30 12:31'
-    },{
-      key: '7',
-      farm: '养殖场001',
-      name: '********疫苗',
-      number: 1132,
-      operator: '张思思',
-      time: '"2020/06/30 12:31'
-    },{
-      key: '8',
-      farm: '养殖场001',
-      name: '********疫苗',
-      number: 18,
-      operator: '张思思',
-      time: '"2020/06/30 12:31'
+      dataIndex: 'vaccineTime',
+      key: 'vaccineTime',
     },
   ];
 
@@ -128,13 +99,40 @@ export default function VaccineManage() {
     onChange: onSelectChange,
   };
 
-  const onOk = () => {
-    setDrawerVisible(false);
-    message.success('新增成功');
-  }
-
   return (
     <div className="health-manage-container">
+      <Form
+        form={form}
+        onFinish={onFinish}
+        labelCol={{ span: 8 }}
+        wrapperCol={{ span: 14 }}
+        className="farm-search-form"
+      >
+        <Row>
+            <Col span={5} >
+                <Form.Item 
+                    label="选择养殖场" 
+                    name="farmName"
+                >
+                    <Select defaultValue="all">
+                        <Select.Option value="all">全部</Select.Option>
+                    </Select>
+                </Form.Item>
+            </Col>
+            <Col span={5}>
+                <Form.Item label="疫苗名称" name="vaccineName" labelCol={{ span: 6 }}>
+                  <Input />
+                </Form.Item>
+            </Col>
+            <Col span={2}>
+              <div className="search-button">
+                <Button type="primary" htmlType="submit">
+                    查询
+                </Button>                      
+              </div>
+            </Col>
+        </Row>
+      </Form>
       <div className="health-manage-operator">
         已选择 {selectedRowKeys.length} 项
         <div className="operator-button">
@@ -150,7 +148,7 @@ export default function VaccineManage() {
         </div>
       </div>
       <div className="health-manage-content">
-        <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
+        <Table rowKey="id" rowSelection={rowSelection} columns={columns} dataSource={vaccineList} />
       </div>
       <CreateVaccineDrawer
         visible={drawerVisible} 

@@ -8,7 +8,8 @@ import {
   Pagination,
   Table,
   Tag,
-  Space
+  Space,
+  message
 } from 'antd';
 import cs from 'classnames';
 import './index.less';
@@ -20,7 +21,7 @@ export default function HealthMa0nage() {
 
   const [form] = Form.useForm();
   const onFinish = (values) => {
-      console.log('values', values);
+    message.success('保存成功')
   };
 
   const onSelectChange = selectedRowKeys => {

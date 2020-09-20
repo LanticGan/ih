@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect  } from 'react';
 import {
   Form, 
   Row, 
@@ -9,10 +9,13 @@ import {
   Table,
   Input,
   Tag,
-  Space
+  Space,
+  message
 } from 'antd';
 import CreateStaffDrawer from './components/CreateStaffDrawer';
-import JobAssignmentDrawer from './components/JobAssignmentDrawer'
+import JobAssignmentDrawer from './components/JobAssignmentDrawer';
+import { getUserList, updateUser, createUser } from '@/services/users';
+
 import cs from 'classnames';
 import './index.less';
 
@@ -21,27 +24,69 @@ export default function HealthMa0nage() {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [jobDrawerVisible, setJobDrawerVisible] = useState(false);
+  const [userList, setUserList] = useState([]);
+  const [targetUser, setTargetUser] = useState({})
+
 
   const [form] = Form.useForm();
   const onFinish = (values) => {
-      console.log('values', values);
+    fetchUserList(values);
   };
+
+  const fetchUserList = useCallback(async params => {
+    const res = await getUserList({ ...params });
+    const { code, message: info, data = {} } = res;
+    if (code == 500) {
+        message.error(info);
+        return;
+    }
+    const { list = [], currPage, pageSize, totalCount } = data;
+    setUserList(list);
+  }, []);
+
+  useEffect(() => {
+    fetchUserList();
+  }, []);
 
   const onSelectChange = selectedRowKeys => {
     setSelectedRowKeys(selectedRowKeys);
   }
 
   const openDetailDrawer = record => {
+    setTargetUser(record);
     setDrawerVisible(true);
   }
 
+  const openJobAssignmentDrawer = record => {
+    setTargetUser(record);
+    setJobDrawerVisible(true)
+  }
+
+  const onCreateUser = async values => {
+    const res = await createUser({ ...values });
+      const { code, message: info } = res;
+      if (code == 500) {
+          message.error(info);
+          return;
+      }
+      setDrawerVisible(false);
+      fetchUserList();
+      message.success('新增成功');
+  }
+
+  const onUpdateUser = async values => {
+    const res = await updateUser({ ...values });
+      const { code, message: info } = res;
+      if (code == 500) {
+          message.error(info);
+          return;
+      }
+      setDrawerVisible(false);
+      fetchUserList();
+      message.success('编辑成功');
+  }
+
   const columns = [
-    {
-      title: '所属养殖场',
-      dataIndex: 'name',
-      key: 'name',
-      render: text => <a>{text}</ a>,
-    },
     {
       title: '姓名',
       dataIndex: 'name',
@@ -49,13 +94,14 @@ export default function HealthMa0nage() {
     },
     {
       title: '性别',
-      dataIndex: 'sex',
-      key: 'sex',
+      dataIndex: 'gender',
+      key: 'gender',
+      render: v => v == '1' ? '男' : '女'
     },
     {
       title: '身份证号',
-      dataIndex: 'identify',
-      key: 'identify',
+      dataIndex: 'idCard',
+      key: 'idCard',
     },
     {
       title: '手机号',
@@ -64,13 +110,24 @@ export default function HealthMa0nage() {
     },
     {
       title: '职务',
-      dataIndex: 'rule',
-      key: 'rule',
+      dataIndex: 'jobTitle',
+      key: 'jobTitle',
     },
     {
       title: '账号权限',
-      dataIndex: 'authority',
-      key: 'authority',
+      dataIndex: 'role',
+      key: 'role',
+      render: v => {
+        let text;
+        if (v == 1) {
+          text = '超级管理员'
+        } else if (v == 2) {
+          text = '管理员'
+        } else {
+          text = '普通员工'
+        }
+        return text;
+      }
     },
     {
       title: '操作',
@@ -79,35 +136,10 @@ export default function HealthMa0nage() {
         <div>
         <Space size="middle">
           <a onClick={() => openDetailDrawer(record)} >编辑</ a>
-          <a onClick={() => setJobDrawerVisible(true)} >分配职务/账号</ a>
+          <a onClick={() => openJobAssignmentDrawer(record)} >分配职务/账号</ a>
         </Space>
         </div>
       ),
-    },
-  ];
-  
-  const data = [
-    {
-      key: '1',
-      farm: '001号养殖场',
-      name: '张思思',
-      sex: '女',
-      identify: '452701198706212711',
-      age: 32,
-      phone: '15733829982',
-      rule: '兽医',
-      authority: '员工权限'
-    },
-    {
-      key: '2',
-      farm: '001号养殖场',
-      name: '王强',
-      sex: '男',
-      identify: '543201198706212711',
-      age: 32,
-      phone: '18634821982',
-      rule: '饲养员',
-      authority: '员工权限'
     },
   ];
 
@@ -137,16 +169,14 @@ export default function HealthMa0nage() {
             <Col span={5}>
                 <Form.Item 
                   label="手机号" 
-                  name="number"
+                  name="phone"
                 >
                     <Input /> 
                 </Form.Item>
             </Col>
             <Col span={4}>
-                <Form.Item label="职务" name="position" labelCol={{ span: 6 }}>
-                    <Select>
-                        <Select.Option value="demo">Demo</Select.Option>
-                    </Select>
+                <Form.Item label="职务" name="jobTitle" labelCol={{ span: 6 }}>
+                    <Input /> 
                 </Form.Item>
             </Col>
             <Col span={2}>
@@ -165,22 +195,27 @@ export default function HealthMa0nage() {
           <Button>
             批量导出
           </Button>
-          <Button type="primary" onClick={() => {setDrawerVisible(true)}}>
+          <Button type="primary" onClick={() => openDetailDrawer(null)}>
             新增人员
           </Button>
           </Space>
         </div>
       </div>
       <div className="health-manage-content">
-        <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
+        <Table rowKey="id" rowSelection={rowSelection} columns={columns} dataSource={userList} />
       </div>
       <CreateStaffDrawer
         visible={drawerVisible} 
-        onClose={() => setDrawerVisible(false)} 
+        onClose={() => setDrawerVisible(false)}
+        onCreateUser={onCreateUser}
+        onUpdateUser={onUpdateUser}
+        targetUser={targetUser}
       />
       <JobAssignmentDrawer
         visible={jobDrawerVisible} 
-        onClose={() => setJobDrawerVisible(false)} 
+        onClose={() => setJobDrawerVisible(false)}
+        onUpdateUser={onUpdateUser}
+        targetUser={targetUser}
       />
     </div>
   )

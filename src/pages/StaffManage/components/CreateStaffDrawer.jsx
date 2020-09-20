@@ -1,12 +1,30 @@
+import { useEffect } from 'react';
 import { Drawer, Form, Button, Col, Row, Input, Select, Radio } from 'antd';
 
 const CreateStaffDrawer = (props) => {
+  const { targetUser } = props;
 
   const [form] = Form.useForm();
 
+  const onFinish = values =>{
+    if (targetUser) {
+      targetUser.userId = targetUser.id;
+      props.onUpdateUser({...targetUser, ...values});
+    } else {
+      props.onCreateUser(values);
+    }
+  }
+
+  useEffect(() => {
+    if (targetUser) {
+      form.setFieldsValue(targetUser)
+    }
+  }, [targetUser]);
+
+
   return (
     <Drawer
-      title="新增人员"
+      title={targetUser ? '编辑人员' : '新增人员'}
       width={720}
       onClose={props.onClose}
       visible={props.visible}
@@ -20,7 +38,7 @@ const CreateStaffDrawer = (props) => {
           <Button onClick={props.onClose} style={{ marginRight: 8 }}>
             取消
           </Button>
-          <Button onClick={props.onClose} type="primary">
+          <Button onClick={() => form.submit()} type="primary">
             确认
           </Button>
         </div>
@@ -30,6 +48,7 @@ const CreateStaffDrawer = (props) => {
       form={form}
       labelCol={{ span: 6 }}
       wrapperCol={{ span: 18 }}
+      onFinish={onFinish}
     >
       <Row justify="center">
         <Col span={20}>
@@ -50,7 +69,7 @@ const CreateStaffDrawer = (props) => {
       <Row justify="center">
         <Col span={20}>
         <Form.Item
-          name="sex"
+          name="gender"
           label="性别"
           rules={[
                 {
@@ -59,14 +78,14 @@ const CreateStaffDrawer = (props) => {
                 },
               ]}
             >
-            <Select style={{ width: 120 }} options={[{label:'男', value:'male'},{label:'女', value:'female'}]}/>
+            <Select style={{ width: 120 }} options={[{label:'男', value:1},{label:'女', value:2}]}/>
           </Form.Item>
         </Col>
       </Row>
       <Row justify="center">
         <Col span={20}>
           <Form.Item
-            name="cll"
+            name="idCard"
             label="身份证号"
            >
             <Input placeholder="请输入身份证号" />
@@ -76,7 +95,7 @@ const CreateStaffDrawer = (props) => {
       <Row justify="center">
         <Col span={20}>
           <Form.Item
-            name="cll"
+            name="phone"
             label="手机号"
            >
             <Input placeholder="请输入手机号" />

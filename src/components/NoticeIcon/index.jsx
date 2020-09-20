@@ -5,6 +5,7 @@ import React from 'react';
 import classNames from 'classnames';
 import NoticeList from './NoticeList';
 import HeaderDropdown from '../HeaderDropdown';
+import CustromNoticeList from './CustromNoticeList';
 import styles from './index.less';
 
 const { TabPane } = Tabs;
@@ -95,7 +96,7 @@ const NoticeIcon = props => {
   return (
     <HeaderDropdown
       placement="bottomRight"
-      overlay={notificationBox}
+      overlay={<CustromNoticeList />}
       overlayClassName={styles.popover}
       trigger={['click']}
       visible={visible}

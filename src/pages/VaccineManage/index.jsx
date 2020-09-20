@@ -24,7 +24,7 @@ export default function VaccineManage() {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [vaccineList, setVaccineList] = useState([]);
   const [farmOptions, setFarmOptions] = useState([]);
-
+  const [loading, setLoading] = useState(false);
   const [paging, setPaging] = useState({
     current: 1,
     pageSize: 10,
@@ -78,7 +78,9 @@ export default function VaccineManage() {
   }, [])
 
   const fetchVaccineList = useCallback(async params => {
+    setLoading(true);
     const res = await getVaccineList({ ...params });
+    setLoading(false);
     const { code, message: info, data = {} } = res;
     if (code == 500) {
         message.error(info);
@@ -90,7 +92,7 @@ export default function VaccineManage() {
       ...paging,
       current: currPage,
       total: totalCount,
-    })
+    });
   }, []);
 
   const changePagination = v => {
@@ -153,6 +155,7 @@ export default function VaccineManage() {
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 14 }}
         className="farm-search-form"
+        loading={loading}
       >
         <Row>
             <Col span={5} >
@@ -200,6 +203,7 @@ export default function VaccineManage() {
           dataSource={vaccineList}
           pagination={paging}
           onChange={changePagination}
+          loading={loading}
         />
       </div>
       <CreateVaccineDrawer

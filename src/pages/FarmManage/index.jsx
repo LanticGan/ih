@@ -17,8 +17,9 @@ import './index.less';
 
 const FarmContentCard = (props) => {
     const { data = {} } = props;
+    const { id } = data;
     return (
-        <Col span={8} className="farm-card-col" onClick={() => history.push('/animal-manage/health-manage')}>
+        <Col span={8} className="farm-card-col" onClick={() => history.push(`/animal-manage/health-manage?farmId=${id}` )}>
             <FarmCard data={data} />
         </Col>
     )

@@ -13,6 +13,7 @@ import {
 import DetailDrawer from './components/DetailDrawer';
 import { getAnimalList, getAnimalDetail } from '@/services/animal';
 import { getFarmOptions } from '@/services/farm';
+import { getPageQuery } from '@/utils/utils';
 
 import cs from 'classnames';
 import './index.less';
@@ -25,6 +26,7 @@ export default function HealthMa0nage() {
   const [targetAnimal, setTargetAnimal] = useState({});
   const [animalList, setAnimalList] = useState([]);
   const [farmOptions, setFarmOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [paging, setPaging] = useState({
     current: 1,
     pageSize: 10,
@@ -60,12 +62,23 @@ export default function HealthMa0nage() {
     setFarmOptions(farmOptions);
 }, []);
 
-useEffect(() => {
-  fetchFarmOptions();
-}, [])
+  useEffect(() => {
+    fetchFarmOptions();
+  }, [])
+
+  useEffect(() => {
+    const params = getPageQuery() || {};
+    const farmId = params['farmId']
+    if (farmId && farmOptions.length > 0) {
+      form.setFieldsValue({ farmId: Number(farmId) });
+      form.submit();
+    }
+  }, [farmOptions])
 
   const fetchAnimalList = useCallback(async params => {
-    const res = await getAnimalList({ ...params, pageSize: 5 });
+    setLoading(true);
+    const res = await getAnimalList({ ...params });
+    setLoading(false);
     const { code, message: info, data = {} } = res;
     if (code == 500) {
         message.error(info);
@@ -259,6 +272,7 @@ useEffect(() => {
           dataSource={animalList}
           pagination={paging}
           onChange={changePagination}
+          loading={loading}
         />
       </div>
       <DetailDrawer

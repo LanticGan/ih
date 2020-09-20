@@ -17,7 +17,6 @@ import {
 import { getDeviceList } from '@/services/device';
 import { getFarmOptions } from '@/services/farm';
 import { exportAnimal } from '@/services/animal';
-import cs from 'classnames';
 import './index.less';
 
 export default function HealthMa0nage() {
@@ -26,6 +25,8 @@ export default function HealthMa0nage() {
   const [showModal, setShowModal] = useState(false);
   const [deviceList, setDeviceList] = useState([]);
   const [farmOptions, setFarmOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+
   const [paging, setPaging] = useState({
     current: 1,
     pageSize: 10,
@@ -56,7 +57,9 @@ export default function HealthMa0nage() {
   }, [])
 
   const fetchDeviceList = useCallback(async params => {
+    setLoading(true);
     const res = await getDeviceList({ ...params });
+    setLoading(false);
     const { code, message: info, data = {} } = res;
     if (code == 500) {
         message.error(info);
@@ -194,7 +197,7 @@ export default function HealthMa0nage() {
                 </Form.Item>
             </Col>
             <Col span={5}>
-                <Form.Item label="设备电量" name="battery" labelCol={{ span: 6 }}>
+                <Form.Item label="设备电量" name="battery" labelCol={{ span: 8 }}>
                   <InputNumber mix={0} max={100} />
                 </Form.Item>
             </Col>
@@ -227,7 +230,8 @@ export default function HealthMa0nage() {
         </div>
       </div>
       <div className="health-manage-content">
-        <Table 
+        <Table
+          loading={loading}
           rowKey="id" 
           columns={columns} 
           dataSource={deviceList}

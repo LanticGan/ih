@@ -14,7 +14,7 @@ import {
 } from 'antd';
 import CreateStaffDrawer from './components/CreateStaffDrawer';
 import JobAssignmentDrawer from './components/JobAssignmentDrawer';
-import { getUserList, updateUser, createUser } from '@/services/users';
+import { getUserList, updateUser, createUser, exportUsers } from '@/services/users';
 import cs from 'classnames';
 import './index.less';
 
@@ -32,7 +32,12 @@ export default function HealthMa0nage() {
   const [jobDrawerVisible, setJobDrawerVisible] = useState(false);
   const [userList, setUserList] = useState([]);
   const [targetUser, setTargetUser] = useState({})
-
+  const [loading, setLoading] = useState(false);
+  const [paging, setPaging] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  })
 
   const [form] = Form.useForm();
   const onFinish = (values) => {
@@ -40,7 +45,9 @@ export default function HealthMa0nage() {
   };
 
   const fetchUserList = useCallback(async params => {
+    setLoading(true);
     const res = await getUserList({ ...params });
+    setLoading(false);
     const { code, message: info, data = {} } = res;
     if (code == 500) {
         message.error(info);
@@ -48,7 +55,27 @@ export default function HealthMa0nage() {
     }
     const { list = [], currPage, pageSize, totalCount } = data;
     setUserList(list);
+    setPaging({
+      ...paging,
+      current: currPage,
+      total: totalCount,
+    });
   }, []);
+
+  const changePagination = v => {
+    const { current } = v;
+    fetchUserList({ pageNum: current });
+  }
+
+  const exportAll = useCallback(async params => {
+    const res = await exportUsers({});
+    const { code, message: info, data = {} } = res;
+    if (code == 500) {
+        message.error(info);
+        return;
+    }
+    console.log('res', res);
+  }, [])
 
   useEffect(() => {
     fetchUserList();
@@ -204,7 +231,7 @@ export default function HealthMa0nage() {
         {/* 已选择 {selectedRowKeys.length} 项 */}
         <div className="operator-button">
         <Space>
-          <Button>
+          <Button onClick={exportAll}>
             批量导出
           </Button>
           <Button type="primary" onClick={() => openDetailDrawer(null)}>
@@ -214,7 +241,14 @@ export default function HealthMa0nage() {
         </div>
       </div>
       <div className="health-manage-content">
-        <Table rowKey="id" columns={columns} dataSource={userList} />
+        <Table 
+          rowKey="id" 
+          columns={columns} 
+          dataSource={userList} 
+          loading={loading} 
+          pagination={paging}
+          onChange={changePagination}
+        />
       </div>
       <CreateStaffDrawer
         visible={drawerVisible} 

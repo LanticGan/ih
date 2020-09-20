@@ -11,9 +11,11 @@ const cardList =[{
   path: '/farm-manage/farm-manage',
   name: '养殖场管理',
   detail: [{
+    key: 'farmTotal',
     label: '养殖场数量',
     value: '0'
   },{
+    key: 'abFarmTotal',
     label: '异常数量',
     value: '0'
   }]
@@ -23,9 +25,11 @@ const cardList =[{
   path:  '/animal-manage/health-manage',
   name: '牲畜管理',
   detail: [{
+    key: 'activityTotal',
     label: '活动异常',
     value: '0'
   },{
+    key: 'locationTotal',
     label: '位置异常',
     value: '0'
   }]
@@ -34,9 +38,11 @@ const cardList =[{
   path:  '/animal-manage/device-manage',
   name: '设备管理',
   detail: [{
+    key: 'animalTotal',
     label: '激活数量',
     value: '0'
   },{
+    key: 'batteryTotal',
     label: '异常数量',
     value: '0'
   }]
@@ -46,21 +52,24 @@ const cardList =[{
   name: '疫苗管理',
 },
 {
-  id: "system",
-  name: '系统管理',
-},
-{
   id: "params",
   path: '/param-manage',
   name: '参数设置',
-}];
+},
+{
+  id: "system",
+  name: '系统设置',
+}
+];
 
 const Home = (props) => {
 
   const [drawerVisible, setDialogVisible] = useState(false);
   const [needCreateCompany, setNeedCreateCompany] = useState(false);
+  const [cardData, setCardData] = useState(cardList);
   const { company, dispatch } = props;
-  const { companyList, companyDetail } = company;
+  const { companyDetail = {} } = company;
+  const { companyId } = companyDetail
 
   const onCreateCompany = useCallback(async (values) => {
     const res = await createCompany(values);
@@ -73,32 +82,28 @@ const Home = (props) => {
     }
   }, []);
 
-  const fetchCompanyDetail = useCallback((companyId) => {
-    dispatch({
-      type: 'company/getCompanyDetail',
-      payload: {
-        companyId
-      }
-    });
-  }, []);
-
+  
   useEffect(() => {
-    dispatch({
-      type: 'company/findPageInfo'
-    })
-  }, []);
-
-  useEffect(() => {
-    if (companyList.length === 0) {
+    if (!companyId) {
       setNeedCreateCompany(true);
-      return;
     } else {
       setNeedCreateCompany(false);
-      const targetCompany = companyList[0];
-      const { companyId } = targetCompany;
-      fetchCompanyDetail(companyId);
     }
-  }, [companyList]);
+  }, []);
+
+  useEffect(() => {
+    console.log('companyDetail', companyDetail)
+    const newCardData= cardData.map(card => {
+      const { detail = [] } = card;
+      const newDetail = detail.map(d => {
+        d.value = companyDetail[d.key] || 0;
+        return d;
+      });
+      card.detail = newDetail;
+      return card;
+    });
+    setCardData(newCardData);
+  }, [companyDetail])
 
   return (
     <>
@@ -107,7 +112,7 @@ const Home = (props) => {
           (
             <div className="manage-card-container">
               {
-                cardList.map((v, i) => <ManageCard paht={v.path} item={v} bgName={`bg-${v.id}`} key={i} />)
+                cardData.map((v, i) => <ManageCard paht={v.path} item={v} bgName={`bg-${v.id}`} key={i} />)
               }
             </div>
           ) : (

@@ -16,7 +16,7 @@ export async function getAnimalList(params) {
 
 export async function exportAnimal(params) {
   return request('/yunmu/api/animal/export', {
-    method: 'POST',
+    method: 'GET',
     data: params,
   });
 } 

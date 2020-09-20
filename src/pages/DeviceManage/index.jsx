@@ -47,13 +47,14 @@ export default function HealthMa0nage() {
   }
 
   const exportAll = useCallback(async params => {
-    const res = await exportAnimal({});
-    const { code, message: info, data = {} } = res;
-    if (code == 500) {
-        message.error(info);
-        return;
-    }
-    console.log('res', res);
+    window.open('/yunmu/api/animal/export');
+    // const res = await exportAnimal();
+    // const { code, message: info, data = {} } = res;
+    // if (code == 500) {
+    //     message.error(info);
+    //     return;
+    // }
+    // location.
   }, [])
 
   const fetchDeviceList = useCallback(async params => {

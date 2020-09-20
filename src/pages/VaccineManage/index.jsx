@@ -101,13 +101,7 @@ export default function VaccineManage() {
   }
 
   const exportVa = async () => {
-    const { farmId }= form.getFieldsValue();
-    const res = await exportVaccine({ farmId });
-    const { code, message: info, data = {} } = res;
-    if (code == 500) {
-      message.error(info);
-      return;
-    }
+    window.open('/yunmu/api/vaccine/export');
   }
 
   useEffect(() => {

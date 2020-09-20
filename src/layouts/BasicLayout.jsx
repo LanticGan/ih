@@ -4,11 +4,12 @@
  * https://github.com/ant-design/ant-design-pro-layout
  */
 import ProLayout, { DefaultFooter } from '@ant-design/pro-layout';
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { Link, useIntl, connect, history } from 'umi';
 import { Result, Button } from 'antd';
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
+import { fetchUserDetail } from '@/services/users';
 import { getAuthorityFromRouter } from '@/utils/utils';
 import cookie from 'js-cookie';
 import { stringify } from 'querystring';
@@ -28,19 +29,6 @@ const noMatch = (
   />
 );
 
-/**
- * use Authorized check all menu item
- */
-const menuDataRender = menuList =>
-  menuList.map(item => {
-    const localItem = {
-      ...item,
-      children: item.children ? menuDataRender(item.children) : undefined,
-    };
-    return Authorized.check(item.authority, localItem, null);
-  });
-
-
 const BasicLayout = props => {
   const {
     dispatch,
@@ -49,16 +37,51 @@ const BasicLayout = props => {
     location = {
       pathname: '/',
     },
+    companyDetail = {}
   } = props;
+
   /**
    * constructor
    */
+
+   /**
+ * use Authorized check all menu item
+ */
+  const menuDataRender = menuList =>
+    menuList.map(item => {
+    const localItem = {
+      ...item,
+      children: item.children ? menuDataRender(item.children) : undefined,
+    };
+    const { companyId } = companyDetail 
+    return companyId ? localItem : (localItem.path == '/home' ? localItem : null)
+    // return Authorized.check(item.authority, localItem, null);
+  });
+
+  const fetchUser = useCallback(async () => {
+    const res = await fetchUserDetail();
+    const { code, message: info, data = {} } = res;
+    if (code == 500) {
+        message.error(info);
+        return;
+    }
+    const { companyId } = data;
+    if (companyId) {
+      dispatch({
+        type: 'company/getCompanyDetail',
+        payload: {
+          companyId
+        }
+      });
+    }
+  }, []);
 
   useEffect(() => {
     const { isLogin } = props;
     const token = cookie.get('token');
 
     if (isLogin || token) {
+      fetchUser()
       return;
     }
 
@@ -129,8 +152,9 @@ const BasicLayout = props => {
   );
 };
 
-export default connect(({ global, settings, login }) => ({
+export default connect(({ global, settings, login, company }) => ({
   collapsed: global.collapsed,
   settings,
-  isLogin: login.isLogin
+  isLogin: login.isLogin,
+  companyDetail: company.companyDetail
 }))(BasicLayout);

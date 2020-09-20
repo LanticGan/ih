@@ -68,13 +68,14 @@ export default function HealthMa0nage() {
   }
 
   const exportAll = useCallback(async params => {
-    const res = await exportUsers({});
-    const { code, message: info, data = {} } = res;
-    if (code == 500) {
-        message.error(info);
-        return;
-    }
-    console.log('res', res);
+    window.open('/yunmu/api/users/export');
+    // const res = await exportUsers({});
+    // const { code, message: info, data = {} } = res;
+    // if (code == 500) {
+    //     message.error(info);
+    //     return;
+    // }
+    // console.log('res', res);
   }, [])
 
   useEffect(() => {

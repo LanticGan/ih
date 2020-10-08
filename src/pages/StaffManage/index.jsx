@@ -37,6 +37,7 @@ export default function HealthMa0nage() {
     current: 1,
     pageSize: 10,
     total: 0,
+    position: ['topRight']
   })
 
   const [form] = Form.useForm();
@@ -250,6 +251,7 @@ export default function HealthMa0nage() {
           loading={loading} 
           pagination={paging}
           onChange={changePagination}
+          size="small"
         />
       </div>
       <CreateStaffDrawer

@@ -29,6 +29,7 @@ export default function VaccineManage() {
     current: 1,
     pageSize: 10,
     total: 0,
+    position: ['topRight']
   })
 
   const [form] = Form.useForm();
@@ -198,6 +199,7 @@ export default function VaccineManage() {
           pagination={paging}
           onChange={changePagination}
           loading={loading}
+          size="small"
         />
       </div>
       <CreateVaccineDrawer

@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Drawer, Form, Button, Card, Descriptions, Divider, Table, message  } from 'antd';
+import { Drawer, Form, Button, Card, Descriptions, Divider, Table, message, Row, Col  } from 'antd';
+import { Line } from '@ant-design/charts';
 import { getAnimaDetail } from '@/services/animal';
 
 const animalColumns = [
@@ -28,6 +29,26 @@ const animalColumns = [
     align: 'right',  
   },
 ];
+
+const templateData = [
+  { year: '10.1', value: 36, name: '温度' },
+  { year: '10.2', value: 35, name: '温度'},
+  { year: '10.3', value: 34, name: '温度' },
+  { year: '10.4', value: 36, name: '温度'},
+  { year: '10.5', value: 37, name: '温度'},
+  { year: '10.6', value: 38, name: '温度' },
+  { year: '10.7', value: 32, name: '温度' },
+  { year: '10.8', value: 36, name: '温度' },
+  { year: '10.9', value: 35, name: '温度' },
+];
+
+const templateConfig = {
+  data:templateData,
+  xField: 'year',
+  yField: 'value',
+  seriesField: 'name',
+  legend: { position: 'top' },
+};
 
 const CreateFarmDrawer = (props) => {
 
@@ -90,6 +111,19 @@ const CreateFarmDrawer = (props) => {
           </Descriptions>
           <Divider style={{ marginBottom: 32 }} />
           <div className="header-title">历史记录（近一周）</div>
+          <Row style={{height: 240, marginBottom: 16}} gutter={8}>
+            <Col span={12}>
+              <Line {...templateConfig} />
+            </Col>
+            <Col span={12}>
+              <Line {...templateConfig} />
+            </Col>
+          </Row>
+          <Row style={{height: 240, marginBottom: 16}} gutter={8}>
+            <Col span={24}>
+              <Line {...templateConfig} />
+            </Col>
+          </Row>
           <Table
             style={{ marginBottom: 24 }}
             pagination={false}

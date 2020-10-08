@@ -31,6 +31,7 @@ export default function HealthMa0nage() {
     current: 1,
     pageSize: 10,
     total: 0,
+    position: ['topRight']
   })
 
   const [form] = Form.useForm();
@@ -59,6 +60,10 @@ export default function HealthMa0nage() {
         label: farmName,
         value: id
     }));
+    farmOptions.unshift({
+      label: '全部',
+      value: ''
+    })
     setFarmOptions(farmOptions);
 }, []);
 
@@ -108,22 +113,17 @@ export default function HealthMa0nage() {
       dataIndex: 'equipmentNo',
       key: 'equipmentNo',
     },
-    {
-      title: '品种',
-      dataIndex: 'animalBreed',
-      key: 'animalBreed',
-    },
-    {
-      title: '性别',
-      dataIndex: 'animalSex',
-      key: 'animalSex',
-      render: v => v == '1' ? '母' : '公'
-    },
-    {
-      title: '日龄',
-      dataIndex: 'dailyAges',
-      key: 'dailyAges',
-    },
+    // {
+    //   title: '品种',
+    //   dataIndex: 'animalBreed',
+    //   key: 'animalBreed',
+    // },
+    // {
+    //   title: '性别',
+    //   dataIndex: 'animalSex',
+    //   key: 'animalSex',
+    //   render: v => v == '1' ? '母' : '公'
+    // },
     {
       title: '活动',
       dataIndex: 'activity',
@@ -133,25 +133,9 @@ export default function HealthMa0nage() {
         if (v == '0') {
           text = '正常'
         } else if (v == '1') {
-          text = '偏少'
+          text = <span className="abnormal-color">偏少</span>
         } else {
-          text = '异常'
-        }
-        return text;
-      }
-    },
-    {
-      title: '位置',
-      dataIndex: 'location',
-      key: 'location',
-      render: v => {
-        let text = "";
-        if (v == '0') {
-          text = '正常'
-        } else if (v == '1') {
-          text = '偏少'
-        } else {
-          text = '异常'
+          text = <span className="abnormal-color">异常</span>
         }
         return text;
       }
@@ -165,12 +149,33 @@ export default function HealthMa0nage() {
         if (v == '0') {
           text = '正常'
         } else if (v == '1') {
-          text = '偏少'
+          text = <span className="abnormal-color">偏少</span>
         } else {
-          text = '异常'
+          text = <span className="abnormal-color">异常</span>
         }
         return text;
       }
+    },
+    {
+      title: '位置',
+      dataIndex: 'location',
+      key: 'location',
+      render: v => {
+        let text = "";
+        if (v == '0') {
+          text = '正常'
+        } else if (v == '1') {
+          text =  <span className="abnormal-color">偏少</span>
+        } else {
+          text = <span className="abnormal-color">异常</span>
+        }
+        return text;
+      }
+    },
+    {
+      title: '日龄',
+      dataIndex: 'dailyAges',
+      key: 'dailyAges',
     },
     {
       title: '数据更新时间',
@@ -245,6 +250,15 @@ export default function HealthMa0nage() {
                     </Select>
                 </Form.Item>
             </Col>
+            <Col span={4}>
+                <Form.Item label="体温" name="template" labelCol={{ span: 6 }}>
+                    <Select allowClear>
+                    <Select.Option value="0">正常</Select.Option>
+                    <Select.Option value="1">偏高</Select.Option>
+                    <Select.Option value="2">异常</Select.Option>                    
+                    </Select>
+                </Form.Item>
+            </Col>
             <Col span={2}>
               <div className="search-button">
                 <Button type="primary" htmlType="submit">
@@ -273,6 +287,7 @@ export default function HealthMa0nage() {
           pagination={paging}
           onChange={changePagination}
           loading={loading}
+          size="small"
         />
       </div>
       <DetailDrawer

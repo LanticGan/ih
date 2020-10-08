@@ -31,6 +31,7 @@ export default function HealthMa0nage() {
     current: 1,
     pageSize: 10,
     total: 0,
+    position: ['topRight']
   });
 
   const [form] = Form.useForm();
@@ -126,11 +127,28 @@ export default function HealthMa0nage() {
       title: '设备状态',
       dataIndex: 'status',
       key: 'status',
+      render: v => {
+        let text = "";
+        if (v == '99') {
+          text = '已绑定'
+        } else {
+          text = v
+        }
+        return text;
+      }
     },
     {
       title: '设备电量',
       dataIndex: 'battery',
       key: 'battery',
+      render: v => {
+        let text = v;
+        if (v < 15) {
+          text = <span style={{color: 'red'}}>{v}</span>
+        }
+        return text;
+
+      }
     },
     // {
     //   title: '操作',
@@ -238,6 +256,7 @@ export default function HealthMa0nage() {
           dataSource={deviceList}
           pagination={paging}
           onChange={changePagination}
+          size="small"
         />
       </div>
       <div>

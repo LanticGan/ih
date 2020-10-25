@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Drawer, Form, Button, Card, Descriptions, Divider, Table, message, Row, Col  } from 'antd';
 import { Line } from '@ant-design/charts';
+import { DatePicker } from 'antd';
 import { getAnimaDetail } from '@/services/animal';
 
 const animalColumns = [
@@ -87,11 +88,23 @@ const activityConfig = {
   legend: { position: 'top' },
 };
 
+const { RangePicker } = DatePicker;
+
 const CreateFarmDrawer = (props) => {
 
   const { targetAnimal } = props;
   const { id, equipmentNo, dailyAges, breedType, farmName, bindTime, farmAddr, battery } = targetAnimal;
   const [animalHistory, setAnimalHistory] = useState([]);
+  const [dates, setDates] = useState([]);
+  
+  const disabledDate = current => {
+    if (!dates || dates.length === 0) {
+      return false;
+    }
+    const tooLate = dates[0] && current.diff(dates[0], 'days') > 30;
+    const tooEarly = dates[1] && dates[1].diff(current, 'days') > 30;
+    return tooEarly || tooLate;
+  };
 
 
   const getAnimalDetail = useCallback(async id => {
@@ -135,7 +148,7 @@ const CreateFarmDrawer = (props) => {
       }
     >
     <div>
-          <Descriptions title="基本信息" style={{ marginBottom: 32 }}>
+          <Descriptions title="基本信息" style={{ marginBottom: 16 }}>
             <Descriptions.Item label="设备编号">{equipmentNo}</Descriptions.Item>
             <Descriptions.Item label="所属养殖场">{farmName}</Descriptions.Item>
             <Descriptions.Item label="日龄">{dailyAges}</Descriptions.Item>
@@ -146,8 +159,22 @@ const CreateFarmDrawer = (props) => {
             <Descriptions.Item label="设备电量">{battery}%</Descriptions.Item>
 
           </Descriptions>
-          <Divider style={{ marginBottom: 32 }} />
-          <div className="header-title">历史记录（近一周）</div>
+          <Divider style={{ marginBottom: 16 }} />
+          <div className="header-container">
+            <div className="header-title">历史记录（近一周）</div>
+            <div className="header-range-pciker">
+              <span style={{marginRight: 6}}>时间区间</span>
+              <RangePicker 
+                disabledDate={disabledDate}
+                onCalendarChange={value => {
+                  const [start, end] = value;
+                  const [oldStart, oldEnd] = dates;
+                  setDates([start || oldStart, end || oldEnd]);
+                }}
+              />
+            </div>
+          </div>
+          
           <Row style={{height: 220, marginBottom: 16}} gutter={8}>
             <Col span={24}>
               <Line {...temparaturConfig} />

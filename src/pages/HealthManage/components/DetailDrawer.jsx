@@ -30,21 +30,58 @@ const animalColumns = [
   },
 ];
 
-const templateData = [
-  { year: '10.1', value: 36, name: '温度' },
-  { year: '10.2', value: 35, name: '温度'},
-  { year: '10.3', value: 34, name: '温度' },
-  { year: '10.4', value: 36, name: '温度'},
-  { year: '10.5', value: 37, name: '温度'},
-  { year: '10.6', value: 38, name: '温度' },
-  { year: '10.7', value: 32, name: '温度' },
-  { year: '10.8', value: 36, name: '温度' },
-  { year: '10.9', value: 35, name: '温度' },
+const temparatureData = [
+  { date: '09-10', value: 36, name: '体温(℃)' },
+  { date: '09-11', value: 35, name: '体温(℃)' },
+  { date: '09-12', value: 34, name: '体温(℃)' },
+  { date: '09-13', value: 36, name: '体温(℃)' },
+  { date: '09-14', value: 37, name: '体温(℃)' },
+  { date: '09-15', value: 38, name: '体温(℃)' },
+  { date: '09-16', value: 32, name: '体温(℃)' },
+  { date: '09-17', value: 36, name: '体温(℃)' },
 ];
 
-const templateConfig = {
-  data:templateData,
-  xField: 'year',
+const eatData = [
+  { date: '09-10', value: 220, name: '进食(次)' },
+  { date: '09-11', value: 230, name: '进食(次)'},
+  { date: '09-12', value: 550, name: '进食(次)' },
+  { date: '09-13', value: 400, name: '进食(次)'},
+  { date: '09-14', value: 310, name: '进食(次)'},
+  { date: '09-15', value: 254, name: '进食(次)' },
+  { date: '09-16', value: 276, name: '进食(次)' },
+  { date: '09-17', value: 472, name: '进食(次)' },
+];
+
+const activityData = [
+  { date: '09-10', value: 12, name: '活动(千步)' },
+  { date: '09-11', value: 13.4, name: '活动(千步)'},
+  { date: '09-12', value: 13.5, name: '活动(千步)' },
+  { date: '09-13', value: 13.6, name: '活动(千步)'},
+  { date: '09-14', value: 15, name: '活动(千步)'},
+  { date: '09-15', value: 11.2, name: '活动(千步)' },
+  { date: '09-16', value: 16, name: '活动(千步)' },
+  { date: '09-17', value: 13, name: '活动(千步)' },
+];
+
+const temparaturConfig = {
+  data:temparatureData,
+  xField: 'date',
+  yField: 'value',
+  seriesField: 'name',
+  legend: { position: 'top' },
+};
+
+const eatConfig = {
+  data: eatData,
+  xField: 'date',
+  yField: 'value',
+  seriesField: 'name',
+  legend: { position: 'top' },
+};
+
+const activityConfig = {
+  data: activityData,
+  xField: 'date',
   yField: 'value',
   seriesField: 'name',
   legend: { position: 'top' },
@@ -111,23 +148,25 @@ const CreateFarmDrawer = (props) => {
           </Descriptions>
           <Divider style={{ marginBottom: 32 }} />
           <div className="header-title">历史记录（近一周）</div>
-          <Row style={{height: 240, marginBottom: 16}} gutter={8}>
-            <Col span={12}>
-              <Line {...templateConfig} />
-            </Col>
-            <Col span={12}>
-              <Line {...templateConfig} />
+          <Row style={{height: 220, marginBottom: 16}} gutter={8}>
+            <Col span={24}>
+              <Line {...temparaturConfig} />
             </Col>
           </Row>
-          <Row style={{height: 240, marginBottom: 16}} gutter={8}>
+          <Row style={{height: 220, marginBottom: 16}} gutter={8}>
             <Col span={24}>
-              <Line {...templateConfig} />
+              <Line {...eatConfig} />
+            </Col>
+          </Row>
+          <Row style={{height: 220, marginBottom: 16}} gutter={8}>
+            <Col span={24}>
+              <Line {...activityConfig} />
             </Col>
           </Row>
           <Table
             style={{ marginBottom: 24 }}
             pagination={false}
-            dataSource={animalHistory}
+            dataSource={[]}
             columns={animalColumns}
             rowKey="id"
           />

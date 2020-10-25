@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback  } from 'react';
+import { history } from 'umi';
 import { Table } from 'antd';
 import { getMsgList } from '@/services/msg';
 import './index.less';
@@ -89,9 +90,14 @@ const CustromNoticeList = () => {
           rowExpandable: ({msgDetailDTOS = []}) => msgDetailDTOS.length > 0,
         }}
         scroll={{
-          y: 300
+          y: 460
           }
         }
+        onRow={() => ({
+          onClick: () => {
+            history.push('/device-manage/device-manage');
+          }
+        })}
       />;
     </div>
   )

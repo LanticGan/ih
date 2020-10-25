@@ -150,15 +150,15 @@ export default function HealthMa0nage() {
 
       }
     },
-    // {
-    //   title: '操作',
-    //   key: 'action',
-    //   render: (text, record) => (
-    //     <Space size="middle">
-    //       <a onClick={confirmUnbind}>设备解绑</a>
-    //     </Space>
-    //   ),
-    // },
+    {
+      title: '操作',
+      key: 'action',
+      render: (text, record) => (
+        <Space size="middle">
+          <a onClick={confirmUnbind}>设备解绑</a>
+        </Space>
+      ),
+    },
   ];
 
   const rowSelection = {
@@ -206,7 +206,7 @@ export default function HealthMa0nage() {
         className="farm-search-form"
       >
         <Row>
-            <Col span={5} >
+            <Col span={6} >
                 <Form.Item 
                     label="选择养殖场" 
                     name="farmId"
@@ -215,8 +215,8 @@ export default function HealthMa0nage() {
                     </Select>
                 </Form.Item>
             </Col>
-            <Col span={5}>
-                <Form.Item label="设备电量" name="battery" labelCol={{ span: 8 }}>
+            <Col span={6}>
+                <Form.Item label="设备电量" name="battery">
                   <InputNumber mix={0} max={100} />
                 </Form.Item>
             </Col>
@@ -230,7 +230,7 @@ export default function HealthMa0nage() {
         </Row>
       </Form>
       <div className="health-manage-operator">
-        {/* 已选择 {selectedRowKeys.length} 项 */}
+        已选择 {selectedRowKeys.length} 项
         <div className="operator-button">
           <Space>
             <Button onClick={exportAll}>
@@ -245,7 +245,6 @@ export default function HealthMa0nage() {
               </Button>
             </Upload>
           </Space>
-
         </div>
       </div>
       <div className="health-manage-content">
@@ -256,6 +255,7 @@ export default function HealthMa0nage() {
           dataSource={deviceList}
           pagination={paging}
           onChange={changePagination}
+          rowSelection={rowSelection}
           size="small"
         />
       </div>

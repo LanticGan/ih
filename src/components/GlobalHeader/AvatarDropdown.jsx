@@ -65,7 +65,7 @@ class AvatarDropdown extends React.Component {
 
         <Menu.Item key="settings">
             <SettingOutlined />
-            个人设置
+            公司基础信息
           </Menu.Item>
 
         <Menu.Item key="logout">

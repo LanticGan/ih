@@ -44,7 +44,7 @@ const FarmContentCard = (props) => {
                 <Col span={6}>
                     <div className="detail">
                         <div className="detail-value">{batteryTotal}</div>
-                        <div className="detail-label">设备低电量</div>
+                        <div className="detail-label">发情</div>
                     </div>
                 </Col>
             </Row>

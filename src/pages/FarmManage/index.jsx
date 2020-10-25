@@ -106,11 +106,11 @@ const FarmManage = (props) => {
                 form={form}
                 onFinish={onFinish}
                 labelCol={{ span: 8 }}
-                wrapperCol={{ span: 14 }}
+                wrapperCol={{ span: 16 }}
                 className="farm-search-form"
             >
                 <Row>
-                    <Col span={5} >
+                    <Col span={6} >
                         <Form.Item 
                             label="选择养殖场" 
                             name="farmId"
@@ -119,43 +119,64 @@ const FarmManage = (props) => {
                             </Select>
                         </Form.Item>
                     </Col>
-                    {/* <Col span={5}>
-                        <Form.Item label="活动" name="activity" labelCol={{ span: 6 }} allowClear>
+                    <Col span={6}>
+                        <Form.Item label="活动" name="activity"  allowClear>
                             <Select>
+                                <Select.Option value="">全部</Select.Option>
                                 <Select.Option value="normal">正常</Select.Option>
-                                <Select.Option value="demo">异常</Select.Option>
+                                <Select.Option value="">偏高</Select.Option>
+                                <Select.Option value="">偏低</Select.Option>
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col span={4}>
-                        <Form.Item label="位置" name="position" labelCol={{ span: 6 }} allowClear>
+                    <Col span={6}>
+                        <Form.Item label="位置" name="position"  allowClear>
                             <Select>
-                            <Select.Option value="normal">正常</Select.Option>
-                                <Select.Option value="demo">异常</Select.Option>                            </Select>
+                                <Select.Option value="">全部</Select.Option>
+                                <Select.Option value="normal">围栏内</Select.Option>
+                                <Select.Option value="">围栏外</Select.Option>                          
+                            </Select>
                         </Form.Item>
                     </Col>
-                    <Col span={4}>
-                        <Form.Item label="进食" name="food" labelCol={{ span: 6 }} allowClear>
+                    <Col span={6}>
+                        <Form.Item label="进食" name="food" allowClear>
                             <Select>
-                            <Select.Option value="normal">正常</Select.Option>
-                                <Select.Option value="demo">异常</Select.Option>                            </Select>
+                                <Select.Option value="">全部</Select.Option>
+                                <Select.Option value="normal">正常</Select.Option>
+                                <Select.Option value="">偏高</Select.Option>
+                                <Select.Option value="">偏低</Select.Option>
+                            </Select>
                         </Form.Item>
                     </Col>
-                    <Col span={4}>
-                        <Form.Item label="设备电量" name="deviceCharge" allowClear>
+                    </Row>
+                    <Row>
+                    <Col span={6}>
+                        <Form.Item label="体温" name="deviceCharge" allowClear>
                             <Select>
-                            <Select.Option value="normal">正常</Select.Option>
-                                <Select.Option value="demo">异常</Select.Option>                            </Select>
+                                <Select.Option value="">全部</Select.Option>
+                                <Select.Option value="normal">正常</Select.Option>
+                                <Select.Option value="">偏高</Select.Option>
+                                <Select.Option value="">偏低</Select.Option>                         
+                            </Select>
                         </Form.Item>
-                    </Col> */}
-                    <Col span={2}>
+                    </Col>
+                    <Col span={6}>
+                        <Form.Item label="发情" name="deviceCharge" allowClear>
+                            <Select>
+                                <Select.Option value="">是</Select.Option>
+                                <Select.Option value="normal">否</Select.Option>
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
                         <div className="search-button">
                             <Button type="primary" htmlType="submit">
                                 查询
                             </Button>                      
                         </div>
                     </Col>
-                </Row>
+                    </Row>
+                    
             </Form>
             <div className="operate-area">
                 <Button type="primary" onClick={() => setDrawerVisible(true)}>

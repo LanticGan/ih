@@ -14,15 +14,44 @@ import {
 } from 'antd';
 import CreateVaccineDrawer from './components/CreateVaccineDrawer';
 import { getFarmOptions } from '@/services/farm';
-import { getVaccineList, createVaccine, exportVaccine } from '@/services/vaccine'
+import { getVaccineList, createVaccine, exportVaccine } from '@/services/vaccine';
+import { getAnimalList } from '@/services/animal';
 import cs from 'classnames';
 import './index.less';
+
+const vaccineColumns = [
+  {
+    title: '疫苗类型',
+    dataIndex: 'vaccineName',
+    key: 'vaccineName',
+  },
+  {
+    title: '是否注射',
+    dataIndex: 'nums',
+    key: 'nums',
+  },
+  {
+    title: '注射人',
+    dataIndex: 'userName',
+    key: 'userName',
+  },
+  {
+    title: '注射时间',
+    dataIndex: 'vaccineTime',
+    key: 'vaccineTime',
+  },
+];
+
+const expandedRowRender = ({ msgDetailDTOS = [] }) => {
+  return <Table rowKey="id" columns={vaccineColumns} dataSource={[]} pagination={false}size="small" />;
+}
 
 export default function VaccineManage() {
   
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [vaccineList, setVaccineList] = useState([]);
+  const [animalList, setAnimalList] = useState([]);
   const [farmOptions, setFarmOptions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [paging, setPaging] = useState({
@@ -35,7 +64,8 @@ export default function VaccineManage() {
   const [form] = Form.useForm();
 
   const onFinish = (values) => {
-    fetchVaccineList(values);
+    // fetchVaccineList(values);
+    fetchAnimalList(values);
   };
 
   const onSelectChange = selectedRowKeys => {
@@ -96,6 +126,24 @@ export default function VaccineManage() {
     });
   }, []);
 
+  const fetchAnimalList = useCallback(async params => {
+    setLoading(true);
+    const res = await getAnimalList({ ...params });
+    setLoading(false);
+    const { code, message: info, data = {} } = res;
+    if (code == 500) {
+        message.error(info);
+        return;
+    }
+    const { list = [], currPage, pageSize, totalCount } = data;
+    setAnimalList(list);
+    setPaging({
+      ...paging,
+      current: currPage,
+      total: totalCount,
+    })
+  }, []);
+
   const changePagination = v => {
     const { current } = v;
     fetchVaccineList({ pageNum: current });
@@ -106,34 +154,30 @@ export default function VaccineManage() {
   }
 
   useEffect(() => {
+    fetchAnimalList();
     fetchVaccineList();
   }, []);
 
-  const columns = [
+  const animalColumns = [
+    {
+      title: '牲畜id',
+      dataIndex: 'id',
+      key: 'id',
+    },
     {
       title: '所属养殖场',
       dataIndex: 'farmName',
       key: 'farmName',
     },
     {
-      title: '疫苗名称',
-      dataIndex: 'vaccineName',
-      key: 'vaccineName',
+      title: '设备编号',
+      dataIndex: 'equipmentNo',
+      key: 'equipmentNo',
     },
     {
-      title: '注射数量',
-      dataIndex: 'nums',
-      key: 'nums',
-    },
-    {
-      title: '注射人',
-      dataIndex: 'userName',
-      key: 'userName',
-    },
-    {
-      title: '注射时间',
-      dataIndex: 'vaccineTime',
-      key: 'vaccineTime',
+      title: '日龄',
+      dataIndex: 'dailyAges',
+      key: 'dailyAges',
     },
   ];
 
@@ -148,12 +192,12 @@ export default function VaccineManage() {
         form={form}
         onFinish={onFinish}
         labelCol={{ span: 8 }}
-        wrapperCol={{ span: 14 }}
+        wrapperCol={{ span: 16 }}
         className="farm-search-form"
         loading={loading}
       >
         <Row>
-            <Col span={5} >
+            <Col span={6} >
                 <Form.Item 
                     label="选择养殖场" 
                     name="farmId"
@@ -162,12 +206,17 @@ export default function VaccineManage() {
                     </Select>
                 </Form.Item>
             </Col>
-            <Col span={5}>
-                <Form.Item label="疫苗名称" name="vaccineName" labelCol={{ span: 6 }}>
+            <Col span={6}>
+                <Form.Item label="疫苗类型" name="vaccineName">
                   <Input />
                 </Form.Item>
             </Col>
-            <Col span={2}>
+            <Col span={6}>
+                <Form.Item label="日龄" name="dailyAges">
+                  <Input />
+                </Form.Item>
+            </Col>
+            <Col span={4}>
               <div className="search-button">
                 <Button type="primary" htmlType="submit">
                     查询
@@ -177,7 +226,7 @@ export default function VaccineManage() {
         </Row>
       </Form>
       <div className="health-manage-operator">
-        {/* 已选择 {selectedRowKeys.length} 项 */}
+        已选择 {selectedRowKeys.length} 项
         <div className="operator-button">
           <Space>
             <Button onClick={exportVa}>
@@ -192,12 +241,27 @@ export default function VaccineManage() {
       </div>
       <div className="health-manage-content">
         {/* rowSelection={rowSelection} */}
-        <Table 
+        {/* <Table 
           rowKey="id" 
           columns={columns} 
           dataSource={vaccineList}
           pagination={paging}
           onChange={changePagination}
+          rowSelection={rowSelection}
+          loading={loading}
+          size="small"
+        /> */}
+        <Table 
+          rowKey="id" 
+          columns={animalColumns} 
+          dataSource={animalList}
+          pagination={paging}
+          onChange={changePagination}
+          rowSelection={rowSelection}
+          expandable={{ 
+            expandedRowRender,
+            rowExpandable: ({msgDetailDTOS = []}) => true,
+          }}
           loading={loading}
           size="small"
         />

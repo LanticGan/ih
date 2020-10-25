@@ -28,15 +28,18 @@ export default defineConfig({
   // umi routes: https://umijs.org/docs/routing
   routes: [
     {
+      key: 'user',
       path: '/user', 
       component: '../layouts/CustomUserLayout',
       routes: [
         {
+          key: 'login',
           name: 'login',
           path: '/user/login',
           component: './user/login',
         },
         {
+          key: 'register',
           name: 'login',
           path: '/user/register',
           component: './user/register',
@@ -59,8 +62,40 @@ export default defineConfig({
             {
               name: '首页',
               icon: 'home',
+              key: 'home',
               path: '/home',
               component: './home',
+            },
+            {
+              path: '/animal-manage',
+              name: '牲畜管理',
+              icon: 'crown',
+              routes: [
+                {
+                  path: '/animal-manage/health-manage',
+                  name: '牲畜健康管理',
+                  icon: 'smile',
+                  component: './HealthManage',
+                },
+                {
+                  path: '/animal-manage/vaccine-manage',
+                  name: '疫苗注射',
+                  icon: 'pushpin',
+                  component: './VaccineManage',
+                },
+                {
+                  path: '/breed-manage',
+                  name: '繁殖管理',
+                  icon: 'tablet',
+                  component: './404',
+                },
+                {
+                  path: '/sell-manage',
+                  name: '售卖管理',
+                  icon: 'tablet',
+                  component: './404',
+                }
+              ],
             },
             {
               path: '/farm-manage',
@@ -75,48 +110,30 @@ export default defineConfig({
                 },
                 {
                   path: '/farm-manage/farm-manage',
-                  name: '养殖场管理',
+                  name: '圈舍管理',
                   icon: 'group',
                   component: './FarmManage',
                 },
               ],
             },
             {
-              path: '/animal-manage',
-              name: '牲畜管理',
-              icon: 'crown',
+              path: '/device-manage',
+              name: '设备管理',
+              icon: 'tablet',
               routes: [
                 {
-                  path: '/animal-manage/health-manage',
-                  name: '牲畜健康管理',
-                  icon: 'smile',
-                  component: './HealthManage',
-                },
-                {
-                  path: '/animal-manage/device-manage',
-                  name: '设备管理',
+                  path: '/device-manage/device-manage',
+                  name: '设备状态',
                   icon: 'smile',
                   component: './DeviceManage',
                 },
-              ],
-            },
-            {
-              path: '/vaccine-manage',
-              name: '疫苗管理',
-              icon: 'pushpin',
-              component: './VaccineManage',
-            },
-            {
-              path: '/source-manage',
-              name: '溯源管理',
-              icon: 'smile',
-              component: './404',
-            },
-            {
-              path: '/forage-manage',
-              name: '饲料管理',
-              icon: 'tablet',
-              component: './404',
+                {
+                  path: '/device-manage/param-manage',
+                  name: '参数设置',
+                  icon: 'menu',
+                  component: './ParamsSetting',
+                },
+              ]
             },
             {
               path: '/staff-manage',
@@ -125,11 +142,30 @@ export default defineConfig({
               component: './StaffManage',
             },
             {
-              path: '/param-manage',
-              name: '参数管理',
+              path: '/stock-manage',
+              name: '库存管理',
               icon: 'menu',
-              component: './ParamsSetting',
+              routes: [
+                {
+                  path: '/stock-manage/vaccine-manage',
+                  name: '疫苗管理',
+                  icon: 'smile',
+                  component: './VaccineManage',
+                },
+                {
+                  path: '/forage-manage',
+                  name: '饲料管理',
+                  icon: 'tablet',
+                  component: './404',
+                },
+              ]
             },
+            // {
+            //   path: '/source-manage',
+            //   name: '溯源管理',
+            //   icon: 'smile',
+            //   component: './404',
+            // },
             {
               name: '合作方管理',
               icon: 'team',

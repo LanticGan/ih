@@ -78,7 +78,7 @@ const NoticeIcon = props => {
       })}
     >
       <Badge
-        count={count}
+        count={5}
         style={{
           boxShadow: 'none',
         }}

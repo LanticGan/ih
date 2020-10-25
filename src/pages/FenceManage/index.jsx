@@ -13,11 +13,11 @@ const farms = [{
   number: 8,
   center: [108.71, 40.83],
   radius: 300,
-  title: '001号养殖场',
-  hdyc: 0,
-  jwzyc: 0,
-  jsyc: 0,
-  sbddl: 0,
+  farmName: '001号养殖场',
+  activityTotal: 0,
+  locationTotal: 0,
+  eatTotal: 0,
+  batteryTotal: 0,
   isAbnormal: false,
   status: 1,
   animals: [
@@ -51,11 +51,11 @@ const farms = [{
   number: 2,
   center: [119.55, 30.27],
   radius: 300,
-  title: '002号养殖场',
-  hdyc: 0,
-  jwzyc: 0,
-  jsyc: 0,
-  sbddl: 0,
+  farmName: '002号养殖场',
+  activityTotal: 0,
+  locationTotal: 0,
+  eatTotal: 0,
+  batteryTotal: 0,
   isAbnormal: false,
   status: 1,
   animals: [
@@ -151,8 +151,6 @@ class FenceManage extends React.Component {
     } else {
       this.addFence(farm);
     }
-
-    this.handleFarmAreaChange(id);
   }
 
   addFarmsMarker = () => {
@@ -265,6 +263,8 @@ class FenceManage extends React.Component {
     let farmsDistribution = farms;
     if (id != 'all') {
       farmsDistribution = farms.filter(f => f.id == id);
+      const targetFarm = farmsDistribution[0];
+      this.handleClickFarm(targetFarm)
     } else {
       this.changeAllMarker(true);
     }
@@ -295,7 +295,7 @@ class FenceManage extends React.Component {
           farmAreaValue={farmAreaValue}
           allFarms={farms} 
           farmsDistribution={farmsDistribution} 
-          clickFarm={this.handleClickFarm}
+          clickFarm={({id}) => history.push(`/animal-manage/health-manage?farmId=${id}`)}
           handleFarmAreaChange={this.handleFarmAreaChange}
         />
         { showFarmCard && this.renderFarmCard()}

@@ -107,11 +107,22 @@ export default function HealthMa0nage() {
       title: '所属养殖场',
       dataIndex: 'farmName',
       key: 'farmName',
+    },{
+      title: '圈舍编号',
+      dataIndex: 'equipmentNo',
+      key: 'farmNo',
+      render: () => "A01-987-678"
     },
     {
       title: '设备编号',
       dataIndex: 'equipmentNo',
       key: 'equipmentNo',
+    },
+    {
+      title: '体温(℃)',
+      dataIndex: 'temprature',
+      key: 'temprature',
+      render: () => "37.4"
     },
     // {
     //   title: '品种',
@@ -185,6 +196,8 @@ export default function HealthMa0nage() {
     {
       title: '操作',
       key: 'action',
+      fixed: 'right',
+      width: 120,
       render: (text, record) => (
         <Space size="middle">
           <a onClick={() => openDetailDrawer(record)} >详情</a>
@@ -209,11 +222,11 @@ export default function HealthMa0nage() {
         form={form}
         onFinish={onFinish}
         labelCol={{ span: 8 }}
-        wrapperCol={{ span: 14 }}
+        wrapperCol={{ span: 16 }}
         className="farm-search-form"
       >
         <Row>
-            <Col span={5} >
+            <Col span={6} >
                 <Form.Item 
                     label="选择养殖场" 
                     name="farmId"
@@ -222,8 +235,8 @@ export default function HealthMa0nage() {
                     </Select>
                 </Form.Item>
             </Col>
-            <Col span={5}>
-                <Form.Item label="活动" name="activity" labelCol={{ span: 6 }}>
+            <Col span={6}>
+                <Form.Item label="活动" name="activity">
                     <Select allowClear>
                         <Select.Option value="0">正常</Select.Option>
                         <Select.Option value="1">偏少</Select.Option>
@@ -232,8 +245,8 @@ export default function HealthMa0nage() {
                     </Select>
                 </Form.Item>
             </Col>
-            <Col span={4}>
-                <Form.Item label="位置" name="location" labelCol={{ span: 6 }}>
+            <Col span={6}>
+                <Form.Item label="位置" name="location">
                     <Select allowClear>
                     <Select.Option value="0">正常</Select.Option>
                         <Select.Option value="1">围栏内</Select.Option>
@@ -241,8 +254,8 @@ export default function HealthMa0nage() {
                     </Select>
                 </Form.Item>
             </Col>
-            <Col span={4}>
-                <Form.Item label="进食" name="eat" labelCol={{ span: 6 }}>
+            <Col span={6}>
+                <Form.Item label="进食" name="eat">
                     <Select allowClear>
                     <Select.Option value="0">正常</Select.Option>
                         <Select.Option value="1">偏少</Select.Option>
@@ -250,31 +263,47 @@ export default function HealthMa0nage() {
                     </Select>
                 </Form.Item>
             </Col>
-            <Col span={4}>
-                <Form.Item label="体温" name="template" labelCol={{ span: 6 }}>
-                    <Select allowClear>
-                    <Select.Option value="0">正常</Select.Option>
-                    <Select.Option value="1">偏高</Select.Option>
-                    <Select.Option value="2">异常</Select.Option>                    
-                    </Select>
-                </Form.Item>
-            </Col>
-            <Col span={2}>
-              <div className="search-button">
-                <Button type="primary" htmlType="submit">
-                    查询
-                </Button>                      
-              </div>
-            </Col>
+        </Row>
+        <Row>
+          <Col span={6}>
+            <Form.Item label="体温" name="template">
+              <Select allowClear>
+              <Select.Option value="0">正常</Select.Option>
+              <Select.Option value="1">偏高</Select.Option>
+              <Select.Option value="2">偏低</Select.Option>                    
+              </Select>
+          </Form.Item>
+          </Col>
+          <Col span={6}>
+            <Form.Item label="发情" name="template">
+                <Select allowClear>
+                <Select.Option value="0">是</Select.Option>
+                <Select.Option value="1">否</Select.Option>                  
+                </Select>
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <div className="search-button">
+              <Button type="primary" htmlType="submit">
+                  查询
+              </Button>                      
+            </div>
+          </Col>
         </Row>
       </Form>
       <div className="health-manage-operator">
-        {/* 已选择 {selectedRowKeys.length} 项 */}
+        已选择 {selectedRowKeys.length} 项
         <div className="operator-button">
         <Space>
-          {/* <Button onClick={() => message.error('导出失败')}>
-            导出
-          </Button> */}
+        <Button onClick={() => message.success('删除成功')}>
+            删除
+          </Button>
+          <Button onClick={() => message.success('导出成功')}>
+            批量导出
+          </Button>
+          <Button onClick={() => message.success('导入成功')}>
+            批量导入
+          </Button>
         </Space>
 
         </div>
@@ -286,6 +315,8 @@ export default function HealthMa0nage() {
           dataSource={animalList}
           pagination={paging}
           onChange={changePagination}
+          rowSelection={rowSelection}
+          scroll={{ x: 1400 }}
           loading={loading}
           size="small"
         />

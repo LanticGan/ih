@@ -14,3 +14,17 @@ export async function getMsgList(params) {
   });
 }
 
+export async function read(params) {
+  return request('/yunmu/api/msg/read', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+export async function batchRead(params) {
+  return request('/yunmu/api/msg/batchRead', {
+    method: 'POST',
+    data: params,
+  });
+}
+

@@ -1,15 +1,13 @@
 import { useEffect, useState, useCallback  } from 'react';
 import { history } from 'umi';
-import { Table } from 'antd';
+import { Table, Space, Tag  } from 'antd';
 import { getMsgList } from '@/services/msg';
 import './index.less';
 
 const msgTypeEnum = {
-  "101": "售卖",
-  "102" : "设备故障",
-  "103" : "低电量", 
-  "201" : "设备变更",
-  "202" : "养殖场变更"
+  "1": "系统消息",
+  "2" : "养殖场消息",
+  "3" : "牲畜消息", 
 }
 
 const columns = [
@@ -19,25 +17,69 @@ const columns = [
     key: 'msgType',
     render: v => msgTypeEnum[v]
   },
-  {
-    title: '所属养殖场',
-    dataIndex: 'farmName',
-    key: 'farmName',
-  },
+  // {
+  //   title: '所属养殖场',
+  //   dataIndex: 'farmName',
+  //   key: 'farmName',
+  // },
   {
     title: '简要概述',
     dataIndex: 'desc',
     key: 'desc',
   },
-  {
-    title: '数量',
-    dataIndex: 'nums',
-    key: 'nums',
-  },
+  // {
+  //   title: '数量',
+  //   dataIndex: 'nums',
+  //   key: 'nums',
+  // },
   {
     title: '时间',
     dataIndex: 'time',
     key: 'time',
+  },
+  {
+    title: '状态',
+    dataIndex: 'status',
+    key: 'status',
+    render: (text, record) => {
+      let ele = null;
+      if (text == 0) {
+        ele = <Tag color="volcano">未读</Tag>
+      } else {
+        ele = <Tag color="green">已读</Tag>
+      }
+      return ele;
+    }
+  },
+  {
+    title: '操作',
+    key: 'action',
+    fixed: 'right',
+    width: 120,
+    render: (text, record) => {
+      const { msgType, ref, id } = record;
+      if (msgType == 1) {
+        return null
+      } else {
+        return (
+          <Space size="middle">
+            <a onClick={() => {
+              if (msgType == 2) {
+                history.push(`/farm-manage/farm-manage?farmdId=${ref}`);
+              } else if (msgType == 3) {
+                history.push(`/animal-manage/health-manage?farmdId=${ref}`);
+              }
+              dispatch({
+                type: 'msg/read',
+                payload: {
+                  messageId: id,
+                }
+              });
+            }} >详情</a>
+          </Space>
+        )
+      }
+    }
   },
 ];
 
@@ -57,25 +99,41 @@ const expandedRowRender = ({ msgDetailDTOS = [] }) => {
   return <Table rowKey="id" columns={columns} dataSource={msgDetailDTOS} pagination={false} />;
 }
 
-const CustromNoticeList = () => {
+const CustromNoticeList = (props) => {
 
-  const [msgList, setMsgList] = useState([]);
+  const { msgList = {}, dispatch = () => {} } = props;
+  const { list = [], currPage = 1, pageSize = 10, totalCount } = msgList; 
+  const paging = {
+    current: currPage,
+    pageSize,
+    total: totalCount,
+  };
+  // const [msgList, setMsgList] = useState([]);
+  // const fetchDeviceList = useCallback(async params => {
+  //   const res = await getMsgList({ ...params });
+  //   const { code, message: info, data = {} } = res;
+  //   if (code == 500) {
+  //       message.error(info);
+  //       return;
+  //   }
+  //   const { list = [], currPage, pageSize, totalCount } = data;
+  //   setMsgList(list);
+  // }, []);
 
+  // useEffect(() => {
+  //   fetchDeviceList();
+  // },[])
 
-  const fetchDeviceList = useCallback(async params => {
-    const res = await getMsgList({ ...params });
-    const { code, message: info, data = {} } = res;
-    if (code == 500) {
-        message.error(info);
-        return;
-    }
-    const { list = [], currPage, pageSize, totalCount } = data;
-    setMsgList(list);
-  }, []);
-
-  useEffect(() => {
-    fetchDeviceList();
-  },[])
+  const changePagination = v => {
+    const { current } = v;
+    dispatch({
+      type: 'msg/getMsgInfo',
+      payload: {
+        pageSize: 10,
+        pageNum: current
+      }
+    });
+  }
 
 
   return (
@@ -83,21 +141,14 @@ const CustromNoticeList = () => {
       <div className="title">消息</div>
       <Table 
         rowKey="id"
-        dataSource={msgList} 
-        columns={columns} 
-        expandable={{ 
-          expandedRowRender,
-          rowExpandable: ({msgDetailDTOS = []}) => msgDetailDTOS.length > 0,
-        }}
+        dataSource={list} 
+        columns={columns}
+        pagination={paging}
+        onChange={changePagination}
         scroll={{
-          y: 460
+          y: 560
           }
         }
-        onRow={() => ({
-          onClick: () => {
-            history.push('/device-manage/device-manage');
-          }
-        })}
       />;
     </div>
   )

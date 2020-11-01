@@ -5,10 +5,10 @@ const Model = {
   state: {
     status: undefined,
     code: null,
+    message: "",
   },
   effects: {
     *submit({ payload }, { call, put }) {
-      console.log('payload', payload);
       const response = yield call(register, payload);
       yield put({
         type: 'registerHandle',
@@ -23,8 +23,14 @@ const Model = {
   },
   reducers: {
     registerHandle(state, { payload }) {
-      return { ...state, status: payload.status, code: payload.code };
+      return { ...state, code: payload.code, message: payload.message };
     },
+    reset(state, { payload }) {
+      return {
+        ...state,
+        status: null
+      }
+    }
   },
 };
 export default Model;

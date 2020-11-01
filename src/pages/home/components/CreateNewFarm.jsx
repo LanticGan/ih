@@ -1,8 +1,15 @@
-import { Drawer, Form, Button, Col, Row, Input, Select, Radio } from 'antd';
+import { Drawer, Form, Button, Col, Row, Input, Select, Radio, Cascader } from 'antd';
+import { useState, useEffect  } from 'react';
+import getAddressOptions from '@/utils/address';
 
 const CreateFarmDrawer = (props) => {
 
   const [form] = Form.useForm();
+  const [addressOptions, setAddressOptions] = useState([]);
+
+  useEffect(() => {
+    setAddressOptions(getAddressOptions());
+  }, [])
 
   const onFinish = values => {
     props.onCreateCompany(values);
@@ -57,8 +64,18 @@ const CreateFarmDrawer = (props) => {
           <Form.Item
             name="companyAddr"
             label="地址"
+            rules={[
+              {
+                required: true,
+                message: '请选择公司地址',
+              },
+            ]}
            >
-            <Input placeholder="请输入公司地址" />
+            <Cascader
+              options={addressOptions}
+              placeholder="请选择公司地址"
+              
+            />
           </Form.Item>
         </Col>
       </Row>

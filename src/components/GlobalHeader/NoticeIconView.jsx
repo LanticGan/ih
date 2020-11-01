@@ -122,9 +122,10 @@ class GlobalHeaderRight extends Component {
   };
 
   render() {
-    const { currentUser, fetchingNotices, onNoticeVisibleChange } = this.props;
+    const { currentUser, fetchingNotices, onNoticeVisibleChange, msg = {}, dispatch } = this.props;
     const noticeData = this.getNoticeData();
     const unreadMsg = this.getUnreadData(noticeData);
+    const { unreadCount, msgList } = msg;
     return (
       <NoticeIcon
         className={styles.action}
@@ -139,24 +140,21 @@ class GlobalHeaderRight extends Component {
         onPopupVisibleChange={onNoticeVisibleChange}
         onViewMore={() => message.info('Click on view more')}
         clearClose
+        unreadCount={unreadCount}
+        msgList={msgList}
+        dispatch={dispatch}
       >
-        <NoticeIcon.Tab
-          tabKey="notification"
-          count={unreadMsg.notification}
-          list={noticeData.notification}
-          title="通知"
-          emptyText="你已查看所有通知"
-          showViewMore
-        />
+        <NoticeIcon.Tab />
       </NoticeIcon>
     );
   }
 }
 
-export default connect(({ user, global, loading }) => ({
+export default connect(({ user, global, loading, msg }) => ({
   currentUser: user.currentUser,
   collapsed: global.collapsed,
   fetchingMoreNotices: loading.effects['global/fetchMoreNotices'],
   fetchingNotices: loading.effects['global/fetchNotices'],
   notices: global.notices,
+  msg
 }))(GlobalHeaderRight);

@@ -56,9 +56,9 @@ class Widget extends React.Component {
     const { allFarms = [] } = this.props;
 
     allFarms.forEach(f => {
-      const { id, title } = f;
+      const { id, farmName } = f;
       famrsOptions.push({
-        label: title,
+        label: farmName,
         value: id
       })
     });
@@ -66,8 +66,16 @@ class Widget extends React.Component {
     return famrsOptions;
   }
 
+  getCurrentFarm = () => {
+    const { allFarms = [], farmAreaValue } = this.props;
+    const currentFarm = allFarms.filter(f => f.id == farmAreaValue)[0] || {};
+    return currentFarm;
+  }
+
   render() {
     const { handleFarmAreaChange, farmAreaValue } = this.props;
+    const currentFarm = this.getCurrentFarm();
+    console.log('currentFarm', currentFarm)
     return (
       <div className="map-widget-contianer">
         <div className="widget-header normal">

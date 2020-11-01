@@ -42,11 +42,18 @@ const Register = ({ submitting, dispatch, userAndregister }) => {
       return;
     }
 
-    if (userAndregister.status == 'ok') {
+    if (userAndregister.code == '0') {
       message.success('注册成功！');
       history.push({
         pathname: '/user/login',
       });
+      dispatch({
+        type: 'userAndregister/reset'
+      });
+    } else {
+      if (userAndregister.message) {
+        message.error(userAndregister.message);
+      }
     }
   }, [userAndregister]);
   useEffect(

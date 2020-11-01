@@ -40,6 +40,16 @@ const BasicLayout = props => {
     companyDetail = {}
   } = props;
 
+  useEffect(() => {
+    dispatch({
+      type: 'msg/getMsgInfo',
+      payload: {
+        pageSize: 10,
+        pageNum: 1
+      }
+    });
+  }, [])
+
   /**
    * constructor
    */
@@ -53,18 +63,22 @@ const BasicLayout = props => {
       ...item,
       children: item.children ? menuDataRender(item.children) : undefined,
     };
-    const { companyId } = companyDetail 
-    return companyId ? localItem : (localItem.path == '/home' ? localItem : null)
-    // return Authorized.check(item.authority, localItem, null);
+    const { companyId } = companyDetail
+    if (companyId && companyId != 0) {
+      return localItem
+    } else {
+      return localItem.key == 'home' ? localItem : null;
+    }
   });
 
   const fetchUser = useCallback(async () => {
     const res = await fetchUserDetail();
-    const { code, message: info, data = {} } = res;
+    let { code, message: info, data = {} } = res;
     if (code == 500) {
         message.error(info);
         return;
     }
+    data = data || {};
     const { companyId } = data;
     if (companyId) {
       dispatch({
@@ -152,9 +166,10 @@ const BasicLayout = props => {
   );
 };
 
-export default connect(({ global, settings, login, company }) => ({
+export default connect(({ global, settings, login, company, msg }) => ({
   collapsed: global.collapsed,
   settings,
   isLogin: login.isLogin,
-  companyDetail: company.companyDetail
+  companyDetail: company.companyDetail || {},
+  msg
 }))(BasicLayout);

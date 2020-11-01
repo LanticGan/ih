@@ -71,14 +71,22 @@ const Home = (props) => {
   const { companyDetail = {} } = company;
   const { companyId } = companyDetail
 
-  const onCreateCompany = useCallback(async (values) => {
-    const res = await createCompany(values);
+  const onCreateCompany = useCallback(async (values = {}) => {
+    const { companyAddr = [] } = values;
+    const res = await createCompany({
+      ...values,
+      companyAddr: companyAddr.join('')
+    });
     const { code } = res;
-    const { companyId = 1 } = res.data || {};
     if (code == 0) {
       message.success('创建成功!');
-      fetchCompanyDetail(companyId);
       setDialogVisible(false);
+      history.replace({
+        pathname: '/home',
+      });  
+    } else {
+      const { message: msg = "创建失败" } = res;
+      message.error(msg);
     }
   }, []);
 

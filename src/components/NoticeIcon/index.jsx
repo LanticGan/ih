@@ -63,7 +63,7 @@ const NoticeIcon = props => {
     );
   };
 
-  const { className, count, bell } = props;
+  const { className, count, bell, unreadCount, msgList, dispatch } = props;
   const [visible, setVisible] = useMergeValue(false, {
     value: props.popupVisible,
     onChange: props.onPopupVisibleChange,
@@ -78,7 +78,7 @@ const NoticeIcon = props => {
       })}
     >
       <Badge
-        count={5}
+        count={unreadCount}
         style={{
           boxShadow: 'none',
         }}
@@ -96,7 +96,7 @@ const NoticeIcon = props => {
   return (
     <HeaderDropdown
       placement="bottomRight"
-      overlay={<CustromNoticeList />}
+      overlay={<CustromNoticeList msgList={msgList} dispatch={dispatch} />}
       overlayClassName={styles.popover}
       trigger={['click']}
       visible={visible}

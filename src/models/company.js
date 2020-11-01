@@ -23,7 +23,8 @@ const Model = {
 
     *getCompanyDetail({ payload }, { call, put }) {
       const response = yield call(getDetail, payload);
-      const { data = {} } = response;
+      let { data = {} } = response;
+      data = data || {};
       yield put({
         type: 'setState',
         payload: {

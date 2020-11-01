@@ -81,12 +81,12 @@ class FenceManage extends React.Component {
   fetchFenceList = async params => {
     const res = await getFenceList({ ...params });
     const { code, message: info, data = {} } = res;
+    console.log('res', res);
     const { list = [], currPage, pageSize, totalCount } = data;
     if (code == 500) {
         message.error(info);
         return;
     }
-    console.log('list', list);
   }
 
   fetchFarmList = async params => {

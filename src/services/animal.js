@@ -19,7 +19,14 @@ export async function exportAnimal(params) {
     method: 'GET',
     data: params,
   });
-} 
+}
+
+export async function statisticDaily(params) {
+  return request('/yunmu/api/animal/statisticDaily', {
+    method: 'POST',
+    data: params,
+  });
+}
 
 
 

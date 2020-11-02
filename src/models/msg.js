@@ -1,4 +1,4 @@
-import { getMsgList, read, batchRead } from '@/services/msg';
+import { getMsgList, read as callRead, batchRead as callBatchRead } from '@/services/msg';
 
 const Model = {
   namespace: 'msg',
@@ -21,7 +21,18 @@ const Model = {
       });
     },
     * read({ payload }, { call, put }) {
-      const response = yield call(read, payload);
+      const response = yield call(callRead, payload);
+      let { data = {} } = response;
+      data = data || {};
+      const { code = 0 } = data;
+      if (code == 0) {
+        yield put({
+          type: 'getMsgInfo',
+        });
+      }
+    },
+    * batchread({ payload }, { call, put }) {
+      const response = yield call(callBatchRead, payload);
       let { data = {} } = response;
       data = data || {};
       const { code = 0 } = data;

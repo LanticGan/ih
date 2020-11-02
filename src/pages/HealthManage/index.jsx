@@ -109,9 +109,8 @@ export default function HealthMa0nage() {
       key: 'farmName',
     },{
       title: '圈舍编号',
-      dataIndex: 'equipmentNo',
-      key: 'farmNo',
-      render: () => "A01-987-678"
+      dataIndex: 'houseNo',
+      key: 'houseNo',
     },
     {
       title: '设备编号',
@@ -120,9 +119,20 @@ export default function HealthMa0nage() {
     },
     {
       title: '体温(℃)',
-      dataIndex: 'temprature',
-      key: 'temprature',
-      render: () => "37.4"
+      dataIndex: 'temperatureValue',
+      key: 'temperatureValue',
+      render: (v, record) => {
+        const { temperature } = record;
+        let text = "";
+        if (temperature == '100') {
+          text = v
+        } else if (temperature == '99') {
+        text = <span className="low-abnormal-color">{v}</span>
+        } else  if (temperature == '98') {
+        text = <span className="abnormal-color">{v}</span>
+        }
+        return text;
+      }
     },
     // {
     //   title: '品种',
@@ -136,35 +146,28 @@ export default function HealthMa0nage() {
     //   render: v => v == '1' ? '母' : '公'
     // },
     {
-      title: '活动',
+      title: '活动(千步)',
       dataIndex: 'activity',
       key: 'activity',
-      render: v => {
+      render: (v, record) => {
+        const { activityValue } = record;
         let text = "";
-        if (v == '0') {
-          text = '正常'
-        } else if (v == '1') {
-          text = <span className="abnormal-color">偏少</span>
-        } else {
-          text = <span className="abnormal-color">异常</span>
+        if (activityValue == '100') {
+          text = v
+        } else if (activityValue == '99') {
+        text = <span className="low-abnormal-color">{v}</span>
+        } else  if (activityValue == '98') {
+        text = <span className="abnormal-color">{v}</span>
         }
         return text;
       }
     },
     {
-      title: '进食',
-      dataIndex: 'eat',
-      key: 'eat',
+      title: '进食(次)',
+      dataIndex: 'eatValue',
+      key: 'eatValue',
       render: v => {
-        let text = "";
-        if (v == '0') {
-          text = '正常'
-        } else if (v == '1') {
-          text = <span className="abnormal-color">偏少</span>
-        } else {
-          text = <span className="abnormal-color">异常</span>
-        }
-        return text;
+        return v
       }
     },
     {
@@ -173,12 +176,24 @@ export default function HealthMa0nage() {
       key: 'location',
       render: v => {
         let text = "";
-        if (v == '0') {
-          text = '正常'
-        } else if (v == '1') {
-          text =  <span className="abnormal-color">偏少</span>
+        if (v == '100') {
+          text = '围栏内'
         } else {
-          text = <span className="abnormal-color">异常</span>
+          text = <span className="abnormal-color">围栏外</span>
+        }
+        return text;
+      }
+    },
+    {
+      title: '发情',
+      dataIndex: 'oestrus',
+      key: 'oestrus',
+      render: v => {
+        let text = "";
+        if (v == '100') {
+          text = '正常'
+        } else {
+          text = <span className="abnormal-color">发情</span>
         }
         return text;
       }
@@ -238,47 +253,50 @@ export default function HealthMa0nage() {
             <Col span={6}>
                 <Form.Item label="活动" name="activity">
                     <Select allowClear>
-                        <Select.Option value="0">正常</Select.Option>
-                        <Select.Option value="1">偏少</Select.Option>
-                        <Select.Option value="2">异常</Select.Option>
-
+                        <Select.Option value="1">全部</Select.Option>
+                        <Select.Option value="100">正常</Select.Option>
+                        <Select.Option value="99">偏低</Select.Option>
+                        <Select.Option value="98">偏高</Select.Option>
                     </Select>
                 </Form.Item>
             </Col>
             <Col span={6}>
                 <Form.Item label="位置" name="location">
                     <Select allowClear>
-                    <Select.Option value="0">正常</Select.Option>
-                        <Select.Option value="1">围栏内</Select.Option>
-                        <Select.Option value="2">围栏外</Select.Option>                   
+                    <Select.Option value="1">全部</Select.Option>
+                        <Select.Option value="100">围栏内</Select.Option>
+                        <Select.Option value="99">围栏外</Select.Option>                   
                     </Select>
                 </Form.Item>
             </Col>
             <Col span={6}>
-                <Form.Item label="进食" name="eat">
+                <Form.Item label="进食" name="field">
                     <Select allowClear>
-                    <Select.Option value="0">正常</Select.Option>
-                        <Select.Option value="1">偏少</Select.Option>
-                        <Select.Option value="2">异常</Select.Option>                    
+                    <Select.Option value="1">全部</Select.Option>
+                    <Select.Option value="100">正常</Select.Option>
+                        <Select.Option value="99">偏低</Select.Option>
+                        <Select.Option value="98">偏高</Select.Option>                    
                     </Select>
                 </Form.Item>
             </Col>
         </Row>
         <Row>
           <Col span={6}>
-            <Form.Item label="体温" name="template">
+            <Form.Item label="体温" name="temperature">
               <Select allowClear>
-              <Select.Option value="0">正常</Select.Option>
-              <Select.Option value="1">偏高</Select.Option>
-              <Select.Option value="2">偏低</Select.Option>                    
+                <Select.Option value="1">全部</Select.Option>
+                <Select.Option value="100">正常</Select.Option>
+                <Select.Option value="99">偏低</Select.Option>
+                <Select.Option value="98">偏高</Select.Option>                   
               </Select>
           </Form.Item>
           </Col>
           <Col span={6}>
             <Form.Item label="发情" name="template">
                 <Select allowClear>
-                <Select.Option value="0">是</Select.Option>
-                <Select.Option value="1">否</Select.Option>                  
+                <Select.Option value="1">全部</Select.Option>
+                <Select.Option value="99">是</Select.Option>
+                <Select.Option value="100">否</Select.Option>                  
                 </Select>
             </Form.Item>
           </Col>

@@ -1,8 +1,9 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Drawer, Form, Button, Card, Descriptions, Divider, Table, message, Row, Col  } from 'antd';
+import { Drawer, Form, Button, Card, Descriptions, Divider, Table, message, Row, Col, Spin   } from 'antd';
 import { Line } from '@ant-design/charts';
 import { DatePicker } from 'antd';
-import { getAnimaDetail } from '@/services/animal';
+import moment from 'moment';
+import { getAnimaDetail, statisticDaily } from '@/services/animal';
 
 const animalColumns = [
   {
@@ -95,9 +96,17 @@ const CreateFarmDrawer = (props) => {
   const { targetAnimal } = props;
   const { id, equipmentNo, dailyAges, breedType, farmName, bindTime, farmAddr, battery } = targetAnimal;
   const [animalHistory, setAnimalHistory] = useState([]);
+  const [isFetching, setIsFetching] = useState(false);
   const [dates, setDates] = useState([]);
+
+  useEffect(() => {
+    setDates([moment().subtract(7, 'days'), moment()]);
+  }, [])
   
   const disabledDate = current => {
+    if (current.diff(new Date(), 'days') >= 0) {
+      return true;
+    }
     if (!dates || dates.length === 0) {
       return false;
     }
@@ -106,6 +115,18 @@ const CreateFarmDrawer = (props) => {
     return tooEarly || tooLate;
   };
 
+  const changeRange = value => {
+    const [start, end] = value;
+    const [oldStart, oldEnd] = dates;
+    setDates([start || oldStart, end || oldEnd]);
+    getStatisticDaily([start || oldStart, end || oldEnd]);
+  }
+
+  const getStatisticDaily = async date => {
+    const [startTime, endTime] = date;
+    const res = await statisticDaily({ animalId: id, startTime: startTime.format(), endTime: endTime.format() });
+    console.log('res', res);
+  };
 
   const getAnimalDetail = useCallback(async id => {
     if (!id) {
@@ -161,34 +182,36 @@ const CreateFarmDrawer = (props) => {
           </Descriptions>
           <Divider style={{ marginBottom: 16 }} />
           <div className="header-container">
-            <div className="header-title">历史记录（近一周）</div>
+            <div className="header-title">历史记录</div>
             <div className="header-range-pciker">
               <span style={{marginRight: 6}}>时间区间</span>
-              <RangePicker 
+              <RangePicker
                 disabledDate={disabledDate}
-                onCalendarChange={value => {
-                  const [start, end] = value;
-                  const [oldStart, oldEnd] = dates;
-                  setDates([start || oldStart, end || oldEnd]);
-                }}
+                onCalendarChange={changeRange}
               />
             </div>
           </div>
           
           <Row style={{height: 220, marginBottom: 16}} gutter={8}>
             <Col span={24}>
-              <Line {...temparaturConfig} />
+              {
+                isFetching ? <Spin /> : <Line {...temparaturConfig} />
+              }
             </Col>
           </Row>
           <Row style={{height: 220, marginBottom: 16}} gutter={8}>
             <Col span={24}>
-              <Line {...eatConfig} />
+            {
+              isFetching ? <Spin /> : <Line {...eatConfig}/>
+            }
             </Col>
           </Row>
           <Row style={{height: 220, marginBottom: 16}} gutter={8}>
             <Col span={24}>
-              <Line {...activityConfig} />
-            </Col>
+            {
+              isFetching ? <Spin /> : <Line {...activityConfig}/>
+            }
+=            </Col>
           </Row>
           <Table
             style={{ marginBottom: 24 }}

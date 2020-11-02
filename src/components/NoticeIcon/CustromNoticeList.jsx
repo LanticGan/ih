@@ -10,79 +10,6 @@ const msgTypeEnum = {
   "3" : "牲畜消息", 
 }
 
-const columns = [
-  {
-    title: '类型',
-    dataIndex: 'msgType',
-    key: 'msgType',
-    render: v => msgTypeEnum[v]
-  },
-  // {
-  //   title: '所属养殖场',
-  //   dataIndex: 'farmName',
-  //   key: 'farmName',
-  // },
-  {
-    title: '简要概述',
-    dataIndex: 'desc',
-    key: 'desc',
-  },
-  // {
-  //   title: '数量',
-  //   dataIndex: 'nums',
-  //   key: 'nums',
-  // },
-  {
-    title: '时间',
-    dataIndex: 'time',
-    key: 'time',
-  },
-  {
-    title: '状态',
-    dataIndex: 'status',
-    key: 'status',
-    render: (text, record) => {
-      let ele = null;
-      if (text == 0) {
-        ele = <Tag color="volcano">未读</Tag>
-      } else {
-        ele = <Tag color="green">已读</Tag>
-      }
-      return ele;
-    }
-  },
-  {
-    title: '操作',
-    key: 'action',
-    fixed: 'right',
-    width: 120,
-    render: (text, record) => {
-      const { msgType, ref, id } = record;
-      if (msgType == 1) {
-        return null
-      } else {
-        return (
-          <Space size="middle">
-            <a onClick={() => {
-              if (msgType == 2) {
-                history.push(`/farm-manage/farm-manage?farmdId=${ref}`);
-              } else if (msgType == 3) {
-                history.push(`/animal-manage/health-manage?farmdId=${ref}`);
-              }
-              dispatch({
-                type: 'msg/read',
-                payload: {
-                  messageId: id,
-                }
-              });
-            }} >详情</a>
-          </Space>
-        )
-      }
-    }
-  },
-];
-
 const expandedRowRender = ({ msgDetailDTOS = [] }) => {
   const columns = [
     {
@@ -108,21 +35,80 @@ const CustromNoticeList = (props) => {
     pageSize,
     total: totalCount,
   };
-  // const [msgList, setMsgList] = useState([]);
-  // const fetchDeviceList = useCallback(async params => {
-  //   const res = await getMsgList({ ...params });
-  //   const { code, message: info, data = {} } = res;
-  //   if (code == 500) {
-  //       message.error(info);
-  //       return;
-  //   }
-  //   const { list = [], currPage, pageSize, totalCount } = data;
-  //   setMsgList(list);
-  // }, []);
+  
 
-  // useEffect(() => {
-  //   fetchDeviceList();
-  // },[])
+  const columns = [
+    {
+      title: '类型',
+      dataIndex: 'msgType',
+      key: 'msgType',
+      render: v => msgTypeEnum[v]
+    },
+    // {
+    //   title: '所属养殖场',
+    //   dataIndex: 'farmName',
+    //   key: 'farmName',
+    // },
+    {
+      title: '简要概述',
+      dataIndex: 'desc',
+      key: 'desc',
+    },
+    // {
+    //   title: '数量',
+    //   dataIndex: 'nums',
+    //   key: 'nums',
+    // },
+    {
+      title: '时间',
+      dataIndex: 'time',
+      key: 'time',
+    },
+    {
+      title: '状态',
+      dataIndex: 'status',
+      key: 'status',
+      render: (text, record) => {
+        let ele = null;
+        if (text == 0) {
+          ele = <Tag color="volcano">未读</Tag>
+        } else {
+          ele = <Tag color="green">已读</Tag>
+        }
+        return ele;
+      }
+    },
+    {
+      title: '操作',
+      key: 'action',
+      fixed: 'right',
+      width: 120,
+      render: (text, record) => {
+        const { msgType, ref, id } = record;
+        if (msgType == 1) {
+          return null
+        } else {
+          return (
+            <Space size="middle">
+              <a onClick={() => {
+                if (msgType == 2) {
+                  history.push(`/farm-manage/farm-manage?farmdId=${ref}`);
+                } else if (msgType == 3) {
+                  history.push(`/animal-manage/health-manage?farmdId=${ref}`);
+                }
+                dispatch({
+                  type: 'msg/read',
+                  payload: {
+                    messageId: id,
+                  }
+                });
+              }} >详情</a>
+            </Space>
+          )
+        }
+      }
+    },
+  ];
 
   const changePagination = v => {
     const { current } = v;
@@ -135,10 +121,18 @@ const CustromNoticeList = (props) => {
     });
   }
 
+  const batchRead = () => {
+    dispatch({
+      type: 'msg/batchread',
+    });
+  }
 
   return (
     <div className="cus-notice-list-container">
-      <div className="title">消息</div>
+      <div className="title">
+        <div>消息</div>
+        <div className="readAll" onClick={batchRead}>全部已读</div>
+      </div>
       <Table 
         rowKey="id"
         dataSource={list} 

@@ -173,7 +173,7 @@ export default function HealthMa0nage() {
         <div>
         <Space size="middle">
           <a onClick={() => openDetailDrawer(record)} >编辑</ a>
-          <a onClick={() => openJobAssignmentDrawer(record)} >分配职务/账号</ a>
+          {/* <a onClick={() => openJobAssignmentDrawer(record)} >分配职务/账号</ a> */}
         </Space>
         </div>
       ),
@@ -231,7 +231,7 @@ export default function HealthMa0nage() {
         </Row>
       </Form>
       <div className="health-manage-operator">
-        {/* 已选择 {selectedRowKeys.length} 项 */}
+        已选择 {selectedRowKeys.length} 项
         <div className="operator-button">
         <Space>
           <Button onClick={exportAll}>
@@ -251,6 +251,7 @@ export default function HealthMa0nage() {
           loading={loading} 
           pagination={paging}
           onChange={changePagination}
+          rowSelection={rowSelection}
           size="small"
         />
       </div>
@@ -261,12 +262,12 @@ export default function HealthMa0nage() {
         onUpdateUser={onUpdateUser}
         targetUser={targetUser}
       />
-      <JobAssignmentDrawer
+      {/* <JobAssignmentDrawer
         visible={jobDrawerVisible} 
         onClose={() => setJobDrawerVisible(false)}
         onUpdateUser={onUpdateUser}
         targetUser={targetUser}
-      />
+      /> */}
     </div>
   )
 }

@@ -21,12 +21,16 @@ const CreateStaffDrawer = (props) => {
     }
   }, [targetUser]);
 
+  const onClose = () => {
+    form.resetFields();
+    props.onClose();
+  }
 
   return (
     <Drawer
       title={targetUser ? '编辑人员' : '新增人员'}
       width={720}
-      onClose={props.onClose}
+      onClose={onClose}
       visible={props.visible}
       bodyStyle={{ paddingBottom: 80 }}
       footer={
@@ -50,6 +54,9 @@ const CreateStaffDrawer = (props) => {
       wrapperCol={{ span: 18 }}
       onFinish={onFinish}
     >
+      <div className="header-title">
+        基本信息
+      </div>
       <Row justify="center">
         <Col span={20}>
         <Form.Item
@@ -105,6 +112,50 @@ const CreateStaffDrawer = (props) => {
             ]}
            >
             <Input placeholder="请输入手机号" />
+          </Form.Item>
+        </Col>
+      </Row>
+      <div className="header-title">
+        职务/权限
+      </div>
+      <Row justify="center">
+        <Col span={20}>
+        <Form.Item
+          name="jobTitle"
+          label="职务类型"
+          rules={[
+                {
+                  required: true,
+                  message: '职务类型',
+                },
+              ]}
+            >
+            <Select style={{ width: 160 }}>
+                <Select.Option value="1">管理员</Select.Option>
+                <Select.Option value="2">兽医</Select.Option>
+                <Select.Option value="3">饲养员</Select.Option>
+                <Select.Option value="4">其他</Select.Option>
+            </Select>
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row justify="center">
+        <Col span={20}>
+        <Form.Item
+          name="role"
+          label="账号权限"
+          rules={[
+                {
+                  required: true,
+                  message: '账号权限',
+                },
+              ]}
+            >
+            <Select style={{ width: 160 }} options={[
+              {label:'超级管理员', value:1},
+              {label:'管理员', value:2},
+              {label:'普通员工', value:3}
+            ]}/>
           </Form.Item>
         </Col>
       </Row>

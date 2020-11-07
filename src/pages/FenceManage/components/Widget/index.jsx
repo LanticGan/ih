@@ -4,50 +4,47 @@ import { RightOutlined } from '@ant-design/icons';
 import classnames from 'classnames';
 import './index.less';
 
-const farmInfo = [
-  {label: '活动异常', value: 0},
-  {label: '位置异常', value: 0},
-  {label: '进食异常', value: 0},
-  {label: '设备低电量', value: 0},
-]
-
-
 class Widget extends React.Component {
 
   renderFarmDistribution = () => {
     const { farmsDistribution = {}, clickFarm } = this.props;
     return (
-      farmsDistribution.map(i => (
-        <div className="farm-info-item" onClick={() => clickFarm(i)}>
-          <div className={classnames({
-              "farm-info-status-icon": true, 
-              "normal": i.status,
-              "abnormal": !i.status
-            })}  
-          />
-          <div className="farm-info-detail">
-            <div className="farm-info-name">
-              {i.title}
+      farmsDistribution.map(i => {
+        let { animals = [], activityTotal, locationTotal, eatTotal, batteryTotal } = i;
+        animals = animals || [];
+        const isAbnormal = activityTotal > 0 || locationTotal > 0 || eatTotal > 0 || batteryTotal > 0;
+        return (
+          <div className="farm-info-item" onClick={() => clickFarm(i)}>
+            <div className={classnames({
+                "farm-info-status-icon": true, 
+                "normal": !isAbnormal,
+                "abnormal": isAbnormal
+              })}  
+            />
+            <div className="farm-info-detail">
+              <div className="farm-info-name">
+                {i.farmName}
+              </div>
+              <div className="farm-info-value">
+                数量 {animals.length}
+              </div>
             </div>
-            <div className="farm-info-value">
-              数量 {i.number}
+            <div className={classnames({
+                "farm-info-status": true, 
+                "normal": !isAbnormal,
+                "abnormal": isAbnormal
+              })}
+            >
+              <span style={{ marginRight: 6 }}>
+                {
+                  !isAbnormal ? '无异常' : '异常'
+                }
+              </span>
+              <RightOutlined />
             </div>
           </div>
-          <div className={classnames({
-              "farm-info-status": true, 
-              "normal": i.status,
-              "abnormal": !i.status
-            })}
-          >
-            <span style={{ marginRight: 6 }}>
-              {
-                i.status ? '无异常' : '异常'
-              }
-            </span>
-            <RightOutlined />
-          </div>
-        </div>
-      ))
+        )
+      })
     )
   }
 
@@ -66,22 +63,40 @@ class Widget extends React.Component {
     return famrsOptions;
   }
 
-  getCurrentFarm = () => {
+  getCurrentFarmInfo = () => {
     const { allFarms = [], farmAreaValue } = this.props;
     const currentFarm = allFarms.filter(f => f.id == farmAreaValue)[0] || {};
-    return currentFarm;
+    let { activityTotal, locationTotal, eatTotal, batteryTotal } = currentFarm;
+    activityTotal = typeof activityTotal === 'number' ? activityTotal : '-'
+    locationTotal = typeof locationTotal === 'number' ? locationTotal : '-'
+    eatTotal = typeof eatTotal === 'number' ? eatTotal : '-'
+    batteryTotal = typeof batteryTotal === 'number' ? batteryTotal : '-'
+
+    return [
+      {key: 'activityTotal', label: '活动异常', value: activityTotal},
+      {key: 'locationTotal', label: '位置异常', value: locationTotal},
+      {key: 'eatTotal', label: '进食异常', value: eatTotal},
+      {key: 'batteryTotal', label: '设备低电量', value: batteryTotal},
+    ]
+  }
+
+  getCurrentIsAbnormal = () => {
+    const { allFarms = [], farmAreaValue } = this.props;
+    const currentFarm = allFarms.filter(f => f.id == farmAreaValue)[0] || {};
+    const { activityTotal, locationTotal, eatTotal, batteryTotal } = currentFarm;
+    return activityTotal > 0 || locationTotal > 0 || eatTotal > 0 || batteryTotal > 0;
   }
 
   render() {
     const { handleFarmAreaChange, farmAreaValue } = this.props;
-    const currentFarm = this.getCurrentFarm();
-    console.log('currentFarm', currentFarm)
+    const farmInfo = this.getCurrentFarmInfo();
+    const isAbnormal = this.getCurrentIsAbnormal();
     return (
       <div className="map-widget-contianer">
-        <div className="widget-header normal">
+        <div className={`widget-header ${isAbnormal ? 'abnormal' : 'normal'}`}>
           <div className="widget-title">
             <div className="widget-name">养殖场概况</div>
-            <div className="widget-operation">+ 新建养殖场</div>
+            {/* <div className="widget-operation">+ 新建养殖场</div> */}
           </div>
           <div className="widget-filter-form">
             <Select

@@ -107,7 +107,13 @@ export default function HealthMa0nage() {
       title: '所属养殖场',
       dataIndex: 'farmName',
       key: 'farmName',
-    },{
+    },
+    {
+      title: '牲畜编号',
+      dataIndex: 'animalNo',
+      key: 'animalNo',
+    },
+    {
       title: '圈舍编号',
       dataIndex: 'houseNo',
       key: 'houseNo',
@@ -134,17 +140,6 @@ export default function HealthMa0nage() {
         return text;
       }
     },
-    // {
-    //   title: '品种',
-    //   dataIndex: 'animalBreed',
-    //   key: 'animalBreed',
-    // },
-    // {
-    //   title: '性别',
-    //   dataIndex: 'animalSex',
-    //   key: 'animalSex',
-    //   render: v => v == '1' ? '母' : '公'
-    // },
     {
       title: '活动(千步)',
       dataIndex: 'activity',

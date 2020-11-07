@@ -140,7 +140,7 @@ const CustromNoticeList = (props) => {
         pagination={paging}
         onChange={changePagination}
         scroll={{
-          y: 560
+          y: 400
           }
         }
       />;

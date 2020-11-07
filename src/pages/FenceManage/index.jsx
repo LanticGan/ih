@@ -76,36 +76,34 @@ class FenceManage extends React.Component {
     targetFence: null,
     farmsDistribution: [],
     farmAreaValue: 'all',
+    allFarms: []
   }
 
   fetchFenceList = async params => {
     const res = await getFenceList({ ...params });
-    const { code, message: info, data = {} } = res;
-    console.log('res', res);
-    const { list = [], currPage, pageSize, totalCount } = data;
+    const { code, message: info, data = [] } = res;
     if (code == 500) {
         message.error(info);
         return;
     }
-  }
-
-  fetchFarmList = async params => {
-    const { companyId } = this.props;
-    const res = await getFarmList({ companyId, ...params });
-    const { code, message: info, data = {} } = res;
-    const { list = [], currPage, pageSize, totalCount } = data;
-    if (code == 500) {
-        message.error(info);
-        return;
-    }
+    this.setState({
+      allFarms: data,
+      farmsDistribution: data
+    });
   }
 
   renderFarmCard = () => {
-    const { targetFarm = {} } = this.state;
-    const { x = 0, y = 0 } = targetFarm;
+    let { targetFarm = {} } = this.state;
+    let { x = 0, y = 0, animals } = targetFarm;
+    animals = animals || [];
 
-    if (!targetFarm.center) {
-      return null;
+    // if (!targetFarm.center) {
+    //   return null;
+    // }
+
+    targetFarm = {
+      ...targetFarm,
+      animalUnits: animals.length || 0
     }
 
     return (
@@ -153,22 +151,27 @@ class FenceManage extends React.Component {
     }
   }
 
-  addFarmsMarker = () => {
-    farms.forEach((farm, i) => {
-      const { center, number } = farm;
+  renderFarmsMarker = (allFarms) => {
+    if (!allFarms || allFarms.length === 0) {
+      return;
+    }
+    allFarms.forEach((farm, i) => {
+      const { animals, latitude, longitude, activityTotal, locationTotal, eatTotal, temperatureTotal } = farm;
+      const isAbnormal = activityTotal || locationTotal || eatTotal || temperatureTotal;
+      const animalsNum = Array.isArray(animals) ? animals.length : 0;
       const text = new AMap.Text({
-        text: number,
+        text: `${animalsNum}`,
         anchor:'center', // 设置文本标记锚点
         cursor:'pointer',
         style:{
-            'background-color': 'rgba(20,97,204,.7)',
+            'background-color': isAbnormal ? 'rgba(255,152,2,.7)' : 'rgba(20,97,204,.7)',
             'width': '3.5rem',
             'border-radius': '20px',
             'text-align': 'center',
             'font-size': '14px',
             'color': 'white'
         },
-        position: center
+        position: [longitude,latitude]
       });
 
       text.setMap(this.map);
@@ -180,10 +183,12 @@ class FenceManage extends React.Component {
   }
   
   addFence = (farm) => {
-    const {id, center, radius, animals = []} = farm;
+    let {id, longitude, latitude , radius, animals = []} = farm;
+    radius = radius / 1000;
+    animals = animals || [];
 
     const fence = new AMap.Circle({
-      center: center,
+      center: [longitude, latitude],
       radius: radius, //半径
       borderWeight: 2,
       strokeColor: "#fff", 
@@ -205,12 +210,10 @@ class FenceManage extends React.Component {
 
   addAnimals = (animals) => {
     animals.forEach(animal => {
-      const { center } = animal;
-      const x = center[0] + Math.random() * 0.001;
-      const y = center[1] + Math.random() * 0.001;
-
+      const { longitude, latitude, location } = animal;
+      const locationAbnormal = location != '100';
       const animalCircle = new AMap.Circle({
-        center: [x, y],
+        center: [longitude, latitude],
         radius: 10,
         borderWeight: 1,
         strokeColor: "#fff", 
@@ -218,7 +221,7 @@ class FenceManage extends React.Component {
         strokeWeight: 1,
         fillOpacity: 1,
         strokeStyle: 'solid',
-        fillColor: '#1461cc',
+        fillColor: locationAbnormal ? 'rgba(255,152,2,.7)' : '#1461cc',
         zIndex: 52,
       });
   
@@ -260,9 +263,10 @@ class FenceManage extends React.Component {
   }
 
   handleFarmAreaChange = (id) => {
-    let farmsDistribution = farms;
+    const { allFarms } = this.state;
+    let farmsDistribution = allFarms;
     if (id != 'all') {
-      farmsDistribution = farms.filter(f => f.id == id);
+      farmsDistribution = allFarms.filter(f => f.id == id);
       const targetFarm = farmsDistribution[0];
       this.handleClickFarm(targetFarm)
     } else {
@@ -276,24 +280,29 @@ class FenceManage extends React.Component {
 
   componentDidMount() {
      this.map = new AMap.Map('map-container', {
-      zoom: 5,//级别
+      zoom: 4,//级别
       center: [109, 33],//中心点坐标
     });
-    this.fetchFenceList();
-    this.addFarmsMarker();
-    this.setState({
-      farmsDistribution: farms
-    });
+    this.fetchFenceList({ farmId: '-1' });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { allFarms = [] } = this.state;
+    const { allFarms: prevFarms = [] } = prevState;
+
+    if (allFarms !== prevFarms) {
+      this.renderFarmsMarker(allFarms)
+    }
   }
 
   render() {
-    const { showFarmCard, farmsDistribution = [], farmAreaValue } = this.state;
+    const { showFarmCard, farmsDistribution = [], farmAreaValue, allFarms } = this.state;
     return (
       <div className="fence-map">
         <div id="map-container" className="map-container" />
         <Widget
           farmAreaValue={farmAreaValue}
-          allFarms={farms} 
+          allFarms={allFarms} 
           farmsDistribution={farmsDistribution} 
           clickFarm={({id}) => history.push(`/animal-manage/health-manage?farmId=${id}`)}
           handleFarmAreaChange={this.handleFarmAreaChange}

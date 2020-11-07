@@ -7,87 +7,81 @@ import { getAnimaDetail, statisticDaily } from '@/services/animal';
 
 const animalColumns = [
   {
-    title: '活动',
-    dataIndex: 'activity',
-    key: 'activity',
-
+    title: '体温(℃)',
+    dataIndex: 'temperatureValue',
+    key: 'temperatureValue',
+    render: (v, record) => {
+      const { temperature } = record;
+      let text = "";
+      if (temperature == '100') {
+        text = v
+      } else if (temperature == '99') {
+      text = <span className="low-abnormal-color">{v}</span>
+      } else  if (temperature == '98') {
+      text = <span className="abnormal-color">{v}</span>
+      }
+      return text;
+    }
+  },
+  {
+    title: '活动(千步)',
+    dataIndex: 'activityValue',
+    key: 'activityValue',
+    render: (v, record) => {
+      const { activity } = record;
+      let text = "";
+      if (activity == '100') {
+        text = v
+      } else if (activity == '99') {
+      text = <span className="low-abnormal-color">{v}</span>
+      } else  if (activity == '98') {
+      text = <span className="abnormal-color">{v}</span>
+      }
+      return text;
+    }
+  },
+  {
+    title: '进食(次)',
+    dataIndex: 'eatValue',
+    key: 'eatValue',
+    render: v => {
+      return v
+    }
   },
   {
     title: '位置',
     dataIndex: 'location',
     key: 'location',
-
+    render: v => {
+      let text = "";
+      if (v == '100') {
+        text = '围栏内'
+      } else {
+        text = <span className="abnormal-color">围栏外</span>
+      }
+      return text;
+    }
   },
   {
-    title: '进食',
-    dataIndex: 'eat',
-    key: 'eat',
-    align: 'right',
+    title: '发情',
+    dataIndex: 'oestrus',
+    key: 'oestrus',
+    render: v => {
+      let text = "";
+      if (v == '100') {
+        text = '正常'
+      } else {
+        text = <span className="abnormal-color">发情</span>
+      }
+      return text;
+    }
   },
   {
-    title: '设备电量',
-    dataIndex: 'battery',
-    key: 'battery',
-    align: 'right',  
+    title: '数据更新时间',
+    dataIndex: 'syncTime',
+    key: 'syncTime',
   },
 ];
-
-const temparatureData = [
-  { date: '09-10', value: 36, name: '体温(℃)' },
-  { date: '09-11', value: 35, name: '体温(℃)' },
-  { date: '09-12', value: 34, name: '体温(℃)' },
-  { date: '09-13', value: 36, name: '体温(℃)' },
-  { date: '09-14', value: 37, name: '体温(℃)' },
-  { date: '09-15', value: 38, name: '体温(℃)' },
-  { date: '09-16', value: 32, name: '体温(℃)' },
-  { date: '09-17', value: 36, name: '体温(℃)' },
-];
-
-const eatData = [
-  { date: '09-10', value: 220, name: '进食(次)' },
-  { date: '09-11', value: 230, name: '进食(次)'},
-  { date: '09-12', value: 550, name: '进食(次)' },
-  { date: '09-13', value: 400, name: '进食(次)'},
-  { date: '09-14', value: 310, name: '进食(次)'},
-  { date: '09-15', value: 254, name: '进食(次)' },
-  { date: '09-16', value: 276, name: '进食(次)' },
-  { date: '09-17', value: 472, name: '进食(次)' },
-];
-
-const activityData = [
-  { date: '09-10', value: 12, name: '活动(千步)' },
-  { date: '09-11', value: 13.4, name: '活动(千步)'},
-  { date: '09-12', value: 13.5, name: '活动(千步)' },
-  { date: '09-13', value: 13.6, name: '活动(千步)'},
-  { date: '09-14', value: 15, name: '活动(千步)'},
-  { date: '09-15', value: 11.2, name: '活动(千步)' },
-  { date: '09-16', value: 16, name: '活动(千步)' },
-  { date: '09-17', value: 13, name: '活动(千步)' },
-];
-
-const temparaturConfig = {
-  data:temparatureData,
-  xField: 'date',
-  yField: 'value',
-  seriesField: 'name',
-  legend: { position: 'top' },
-};
-
-const eatConfig = {
-  data: eatData,
-  xField: 'date',
-  yField: 'value',
-  seriesField: 'name',
-  legend: { position: 'top' },
-};
-
-const activityConfig = {
-  data: activityData,
-  xField: 'date',
-  yField: 'value',
-  seriesField: 'name',
-  legend: { position: 'top' },
-};
 
 const { RangePicker } = DatePicker;
 
@@ -96,6 +90,9 @@ const CreateFarmDrawer = (props) => {
   const { targetAnimal } = props;
   const { id, equipmentNo, dailyAges, breedType, farmName, bindTime, farmAddr, battery } = targetAnimal;
   const [animalHistory, setAnimalHistory] = useState([]);
+  const [temparatureData, setTemparatureData] = useState([]);
+  const [activityData, setActivityData] = useState([]);
+  const [eatData, setEatData] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
   const [dates, setDates] = useState([]);
 
@@ -116,16 +113,55 @@ const CreateFarmDrawer = (props) => {
   };
 
   const changeRange = value => {
+    if (!value) {
+      return
+    }
     const [start, end] = value;
     const [oldStart, oldEnd] = dates;
     setDates([start || oldStart, end || oldEnd]);
     getStatisticDaily([start || oldStart, end || oldEnd]);
   }
 
+  const updateTempratureData = (data = []) => {
+    const temparatureData = data.map(d => ({
+      date: d.syncDate,
+      value: d.temperatureValue,
+      name: '体温(℃)'
+    }));
+    setTemparatureData(temparatureData);
+  }
+
+  const updateEatData = (data = []) => {
+    const eatData = data.map(d => ({
+      date: d.syncDate,
+      value: d.eatValue,
+      name: '进食(次)'
+    }));
+    setEatData(eatData);
+  }
+
+  const updateActivityData = (data = []) => {
+    const activityData = data.map(d => ({
+      date: d.syncDate,
+      value: d.activityValue,
+      name: '活动(千步)'
+    }));
+    setActivityData(activityData);
+  }
+
   const getStatisticDaily = async date => {
+    setIsFetching(true);
     const [startTime, endTime] = date;
-    const res = await statisticDaily({ animalId: id, startTime: startTime.format(), endTime: endTime.format() });
-    console.log('res', res);
+    const res = await statisticDaily({ animalId: id, startTime: startTime.valueOf(), endTime: endTime.valueOf() });
+    setIsFetching(false);
+    if (res.code != 0) {
+      message.error(res.message || "系统异常")
+    }
+    let data = res.data || [];
+    updateTempratureData(data);
+    updateEatData(data);
+    updateActivityData(data);
+    setAnimalHistory(data);
   };
 
   const getAnimalDetail = useCallback(async id => {
@@ -191,32 +227,70 @@ const CreateFarmDrawer = (props) => {
               />
             </div>
           </div>
+          {
+            temparatureData.length > 0 && (
+              <Row style={{height: 220, marginBottom: 16}} gutter={8}>
+                <Col span={24}>
+                  {
+                    isFetching 
+                    ? <div style={{display: 'flex', justifyContent:'center'}}><Spin /></div>
+                    : <Line 
+                        data={temparatureData}
+                        xField='date'
+                        yField='value'
+                        seriesField='name'
+                        legend={{position: 'top'}} 
+                      />
+                  }
+                </Col>
+              </Row>
+            )
+          }
           
-          <Row style={{height: 220, marginBottom: 16}} gutter={8}>
-            <Col span={24}>
-              {
-                isFetching ? <Spin /> : <Line {...temparaturConfig} />
-              }
-            </Col>
-          </Row>
-          <Row style={{height: 220, marginBottom: 16}} gutter={8}>
-            <Col span={24}>
-            {
-              isFetching ? <Spin /> : <Line {...eatConfig}/>
-            }
-            </Col>
-          </Row>
-          <Row style={{height: 220, marginBottom: 16}} gutter={8}>
-            <Col span={24}>
-            {
-              isFetching ? <Spin /> : <Line {...activityConfig}/>
-            }
-=            </Col>
-          </Row>
+          {
+            eatData.length > 0 && (
+              <Row style={{height: 220, marginBottom: 16}} gutter={8}>
+                <Col span={24}>
+                  {
+                    isFetching 
+                    ? <div style={{display: 'flex', justifyContent:'center'}}><Spin /></div>
+                    : <Line 
+                        data={eatData}
+                        xField='date'
+                        yField='value'
+                        seriesField='name'
+                        legend={{position: 'top'}} 
+                      />
+                  }
+                </Col>
+              </Row>
+            )
+          }
+          
+          {
+            activityData.length > 0 && (
+              <Row style={{height: 220, marginBottom: 16}}>
+                <Col span={24}>
+                  {
+                    isFetching 
+                    ? <div style={{display: 'flex', justifyContent:'center'}}><Spin /></div>
+                    : <Line 
+                        data={activityData}
+                        xField='date'
+                        yField='value'
+                        seriesField='name'
+                        legend={{position: 'top'}} 
+                      />
+                  }
+                </Col>
+              </Row>
+            )
+          }
+          
           <Table
-            style={{ marginBottom: 24 }}
+            style={{ marginTop: 24 }}
             pagination={false}
-            dataSource={[]}
+            dataSource={animalHistory}
             columns={animalColumns}
             rowKey="id"
           />

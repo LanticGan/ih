@@ -22,8 +22,8 @@ import './index.less';
 const vaccineColumns = [
   {
     title: '疫苗类型',
-    dataIndex: 'vaccineName',
-    key: 'vaccineName',
+    dataIndex: 'vaccineType',
+    key: 'vaccineType',
   },
   {
     title: '是否注射',
@@ -42,8 +42,8 @@ const vaccineColumns = [
   },
 ];
 
-const expandedRowRender = ({ msgDetailDTOS = [] }) => {
-  return <Table rowKey="id" columns={vaccineColumns} dataSource={[]} pagination={false}size="small" />;
+const expandedRowRender = ({ vaccineDTOS = [] }) => {
+  return <Table rowKey="id" columns={vaccineColumns} dataSource={vaccineDTOS} pagination={false}size="small" />;
 }
 
 export default function VaccineManage() {
@@ -64,8 +64,7 @@ export default function VaccineManage() {
   const [form] = Form.useForm();
 
   const onFinish = (values) => {
-    // fetchVaccineList(values);
-    fetchAnimalList(values);
+    fetchVaccineList(values);
   };
 
   const onSelectChange = selectedRowKeys => {
@@ -126,24 +125,6 @@ export default function VaccineManage() {
     });
   }, []);
 
-  const fetchAnimalList = useCallback(async params => {
-    setLoading(true);
-    const res = await getAnimalList({ ...params });
-    setLoading(false);
-    const { code, message: info, data = {} } = res;
-    if (code == 500) {
-        message.error(info);
-        return;
-    }
-    const { list = [], currPage, pageSize, totalCount } = data;
-    setAnimalList(list);
-    setPaging({
-      ...paging,
-      current: currPage,
-      total: totalCount,
-    })
-  }, []);
-
   const changePagination = v => {
     const { current } = v;
     fetchVaccineList({ pageNum: current });
@@ -154,7 +135,6 @@ export default function VaccineManage() {
   }
 
   useEffect(() => {
-    fetchAnimalList();
     fetchVaccineList();
   }, []);
 
@@ -254,13 +234,13 @@ export default function VaccineManage() {
         <Table 
           rowKey="id" 
           columns={animalColumns} 
-          dataSource={animalList}
+          dataSource={vaccineList}
           pagination={paging}
           onChange={changePagination}
           rowSelection={rowSelection}
           expandable={{ 
             expandedRowRender,
-            rowExpandable: ({msgDetailDTOS = []}) => true,
+            rowExpandable: ({vaccineDTOS = []}) => true,
           }}
           loading={loading}
           size="small"

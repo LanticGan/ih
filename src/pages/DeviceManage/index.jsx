@@ -234,16 +234,16 @@ export default function HealthMa0nage() {
         <div className="operator-button">
           <Space>
             <Button onClick={exportAll}>
-              导出
+              批量导出
             </Button>
-            <Button onClick={download}>
+            {/* <Button onClick={download}>
               模板下载
             </Button>
             <Upload {...uplaodProps}>
               <Button>
                 批量导入
               </Button>
-            </Upload>
+            </Upload> */}
           </Space>
         </div>
       </div>

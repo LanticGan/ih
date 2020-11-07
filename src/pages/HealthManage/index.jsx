@@ -8,18 +8,23 @@ import {
   Pagination,
   Table,
   Tag,
-  Space, message
+  Space, 
+  message,
+  Modal,
+  Upload
 } from 'antd';
 import DetailDrawer from './components/DetailDrawer';
-import { getAnimalList, getAnimalDetail } from '@/services/animal';
+import { getAnimalList, getAnimalDetail, deleteAnimal } from '@/services/animal';
 import { getFarmOptions } from '@/services/farm';
 import { getPageQuery } from '@/utils/utils';
-
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 import cs from 'classnames';
 import './index.less';
 import { useEffect } from 'react';
 
-export default function HealthMa0nage() {
+const { confirm } = Modal;
+
+export default function HealthManage() {
   
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -35,6 +40,7 @@ export default function HealthMa0nage() {
   })
 
   const [form] = Form.useForm();
+
   const onFinish = (values) => {
     fetchAnimalList(values)
   };
@@ -65,7 +71,18 @@ export default function HealthMa0nage() {
       value: ''
     })
     setFarmOptions(farmOptions);
-}, []);
+  }, []);
+
+  const confirmDeleteAnimal = async () => {
+    const res = await deleteAnimal({animalId: selectedRowKeys[0]});
+    const { code, message: info } = res;
+    if (info) {
+      message.error(info);
+      return;
+    }
+    message.success('删除成功');
+    form.submit();
+  }
 
   useEffect(() => {
     fetchFarmOptions();
@@ -219,12 +236,57 @@ export default function HealthMa0nage() {
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
+    type: 'radio'
   };
 
   const changePagination = v => {
     const { current } = v;
     fetchAnimalList({ pageNum: current });
   }
+
+  const confirmDelete = () => {
+    if (selectedRowKeys.length === 0) {
+      message.error('请选择一条记录');
+      return;
+    }
+    confirm({
+      title: '确认删除吗?',
+      icon: <ExclamationCircleOutlined />,
+      okText: '是',
+      cancelText: '否',
+      onOk() {
+        confirmDeleteAnimal();
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  }
+
+  const uplaodProps = {
+    name: 'animals',
+    action: '/yunmu/api/animal/importAnimal',
+    headers: {
+      authorization: 'authorization-text',
+    },
+    showUploadList: false,
+    onChange(info = {}) {
+      const { file = {} } = info
+      const { status, name } = file
+      if (status === 'done') {
+        const { response = {} } = file
+        const { code, message: msg } = response;
+        if (code == 500) {
+          message.error(msg);
+        } else {
+          message.success('导入成功');
+          fetchDeviceList();
+        }
+      } else if (status === 'error') {
+        message.error(`${name} 导入失败.`);
+      }
+    },
+  };
 
   return (
     <div className="health-manage-container">
@@ -308,15 +370,17 @@ export default function HealthMa0nage() {
         已选择 {selectedRowKeys.length} 项
         <div className="operator-button">
         <Space>
-        <Button onClick={() => message.success('删除成功')}>
+        <Button onClick={confirmDelete}>
             删除
           </Button>
-          <Button onClick={() => message.success('导出成功')}>
+          <Button onClick={() => window.open('/yunmu/api/animal/export')}>
             批量导出
           </Button>
-          <Button onClick={() => message.success('导入成功')}>
-            批量导入
-          </Button>
+          <Upload {...uplaodProps}>
+            <Button>
+              批量导入
+            </Button>
+          </Upload>
         </Space>
 
         </div>

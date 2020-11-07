@@ -28,5 +28,16 @@ export async function statisticDaily(params) {
   });
 }
 
+export async function deleteAnimal(params) {
+  return request('/yunmu/api/animal/delete', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+
+
+
+
 
 

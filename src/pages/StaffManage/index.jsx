@@ -17,6 +17,7 @@ import JobAssignmentDrawer from './components/JobAssignmentDrawer';
 import { getUserList, updateUser, createUser, exportUsers } from '@/services/users';
 import cs from 'classnames';
 import './index.less';
+import { values } from 'lodash';
 
 const jobTitleEnum = { 
   "1": "管理员",
@@ -122,6 +123,10 @@ export default function HealthMa0nage() {
       message.success('编辑成功');
   }
 
+  const deleteStaff = async values => {
+    
+  }
+
   const columns = [
     {
       title: '姓名',
@@ -172,7 +177,8 @@ export default function HealthMa0nage() {
       render: (text, record) => (
         <div>
         <Space size="middle">
-          <a onClick={() => openDetailDrawer(record)} >编辑</ a>
+          <a onClick={() => openDetailDrawer(record)}>编辑</ a>
+          <a onClick={() => deleteStaff(record)}>删除</ a>
           {/* <a onClick={() => openJobAssignmentDrawer(record)} >分配职务/账号</ a> */}
         </Space>
         </div>

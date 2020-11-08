@@ -10,14 +10,17 @@ import {
   Input,
   Tag,
   Space,
-  message
+  message,
+  Modal
 } from 'antd';
 import CreateStaffDrawer from './components/CreateStaffDrawer';
 import JobAssignmentDrawer from './components/JobAssignmentDrawer';
-import { getUserList, updateUser, createUser, exportUsers } from '@/services/users';
-import cs from 'classnames';
+import { getUserList, updateUser, createUser, deleteUser } from '@/services/users';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 import './index.less';
 import { values } from 'lodash';
+
+const { confirm } = Modal;
 
 const jobTitleEnum = { 
   "1": "管理员",
@@ -123,8 +126,35 @@ export default function HealthMa0nage() {
       message.success('编辑成功');
   }
 
-  const deleteStaff = async values => {
-    
+  const deleteStaff = async record => {
+    const { id } = record;
+    if (!id) {
+      message.error('请选择一条记录');
+      return;
+    }
+    confirm({
+      title: '确认删除吗?',
+      icon: <ExclamationCircleOutlined />,
+      okText: '是',
+      cancelText: '否',
+      onOk() {
+        confirmDeleteStaff(id);
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  }
+
+  const confirmDeleteStaff = async (id) => {
+    const res = await deleteUser({id});
+    const { code, message: info } = res;
+    if (info) {
+      message.error(info);
+      return;
+    }
+    message.success('删除成功');
+    form.submit();
   }
 
   const columns = [

@@ -36,7 +36,7 @@ export async function fetchUserDetail(params) {
 }
 
 export async function deleteUser(params) {
-  return request('/yunmu/api/users/detail', {
+  return request('/yunmu/api/users/delete', {
     method: 'POST',
     data: params,
   });

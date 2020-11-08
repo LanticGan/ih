@@ -73,8 +73,8 @@ export default function HealthManage() {
     setFarmOptions(farmOptions);
   }, []);
 
-  const confirmDeleteAnimal = async () => {
-    const res = await deleteAnimal({animalId: selectedRowKeys[0]});
+  const confirmDeleteAnimal = async (id) => {
+    const res = await deleteAnimal({animalId: id});
     const { code, message: info } = res;
     if (info) {
       message.error(info);
@@ -228,6 +228,7 @@ export default function HealthManage() {
       render: (text, record) => (
         <Space size="middle">
           <a onClick={() => openDetailDrawer(record)} >详情</a>
+          <a onClick={() => confirmDelete(record)} >删除</a>
         </Space>
       ),
     },
@@ -236,7 +237,6 @@ export default function HealthManage() {
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
-    type: 'radio'
   };
 
   const changePagination = v => {
@@ -244,8 +244,9 @@ export default function HealthManage() {
     fetchAnimalList({ pageNum: current });
   }
 
-  const confirmDelete = () => {
-    if (selectedRowKeys.length === 0) {
+  const confirmDelete = (record) => {
+    const { id } = record;
+    if (!id) {
       message.error('请选择一条记录');
       return;
     }
@@ -255,7 +256,7 @@ export default function HealthManage() {
       okText: '是',
       cancelText: '否',
       onOk() {
-        confirmDeleteAnimal();
+        confirmDeleteAnimal(id);
       },
       onCancel() {
         console.log('Cancel');
@@ -370,9 +371,9 @@ export default function HealthManage() {
         已选择 {selectedRowKeys.length} 项
         <div className="operator-button">
         <Space>
-        <Button onClick={confirmDelete}>
+        {/* <Button onClick={confirmDelete}>
             删除
-          </Button>
+          </Button> */}
           <Button onClick={() => window.open('/yunmu/api/animal/export')}>
             批量导出
           </Button>

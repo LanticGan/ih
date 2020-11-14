@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect  } from 'react';
 import { history, connect } from 'umi';
+import { getPageQuery } from '@/utils/utils';
 import {
     Form, 
     Row, 
@@ -52,7 +53,8 @@ const FarmManage = (props) => {
             return;
         }
         setDrawerVisible(false);
-        fetchFarmList({ companyId })
+        fetchFarmList({ companyId });
+        fetchFarmOptions();
         message.success('新增成功');
     };
 
@@ -73,9 +75,9 @@ const FarmManage = (props) => {
     }, []);
 
     const fetchFarmOptions = useCallback(async () => {
-        const res = await getFarmOptions({companyId: 1});
+        const res = await getFarmOptions({ companyId });
         const { code, message: info, data = {} } = res;
-        if (code == 500) {
+        if (code != 0) {
             message.error(info);
             return;
         }
@@ -98,6 +100,14 @@ const FarmManage = (props) => {
     useEffect(() => {
         fetchFarmList({ companyId })
     }, [companyId])
+
+    useEffect(() => {
+        const params = getPageQuery() || {};
+        const defaultOpen = params['defaultOpen'];
+        if (defaultOpen) {
+            setDrawerVisible(true);
+        }
+    }, [])
 
     
     return (

@@ -2,6 +2,7 @@ import React from 'react';
 import { Select } from 'antd';
 import { RightOutlined } from '@ant-design/icons';
 import classnames from 'classnames';
+import { history } from 'umi';
 import './index.less';
 
 class Widget extends React.Component {
@@ -96,7 +97,7 @@ class Widget extends React.Component {
         <div className={`widget-header ${isAbnormal ? 'abnormal' : 'normal'}`}>
           <div className="widget-title">
             <div className="widget-name">养殖场概况</div>
-            {/* <div className="widget-operation">+ 新建养殖场</div> */}
+            <div className="widget-operation" onClick={() => history.push('/farm-manage/farm-manage?defaultOpen=true')}>+ 新建养殖场</div>
           </div>
           <div className="widget-filter-form">
             <Select

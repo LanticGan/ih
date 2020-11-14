@@ -92,19 +92,18 @@ export default function HealthMa0nage() {
   }
 
   const openDetailDrawer = record => {
-    setTargetUser(record);
+    if (!record) {
+      setTargetUser(record);
+    } else {
+      setTargetUser({ ...record });
+    }
     setDrawerVisible(true);
-  }
-
-  const openJobAssignmentDrawer = record => {
-    setTargetUser(record);
-    setJobDrawerVisible(true)
   }
 
   const onCreateUser = async values => {
     const res = await createUser({ ...values });
       const { code, message: info } = res;
-      if (code == 500) {
+      if (code != 0) {
           message.error(info);
           return;
       }
@@ -116,7 +115,7 @@ export default function HealthMa0nage() {
   const onUpdateUser = async values => {
     const res = await updateUser({ ...values });
       const { code, message: info } = res;
-      if (code == 500) {
+      if (code != 0) {
           message.error(info);
           return;
       }

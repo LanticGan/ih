@@ -87,7 +87,7 @@ const { RangePicker } = DatePicker;
 
 const CreateFarmDrawer = (props) => {
 
-  const { targetAnimal } = props;
+  const { targetAnimal, visible } = props;
   const { id, equipmentNo, dailyAges, breedType, farmName, bindTime, farmAddr, battery } = targetAnimal;
   const [animalHistory, setAnimalHistory] = useState([]);
   const [temparatureData, setTemparatureData] = useState([]);
@@ -99,6 +99,17 @@ const CreateFarmDrawer = (props) => {
   useEffect(() => {
     setDates([moment().subtract(7, 'days'), moment()]);
   }, [])
+
+  useEffect(() => {
+    if (!visible) {
+      return;
+    }
+    const [start, end] = dates;
+    if (start && end && id) {
+      getStatisticDaily([start, end]);
+    }
+  }, [dates, id, visible])
+
   
   const disabledDate = current => {
     if (current.diff(new Date(), 'days') >= 0) {
@@ -119,7 +130,6 @@ const CreateFarmDrawer = (props) => {
     const [start, end] = value;
     const [oldStart, oldEnd] = dates;
     setDates([start || oldStart, end || oldEnd]);
-    getStatisticDaily([start || oldStart, end || oldEnd]);
   }
 
   const updateTempratureData = (data = []) => {
@@ -224,6 +234,7 @@ const CreateFarmDrawer = (props) => {
               <RangePicker
                 disabledDate={disabledDate}
                 onCalendarChange={changeRange}
+                value={dates}
               />
             </div>
           </div>

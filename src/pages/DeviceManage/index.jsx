@@ -48,7 +48,7 @@ export default function HealthMa0nage() {
   }
 
   const exportAll = useCallback(async params => {
-    window.open('/yunmu/api/animal/export');
+    window.open('/yunmu/api/equipment/export');
     // const res = await exportAnimal();
     // const { code, message: info, data = {} } = res;
     // if (code == 500) {
@@ -129,22 +129,22 @@ export default function HealthMa0nage() {
       key: 'status',
       render: v => {
         let text = "";
-        if (v == '99') {
+        if (v == '100') {
           text = '已绑定'
         } else {
-          text = v
+          text = '未绑定'
         }
         return text;
       }
     },
     {
       title: '设备电量',
-      dataIndex: 'battery',
-      key: 'battery',
+      dataIndex: 'batteryValue',
+      key: 'batteryValue',
       render: v => {
-        let text = v;
+        let text = `${v}%`;
         if (v < 15) {
-          text = <span style={{color: 'red'}}>{v}</span>
+          text = <span style={{color: 'red'}}>{text}</span>
         }
         return text;
 

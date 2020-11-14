@@ -18,6 +18,8 @@ const CreateStaffDrawer = (props) => {
   useEffect(() => {
     if (targetUser) {
       form.setFieldsValue(targetUser)
+    } else {
+      form.resetFields();
     }
   }, [targetUser]);
 
@@ -94,6 +96,12 @@ const CreateStaffDrawer = (props) => {
           <Form.Item
             name="idCard"
             label="身份证号"
+            rules={[
+              {
+                required: true,
+                message: '手机号不能为空',
+              },
+            ]}
            >
             <Input placeholder="请输入身份证号" />
           </Form.Item>
@@ -131,10 +139,10 @@ const CreateStaffDrawer = (props) => {
               ]}
             >
             <Select style={{ width: 160 }}>
-                <Select.Option value="1">管理员</Select.Option>
-                <Select.Option value="2">兽医</Select.Option>
-                <Select.Option value="3">饲养员</Select.Option>
-                <Select.Option value="4">其他</Select.Option>
+                <Select.Option value={1}>管理员</Select.Option>
+                <Select.Option value={2}>兽医</Select.Option>
+                <Select.Option value={3}>饲养员</Select.Option>
+                <Select.Option value={4}>其他</Select.Option>
             </Select>
           </Form.Item>
         </Col>

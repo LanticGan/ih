@@ -19,14 +19,33 @@ import { getAnimalList } from '@/services/animal';
 import cs from 'classnames';
 import './index.less';
 
+const vaccineTypeMap = {
+  1000001: '猪瘟弱毒苗',
+  1000002: '兰耳病弱毒苗',
+  1000003: '伪狂犬病弱毒疫苗',
+  1000004: '气喘病灭活菌苗',
+  1000005: '猪瘟疫苗',
+  1000006: '口蹄疫疫苗'
+};
+
 const vaccineColumns = [
+  {
+    title: '疫苗名称',
+    dataIndex: 'vaccineName',
+    key: 'vaccineName',
+    
+  },
   {
     title: '疫苗类型',
     dataIndex: 'vaccineType',
     key: 'vaccineType',
+    render: (v, record) => {
+      const vaccineType = vaccineTypeMap[v] || '其他';
+      return vaccineType;
+    }
   },
   {
-    title: '是否注射',
+    title: '注射数量',
     dataIndex: 'nums',
     key: 'nums',
   },
@@ -59,7 +78,8 @@ export default function VaccineManage() {
     pageSize: 10,
     total: 0,
     position: ['topRight']
-  })
+  });
+  const [targetAnimal, setTargetAnimal] = useState({});
 
   const [form] = Form.useForm();
 
@@ -72,6 +92,7 @@ export default function VaccineManage() {
   }
 
   const openDetailDrawer = record => {
+    setTargetAnimal(record);
     setDrawerVisible(true);
   }
 
@@ -159,6 +180,17 @@ export default function VaccineManage() {
       dataIndex: 'dailyAges',
       key: 'dailyAges',
     },
+    {
+      title: '操作',
+      key: 'action',
+      fixed: 'right',
+      width: 120,
+      render: (text, record) => (
+        <Space size="middle">
+          <a onClick={() => openDetailDrawer(record)} >疫苗录入</a>
+        </Space>
+      ),
+    },
   ];
 
   const rowSelection = {
@@ -212,9 +244,9 @@ export default function VaccineManage() {
             <Button onClick={exportVa}>
               批量导出
             </Button>
-            <Button type="primary" onClick={() => {setDrawerVisible(true)}}>
+            {/* <Button type="primary" onClick={() => {setDrawerVisible(true)}}>
               疫苗录入
-            </Button>
+            </Button> */}
           </Space>
           
         </div>
@@ -247,8 +279,9 @@ export default function VaccineManage() {
         />
       </div>
       <CreateVaccineDrawer
-        visible={drawerVisible} 
+        visible={drawerVisible}
         onClose={() => setDrawerVisible(false)}
+        targetAnimal={targetAnimal}
         onOk={onOk}
       />
     </div>

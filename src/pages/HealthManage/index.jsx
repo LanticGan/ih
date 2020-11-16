@@ -203,9 +203,9 @@ export default function HealthManage() {
       render: v => {
         let text = "";
         if (v == '100') {
-          text = '正常'
+          text = '否'
         } else {
-          text = <span className="abnormal-color">发情</span>
+          text = <span className="abnormal-color">是</span>
         }
         return text;
       }
@@ -311,7 +311,7 @@ export default function HealthManage() {
             <Col span={6}>
                 <Form.Item label="活动" name="activity">
                     <Select allowClear>
-                        <Select.Option value="1">全部</Select.Option>
+                        <Select.Option value="-1">全部</Select.Option>
                         <Select.Option value="100">正常</Select.Option>
                         <Select.Option value="99">偏低</Select.Option>
                         <Select.Option value="98">偏高</Select.Option>
@@ -321,16 +321,16 @@ export default function HealthManage() {
             <Col span={6}>
                 <Form.Item label="位置" name="location">
                     <Select allowClear>
-                    <Select.Option value="1">全部</Select.Option>
+                    <Select.Option value="-1">全部</Select.Option>
                         <Select.Option value="100">围栏内</Select.Option>
                         <Select.Option value="99">围栏外</Select.Option>                   
                     </Select>
                 </Form.Item>
             </Col>
             <Col span={6}>
-                <Form.Item label="进食" name="field">
+                <Form.Item label="进食" name="eat">
                     <Select allowClear>
-                    <Select.Option value="1">全部</Select.Option>
+                    <Select.Option value="-1">全部</Select.Option>
                     <Select.Option value="100">正常</Select.Option>
                         <Select.Option value="99">偏低</Select.Option>
                         <Select.Option value="98">偏高</Select.Option>                    
@@ -342,7 +342,7 @@ export default function HealthManage() {
           <Col span={6}>
             <Form.Item label="体温" name="temperature">
               <Select allowClear>
-                <Select.Option value="1">全部</Select.Option>
+                <Select.Option value="-1">全部</Select.Option>
                 <Select.Option value="100">正常</Select.Option>
                 <Select.Option value="99">偏低</Select.Option>
                 <Select.Option value="98">偏高</Select.Option>                   
@@ -350,9 +350,9 @@ export default function HealthManage() {
           </Form.Item>
           </Col>
           <Col span={6}>
-            <Form.Item label="发情" name="template">
+            <Form.Item label="发情" name="oestrus">
                 <Select allowClear>
-                <Select.Option value="1">全部</Select.Option>
+                <Select.Option value="-1">全部</Select.Option>
                 <Select.Option value="99">是</Select.Option>
                 <Select.Option value="100">否</Select.Option>                  
                 </Select>

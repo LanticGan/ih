@@ -131,51 +131,52 @@ const FarmManage = (props) => {
                     </Col>
                     <Col span={6}>
                         <Form.Item label="活动" name="activity"  allowClear>
-                            <Select>
-                                <Select.Option value="">全部</Select.Option>
-                                <Select.Option value="normal">正常</Select.Option>
-                                <Select.Option value="">偏高</Select.Option>
-                                <Select.Option value="">偏低</Select.Option>
-                            </Select>
+                        <Select allowClear>
+                            <Select.Option value="-1">全部</Select.Option>
+                            <Select.Option value="100">正常</Select.Option>
+                            <Select.Option value="99">偏低</Select.Option>
+                            <Select.Option value="98">偏高</Select.Option>
+                    </Select>
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="位置" name="position"  allowClear>
-                            <Select>
-                                <Select.Option value="">全部</Select.Option>
-                                <Select.Option value="normal">围栏内</Select.Option>
-                                <Select.Option value="">围栏外</Select.Option>                          
-                            </Select>
+                        <Form.Item label="位置" name="location"  allowClear>
+                        <Select allowClear>
+                            <Select.Option value="-1">全部</Select.Option>
+                            <Select.Option value="100">围栏内</Select.Option>
+                            <Select.Option value="99">围栏外</Select.Option>                   
+                    </Select>
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="进食" name="food" allowClear>
-                            <Select>
-                                <Select.Option value="">全部</Select.Option>
-                                <Select.Option value="normal">正常</Select.Option>
-                                <Select.Option value="">偏高</Select.Option>
-                                <Select.Option value="">偏低</Select.Option>
-                            </Select>
+                        <Form.Item label="进食" name="eat" allowClear>
+                        <Select allowClear>
+                    <Select.Option value="-1">全部</Select.Option>
+                    <Select.Option value="100">正常</Select.Option>
+                        <Select.Option value="99">偏低</Select.Option>
+                        <Select.Option value="98">偏高</Select.Option>                    
+                    </Select>
                         </Form.Item>
                     </Col>
                     </Row>
                     <Row>
                     <Col span={6}>
-                        <Form.Item label="体温" name="deviceCharge" allowClear>
-                            <Select>
-                                <Select.Option value="">全部</Select.Option>
-                                <Select.Option value="normal">正常</Select.Option>
-                                <Select.Option value="">偏高</Select.Option>
-                                <Select.Option value="">偏低</Select.Option>                         
-                            </Select>
+                        <Form.Item label="体温" name="temperature" allowClear>
+                        <Select allowClear>
+                <Select.Option value="-1">全部</Select.Option>
+                <Select.Option value="100">正常</Select.Option>
+                <Select.Option value="99">偏低</Select.Option>
+                <Select.Option value="98">偏高</Select.Option>                   
+              </Select>
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="发情" name="deviceCharge" allowClear>
-                            <Select>
-                                <Select.Option value="">是</Select.Option>
-                                <Select.Option value="normal">否</Select.Option>
-                            </Select>
+                        <Form.Item label="发情" name="oestrus" allowClear>
+                        <Select allowClear>
+                <Select.Option value="-1">全部</Select.Option>
+                <Select.Option value="99">是</Select.Option>
+                <Select.Option value="100">否</Select.Option>                  
+                </Select>
                         </Form.Item>
                     </Col>
                     <Col span={12}>

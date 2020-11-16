@@ -146,7 +146,7 @@ export default function HealthManage() {
       key: 'temperatureValue',
       render: (v, record) => {
         const { temperature } = record;
-        let text = "";
+        let text = "-";
         if (temperature == '100') {
           text = v
         } else if (temperature == '99') {
@@ -163,7 +163,7 @@ export default function HealthManage() {
       key: 'activity',
       render: (v, record) => {
         const { activityValue } = record;
-        let text = "";
+        let text = "-";
         if (activityValue == '100') {
           text = v
         } else if (activityValue == '99') {
@@ -187,10 +187,10 @@ export default function HealthManage() {
       dataIndex: 'location',
       key: 'location',
       render: v => {
-        let text = "";
+        let text = "-";
         if (v == '100') {
           text = '围栏内'
-        } else {
+        } else if (v == '99') {
           text = <span className="abnormal-color">围栏外</span>
         }
         return text;
@@ -201,10 +201,10 @@ export default function HealthManage() {
       dataIndex: 'oestrus',
       key: 'oestrus',
       render: v => {
-        let text = "";
+        let text = "-";
         if (v == '100') {
           text = '否'
-        } else {
+        } else if (v == '99') {
           text = <span className="abnormal-color">是</span>
         }
         return text;

@@ -16,7 +16,7 @@ import {
 import DetailDrawer from './components/DetailDrawer';
 import { getAnimalList, getAnimalDetail, deleteAnimal } from '@/services/animal';
 import { getFarmOptions } from '@/services/farm';
-import { getPageQuery } from '@/utils/utils';
+import { getPageQuery, stringify } from '@/utils/utils';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import cs from 'classnames';
 import './index.less';
@@ -73,8 +73,8 @@ export default function HealthManage() {
     setFarmOptions(farmOptions);
   }, []);
 
-  const confirmDeleteAnimal = async (id) => {
-    const res = await deleteAnimal({animalId: id});
+  const confirmDeleteAnimal = async (confirmDeleteAnimal) => {
+    const res = await deleteAnimal({animalIds: confirmDeleteAnimal});
     const { code, message: info } = res;
     if (info) {
       message.error(info);
@@ -228,7 +228,7 @@ export default function HealthManage() {
       render: (text, record) => (
         <Space size="middle">
           <a onClick={() => openDetailDrawer(record)} >详情</a>
-          <a onClick={() => confirmDelete(record)} >删除</a>
+          {/* <a onClick={() => confirmDelete(record)} >删除</a> */}
         </Space>
       ),
     },
@@ -244,9 +244,8 @@ export default function HealthManage() {
     fetchAnimalList({ pageNum: current });
   }
 
-  const confirmDelete = (record) => {
-    const { id } = record;
-    if (!id) {
+  const confirmDelete = () => {
+    if (selectedRowKeys.length === 0) {
       message.error('请选择一条记录');
       return;
     }
@@ -256,7 +255,7 @@ export default function HealthManage() {
       okText: '是',
       cancelText: '否',
       onOk() {
-        confirmDeleteAnimal(id);
+        confirmDeleteAnimal(selectedRowKeys);
       },
       onCancel() {
         console.log('Cancel');
@@ -289,6 +288,11 @@ export default function HealthManage() {
     },
   };
 
+  const exportAll = () => {
+    const url = `/yunmu/api/animal/export?${stringify(form.getFieldsValue())}`;
+    location.href = url;
+  }
+
   return (
     <div className="health-manage-container">
       <Form
@@ -304,7 +308,14 @@ export default function HealthManage() {
                     label="选择养殖场" 
                     name="farmId"
                 >
-                    <Select allowClear options={farmOptions}>
+                    <Select 
+                      allowClear 
+                      options={farmOptions}
+                      showSearch
+                      filterOption={(input, option) =>
+                        option.label.includes(input)
+                      }
+                    >
                     </Select>
                 </Form.Item>
             </Col>
@@ -374,14 +385,20 @@ export default function HealthManage() {
         {/* <Button onClick={confirmDelete}>
             删除
           </Button> */}
-          <Button onClick={() => window.open('/yunmu/api/animal/export')}>
-            批量导出
+           <Button onClick={confirmDelete}>
+            删除
+          </Button>
+          <Button onClick={exportAll}>
+            导出
           </Button>
           <Upload {...uplaodProps}>
             <Button>
               批量导入
             </Button>
           </Upload>
+          <Button onClick={() =>  location.href = '//bucket.bysocket.com/animal_template.xlsx'}>
+            模板下载
+          </Button>
         </Space>
 
         </div>

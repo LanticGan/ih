@@ -1,4 +1,4 @@
-import { parse } from 'querystring';
+import { parse, stringify } from 'querystring';
 import pathRegexp from 'path-to-regexp';
 
 /* eslint no-useless-escape:0 import/prefer-default-export:0 */
@@ -57,3 +57,5 @@ export const getRouteAuthority = (path, routeData) => {
   });
   return authorities;
 };
+
+export { parse, stringify };

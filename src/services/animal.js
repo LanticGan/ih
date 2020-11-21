@@ -29,7 +29,7 @@ export async function statisticDaily(params) {
 }
 
 export async function deleteAnimal(params) {
-  return request('/yunmu/api/animal/delete', {
+  return request('/yunmu/api/animal/batchDelete', {
     method: 'POST',
     data: params,
   });

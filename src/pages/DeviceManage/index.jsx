@@ -14,8 +14,9 @@ import {
   InputNumber,
   Upload
 } from 'antd';
-import { getDeviceList } from '@/services/device';
+import { getDeviceList, unbindDevice } from '@/services/device';
 import { getFarmOptions } from '@/services/farm';
+import { getPageQuery, stringify } from '@/utils/utils';
 import { exportAnimal } from '@/services/animal';
 import './index.less';
 
@@ -34,6 +35,8 @@ export default function HealthMa0nage() {
     position: ['topRight']
   });
 
+  const [targetAnimal, setTargetAnimal] = useState({});
+
   const [form] = Form.useForm();
   const onFinish = (values) => {
     fetchDeviceList(values);
@@ -45,71 +48,6 @@ export default function HealthMa0nage() {
 
   const openDetailDrawer = record => {
     setDrawerVisible(true);
-  }
-
-  const exportAll = useCallback(async params => {
-    window.open('/yunmu/api/equipment/export');
-    // const res = await exportAnimal();
-    // const { code, message: info, data = {} } = res;
-    // if (code == 500) {
-    //     message.error(info);
-    //     return;
-    // }
-    // location.
-  }, [])
-
-  const fetchDeviceList = useCallback(async params => {
-    setLoading(true);
-    const res = await getDeviceList({ ...params });
-    setLoading(false);
-    const { code, message: info, data = {} } = res;
-    if (code == 500) {
-        message.error(info);
-        return;
-    }
-    const { list = [], currPage, pageSize, totalCount } = data;
-    setDeviceList(list);
-    setPaging({
-      ...paging,
-      current: currPage,
-      total: totalCount,
-    })
-  }, []);
-
-    useEffect(() => {
-      fetchDeviceList();
-    }, []);
-
-  const fetchFarmOptions = useCallback(async () => {
-      const res = await getFarmOptions({companyId: 1});
-      const { code, message: info, data = {} } = res;
-      if (code == 500) {
-          message.error(info);
-          return;
-      }
-      const { list = [] } = data;
-      const farmOptions = list.map(({ farmName, id }) => ({
-          label: farmName,
-          value: id
-      }));
-      setFarmOptions(farmOptions);
-  }, []);
-
-  useEffect(() => {
-    fetchFarmOptions();
-  }, [])
-
-  const confirmUnbind = () => {
-    setShowModal(true);
-  }
-
-  const changePagination = v => {
-    const { current } = v;
-    fetchDeviceList({ pageNum: current });
-  }
-
-  const download = () => {
-    window.open('//47.110.59.191/uploadTemplate/device_template.xlsx')
   }
 
   const columns = [
@@ -155,11 +93,92 @@ export default function HealthMa0nage() {
       key: 'action',
       render: (text, record) => (
         <Space size="middle">
-          <a onClick={confirmUnbind}>设备解绑</a>
+          <a onClick={() => confirmUnbind(record)}>设备解绑</a>
         </Space>
       ),
     },
   ];
+
+  const exportAll = useCallback(async params => {
+    const url = `/yunmu/api/equipment/export?${stringify(form.getFieldsValue())}`;
+    location.href = url;
+    // const res = await exportAnimal();
+    // const { code, message: info, data = {} } = res;
+    // if (code == 500) {
+    //     message.error(info);
+    //     return;
+    // }
+    // location.
+  }, [])
+
+  const fetchDeviceList = useCallback(async params => {
+    setLoading(true);
+    const res = await getDeviceList({ ...params });
+    setLoading(false);
+    const { code, message: info, data = {} } = res;
+    if (code == 500) {
+        message.error(info);
+        return;
+    }
+    const { list = [], currPage, pageSize, totalCount } = data;
+    setDeviceList(list);
+    setPaging({
+      ...paging,
+      current: currPage,
+      total: totalCount,
+    })
+  }, []);
+
+  useEffect(() => {
+    fetchDeviceList();
+  }, []);
+
+  const fetchFarmOptions = useCallback(async () => {
+      const res = await getFarmOptions({companyId: 1});
+      const { code, message: info, data = {} } = res;
+      if (code == 500) {
+          message.error(info);
+          return;
+      }
+      const { list = [] } = data;
+      const farmOptions = list.map(({ farmName, id }) => ({
+          label: farmName,
+          value: id
+      }));
+      setFarmOptions(farmOptions);
+  }, []);
+
+  useEffect(() => {
+    fetchFarmOptions();
+  }, [])
+
+  const unbind =  useCallback(async params => {
+    setLoading(true);
+    const res = await unbindDevice({ ...params });
+    setLoading(false);
+    const { code, message: info, data = {} } = res;
+    if (code != '0') {
+        message.error(info);
+        return;
+    }
+    message.success('解绑成功');
+    setShowModal(false);
+    fetchDeviceList();
+  }, []);
+
+  const confirmUnbind = (record) => {
+    setTargetAnimal(record);
+    setShowModal(true);
+  }
+
+  const changePagination = v => {
+    const { current } = v;
+    fetchDeviceList({ pageNum: current });
+  }
+
+  const download = () => {
+    window.open('//47.110.59.191/uploadTemplate/device_template.xlsx')
+  }
 
   const rowSelection = {
     selectedRowKeys,
@@ -167,8 +186,15 @@ export default function HealthMa0nage() {
   };
 
   const onOk = () => {
-    message.success('解绑成功')
-    setShowModal(false);
+    const { equipmentNo, animalNo } = targetAnimal;
+    unbind({
+      batchNo: '200',
+      unbindType: 999,
+      unbindDetails: [{
+        animalNo,
+        equipmentNo,
+      }]
+    });
   }
 
   const uplaodProps = {
@@ -211,7 +237,14 @@ export default function HealthMa0nage() {
                     label="选择养殖场" 
                     name="farmId"
                 >
-                    <Select allowClear options={farmOptions}>
+                    <Select 
+                      allowClear 
+                      options={farmOptions}
+                      showSearch
+                      filterOption={(input, option) =>
+                        option.label.includes(input)
+                      }
+                    >
                     </Select>
                 </Form.Item>
             </Col>
@@ -234,7 +267,7 @@ export default function HealthMa0nage() {
         <div className="operator-button">
           <Space>
             <Button onClick={exportAll}>
-              批量导出
+              导出
             </Button>
             {/* <Button onClick={download}>
               模板下载

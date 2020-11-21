@@ -8,9 +8,15 @@ export async function getAnimaDetail(params) {
 }
 
 export async function getDeviceList(params) {
-  return request('/yunmu/api/animal/findPageInfo', {
+  return request('/yunmu/api/equipment/findPageInfo', {
     method: 'POST',
     data: params,
   });
 }
 
+export async function unbindDevice(params) {
+  return request('/yunmu/api/animal/unbind', {
+    method: 'POST',
+    data: params,
+  });
+}

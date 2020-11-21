@@ -104,7 +104,7 @@ export default defineConfig({
               routes: [
                 {
                   path: '/farm-manage/fence-manage',
-                  name: '围栏管理',
+                  name: '地图模式',
                   icon: 'border',
                   component: './FenceManage',
                 },

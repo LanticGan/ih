@@ -14,6 +14,8 @@ import {
 } from 'antd';
 import CreateVaccineDrawer from './components/CreateVaccineDrawer';
 import { getFarmOptions } from '@/services/farm';
+import { stringify } from '@/utils/utils';
+
 import { getVaccineList, createVaccine, exportVaccine } from '@/services/vaccine';
 import { getAnimalList } from '@/services/animal';
 import cs from 'classnames';
@@ -152,9 +154,11 @@ export default function VaccineManage() {
   }
 
   const exportVa = async () => {
-    window.open('/yunmu/api/vaccine/export');
+    const url = `/yunmu/api/vaccine/export?${stringify(form.getFieldsValue())}`;
+    location.href = url;
   }
 
+  
   useEffect(() => {
     fetchVaccineList();
   }, []);
@@ -214,7 +218,14 @@ export default function VaccineManage() {
                     label="选择养殖场" 
                     name="farmId"
                 >
-                       <Select allowClear options={farmOptions}>
+                       <Select 
+                        allowClear 
+                        options={farmOptions}
+                        showSearch
+                        filterOption={(input, option) =>
+                          option.label.includes(input)
+                        }
+                      >
                     </Select>
                 </Form.Item>
             </Col>
@@ -242,7 +253,7 @@ export default function VaccineManage() {
         <div className="operator-button">
           <Space>
             <Button onClick={exportVa}>
-              批量导出
+              导出
             </Button>
             {/* <Button type="primary" onClick={() => {setDrawerVisible(true)}}>
               疫苗录入

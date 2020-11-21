@@ -125,7 +125,14 @@ const FarmManage = (props) => {
                             label="选择养殖场" 
                             name="farmId"
                         >
-                            <Select allowClear options={farmOptions}>
+                            <Select 
+                                allowClear 
+                                options={farmOptions}
+                                showSearch
+                                filterOption={(input, option) =>
+                                    option.label.includes(input)
+                                }
+                            >
                             </Select>
                         </Form.Item>
                     </Col>

@@ -396,7 +396,7 @@ export default function HealthManage() {
               批量导入
             </Button>
           </Upload>
-          <Button onClick={() =>  location.href = '//bucket.bysocket.com/animal_template.xlsx'}>
+          <Button onClick={() =>  location.href = '///uploadTemplate/animal_template.xlsx'}>
             模板下载
           </Button>
         </Space>

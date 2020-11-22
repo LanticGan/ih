@@ -214,7 +214,7 @@ const CreateFarmDrawer = (props) => {
         </div>
       }
     >
-    <div>
+    <div style={{ marginTop: 20 }}>
           <Descriptions title="基本信息" style={{ marginBottom: 16 }}>
             <Descriptions.Item label="设备编号">{equipmentNo}</Descriptions.Item>
             <Descriptions.Item label="所属养殖场">{farmName}</Descriptions.Item>

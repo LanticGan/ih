@@ -171,9 +171,8 @@ export default function HealthMa0nage() {
     setShowModal(true);
   }
 
-  const changePagination = v => {
-    const { current } = v;
-    fetchDeviceList({ pageNum: current });
+  const changePagination = (page, pageSize) => {
+    fetchDeviceList({ pageNum: page, pageSize});
   }
 
   const download = () => {
@@ -253,7 +252,7 @@ export default function HealthMa0nage() {
                   <InputNumber mix={0} max={100} />
                 </Form.Item>
             </Col>
-            <Col span={2}>
+            <Col span={12}>
               <div className="search-button">
                 <Button type="primary" htmlType="submit">
                     查询
@@ -263,8 +262,10 @@ export default function HealthMa0nage() {
         </Row>
       </Form>
       <div className="health-manage-operator">
-        已选择 {selectedRowKeys.length} 项
         <div className="operator-button">
+        <div className="total-select">
+            已选择 {selectedRowKeys.length} 项
+          </div>
           <Space>
             <Button onClick={exportAll}>
               导出
@@ -279,6 +280,7 @@ export default function HealthMa0nage() {
             </Upload> */}
           </Space>
         </div>
+        <Pagination  defaultCurrent={1} current={paging.current} pageSize={paging.pageSize} total={paging.total} onChange={changePagination} />
       </div>
       <div className="health-manage-content">
         <Table
@@ -286,8 +288,8 @@ export default function HealthMa0nage() {
           rowKey="id" 
           columns={columns} 
           dataSource={deviceList}
-          pagination={paging}
-          onChange={changePagination}
+          pagination={false}
+          // onChange={changePagination}
           rowSelection={rowSelection}
           size="small"
         />

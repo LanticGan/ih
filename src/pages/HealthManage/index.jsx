@@ -239,9 +239,8 @@ export default function HealthManage() {
     onChange: onSelectChange,
   };
 
-  const changePagination = v => {
-    const { current } = v;
-    fetchAnimalList({ pageNum: current });
+  const changePagination =  (page, pageSize) => {
+    fetchAnimalList({ pageNum: page, pageSize})
   }
 
   const confirmDelete = () => {
@@ -379,8 +378,10 @@ export default function HealthManage() {
         </Row>
       </Form>
       <div className="health-manage-operator">
-        已选择 {selectedRowKeys.length} 项
         <div className="operator-button">
+          <div className="total-select">
+            已选择 {selectedRowKeys.length} 项
+          </div>
         <Space>
         {/* <Button onClick={confirmDelete}>
             删除
@@ -400,16 +401,16 @@ export default function HealthManage() {
             模板下载
           </Button>
         </Space>
-
         </div>
+        <Pagination  defaultCurrent={1} current={paging.current} pageSize={paging.pageSize} total={paging.total} onChange={changePagination} />
       </div>
       <div className="health-manage-content">
         <Table 
           rowKey="id" 
           columns={columns} 
           dataSource={animalList}
-          pagination={paging}
-          onChange={changePagination}
+          pagination={false}
+          // onChange={changePagination}
           rowSelection={rowSelection}
           scroll={{ x: 1400 }}
           loading={loading}

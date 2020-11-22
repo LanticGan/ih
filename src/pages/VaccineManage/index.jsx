@@ -148,9 +148,8 @@ export default function VaccineManage() {
     });
   }, []);
 
-  const changePagination = v => {
-    const { current } = v;
-    fetchVaccineList({ pageNum: current });
+  const changePagination = (page, pageSize) => {
+    fetchVaccineList({ pageNum: page, pageSize})
   }
 
   const exportVa = async () => {
@@ -239,7 +238,7 @@ export default function VaccineManage() {
                   <Input />
                 </Form.Item>
             </Col>
-            <Col span={4}>
+            <Col span={6}>
               <div className="search-button">
                 <Button type="primary" htmlType="submit">
                     查询
@@ -249,8 +248,10 @@ export default function VaccineManage() {
         </Row>
       </Form>
       <div className="health-manage-operator">
-        已选择 {selectedRowKeys.length} 项
         <div className="operator-button">
+        <div className="total-select">
+            已选择 {selectedRowKeys.length} 项
+          </div>
           <Space>
             <Button onClick={exportVa}>
               导出
@@ -259,8 +260,8 @@ export default function VaccineManage() {
               疫苗录入
             </Button> */}
           </Space>
-          
         </div>
+        <Pagination  defaultCurrent={1} current={paging.current} pageSize={paging.pageSize} total={paging.total} onChange={changePagination} />
       </div>
       <div className="health-manage-content">
         {/* rowSelection={rowSelection} */}
@@ -278,8 +279,7 @@ export default function VaccineManage() {
           rowKey="id" 
           columns={animalColumns} 
           dataSource={vaccineList}
-          pagination={paging}
-          onChange={changePagination}
+          pagination={false}
           rowSelection={rowSelection}
           expandable={{ 
             expandedRowRender,

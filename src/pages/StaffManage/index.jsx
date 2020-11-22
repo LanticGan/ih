@@ -67,9 +67,8 @@ export default function HealthMa0nage() {
     });
   }, []);
 
-  const changePagination = v => {
-    const { current } = v;
-    fetchUserList({ pageNum: current });
+  const changePagination = (page, pageSize) => {
+    fetchUserList({ pageNum: page, pageSize})
   }
 
   const exportAll = useCallback(async params => {
@@ -230,7 +229,7 @@ export default function HealthMa0nage() {
         className="farm-search-form"
       >
         <Row>
-            <Col span={5} >
+            <Col span={6} >
                 <Form.Item 
                     label="姓名" 
                     name="name"
@@ -238,7 +237,7 @@ export default function HealthMa0nage() {
                     <Input /> 
                 </Form.Item>
             </Col>
-            <Col span={5}>
+            <Col span={6}>
                 <Form.Item 
                   label="手机号" 
                   name="phone"
@@ -246,7 +245,7 @@ export default function HealthMa0nage() {
                     <Input /> 
                 </Form.Item>
             </Col>
-            <Col span={4}>
+            <Col span={6}>
                 <Form.Item label="职务" name="jobTitle" labelCol={{ span: 6 }}>
                     <Select allowClear>
                       <Select.Option value="1">管理员</Select.Option>
@@ -256,7 +255,7 @@ export default function HealthMa0nage() {
                     </Select>
                 </Form.Item>
             </Col>
-            <Col span={2}>
+            <Col span={6}>
               <div className="search-button">
                 <Button type="primary" htmlType="submit">
                     查询
@@ -266,8 +265,10 @@ export default function HealthMa0nage() {
         </Row>
       </Form>
       <div className="health-manage-operator">
-        已选择 {selectedRowKeys.length} 项
         <div className="operator-button">
+        <div className="total-select">
+            已选择 {selectedRowKeys.length} 项
+          </div>
         <Space>
           <Button onClick={exportAll}>
             批量导出
@@ -277,6 +278,7 @@ export default function HealthMa0nage() {
           </Button>
           </Space>
         </div>
+        <Pagination  defaultCurrent={1} current={paging.current} pageSize={paging.pageSize} total={paging.total} onChange={changePagination} />
       </div>
       <div className="health-manage-content">
         <Table 
@@ -284,8 +286,8 @@ export default function HealthMa0nage() {
           columns={columns} 
           dataSource={userList} 
           loading={loading} 
-          pagination={paging}
-          onChange={changePagination}
+          pagination={false}
+          // onChange={changePagination}
           rowSelection={rowSelection}
           size="small"
         />

@@ -61,7 +61,7 @@ export default defineConfig({
             },
             {
               name: '首页',
-              icon: 'home',
+              icon: 'https://img.alicdn.com/tfs/TB1sObktz39YK4jSZPcXXXrUFXa-12-12.png',
               key: 'home',
               path: '/home',
               component: './home',
@@ -69,7 +69,7 @@ export default defineConfig({
             {
               path: '/animal-manage',
               name: '牲畜管理',
-              icon: 'crown',
+              icon: 'https://img.alicdn.com/tfs/TB1AzNpsQ9l0K4jSZFKXXXFjpXa-13-12.png',
               routes: [
                 {
                   path: '/animal-manage/health-manage',
@@ -100,7 +100,7 @@ export default defineConfig({
             {
               path: '/farm-manage',
               name: '养殖场管理',
-              icon: 'group',
+              icon: 'https://img.alicdn.com/tfs/TB1DDm52Yr1gK0jSZFDXXb9yVXa-14-12.png',
               routes: [
                 {
                   path: '/farm-manage/fence-manage',
@@ -138,7 +138,7 @@ export default defineConfig({
             {
               path: '/staff-manage',
               name: '人员管理',
-              icon: 'user',
+              icon: 'https://img.alicdn.com/tfs/TB1DFrksBBh1e4jSZFhXXcC9VXa-11-14.png',
               component: './StaffManage',
             },
             {
@@ -168,7 +168,7 @@ export default defineConfig({
             // },
             {
               name: '合作方管理',
-              icon: 'team',
+              icon: 'https://img.alicdn.com/tfs/TB1UXMqomslXu8jSZFuXXXg7FXa-12-14.png',
               path: '/profilebasic',
               component: './404',
             },

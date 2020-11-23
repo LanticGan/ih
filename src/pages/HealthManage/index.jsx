@@ -129,6 +129,9 @@ export default function HealthManage() {
       title: '牲畜编号',
       dataIndex: 'animalNo',
       key: 'animalNo',
+      render: (text, record) => (
+          <a onClick={() => openDetailDrawer(record)}>{text}</a>
+      ),
     },
     {
       title: '圈舍编号',
@@ -397,7 +400,7 @@ export default function HealthManage() {
               批量导入
             </Button>
           </Upload>
-          <Button onClick={() =>  location.href = '///uploadTemplate/animal_template.xlsx'}>
+          <Button onClick={() =>  location.href = '//uploadTemplate/animal_template.xlsx'}>
             模板下载
           </Button>
         </Space>

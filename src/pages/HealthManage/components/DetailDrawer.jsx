@@ -228,7 +228,8 @@ const CreateFarmDrawer = (props) => {
           </Descriptions>
           <Divider style={{ marginBottom: 16 }} />
           <div className="header-container">
-            <div className="header-title">历史记录</div>
+            <div className="header-title history-record">
+              <div>历史记录</div>
             <div className="header-range-pciker">
               <span style={{marginRight: 6}}>时间区间</span>
               <RangePicker
@@ -237,6 +238,8 @@ const CreateFarmDrawer = (props) => {
                 value={dates}
               />
             </div>
+            </div>
+            
           </div>
           {
             temparatureData.length > 0 && (

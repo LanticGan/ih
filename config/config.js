@@ -119,7 +119,7 @@ export default defineConfig({
             {
               path: '/device-manage',
               name: '设备管理',
-              icon: 'tablet',
+              icon: 'https://img.alicdn.com/tfs/TB1kRM927T2gK0jSZFkXXcIQFXa-14-14.png',
               routes: [
                 {
                   path: '/device-manage/device-manage',
@@ -144,7 +144,7 @@ export default defineConfig({
             {
               path: '/stock-manage',
               name: '库存管理',
-              icon: 'menu',
+              icon: 'https://img.alicdn.com/tfs/TB1lRM927T2gK0jSZFkXXcIQFXa-14-14.png',
               routes: [
                 {
                   path: '/stock-manage/vaccine-manage',
